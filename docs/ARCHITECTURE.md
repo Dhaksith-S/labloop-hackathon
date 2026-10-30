@@ -91,20 +91,21 @@ server's local timezone.
 
 ## 4. Booking lifecycle
 
-```
-                 ┌──────────┐
-    submit ─────▶│ pending  │──── approve ───▶ approved ── check-in ──▶ checked_in
-                 └────┬─────┘                     │                        │
-                      │ reject                    │ cancel                 │ return
-                      ▼                           ▼                        ▼
-                 ┌──────────┐               ┌──────────┐            return_submitted
-                 │ rejected │               │ cancelled│                    │
-                 └──────────┘               └──────────┘                    │ owner confirms
-                      │ waitlist                                           ▼
-                      ▼                                              ┌───────────┐
-                 ┌───────────┐   slot released, eligible            │ completed │
-                 │ waitlisted│──────────────▶ pending (human)       └───────────┘
-                 └───────────┘
+```mermaid
+stateDiagram-v2
+    [*] --> pending: Eligible request submitted
+    pending --> approved: Human approves after recheck
+    pending --> rejected: Human rejects with reason
+    pending --> waitlisted: Human waitlists with reason
+    waitlisted --> pending: Released slot, first eligible candidate
+    waitlisted --> approved: Human approves after recheck
+    waitlisted --> rejected: Human rejects with reason
+    pending --> cancelled: Cancel
+    waitlisted --> cancelled: Cancel
+    approved --> cancelled: Cancel
+    approved --> checked_in: Borrower check-in and initial condition
+    checked_in --> return_submitted: Borrower return and final condition
+    return_submitted --> completed: Independent owner or manager confirms
 ```
 
 - `BOOKING_TRANSITIONS` in `src/lib/state-machine.ts` is the single source of
@@ -113,7 +114,7 @@ server's local timezone.
   for `approved`/`checked_in`. This keeps custody states honest.
 - **Check-in window:** opens 30 minutes before `starts_at`, closes 120 minutes
   after it. Only the borrower may check in, and only with the rules
-  acknowledged.
+  acknowledged and current database membership is active.
 - **Return:** only the borrower; appends the final condition report.
 - **Confirmation:** owner of that resource, or manager/admin of the org, and not
   the borrower. Closes custody.

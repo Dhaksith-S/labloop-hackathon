@@ -17,10 +17,14 @@ real, what is prepared, and which invariants must not be broken.
 
 - Runnable monolith: Next.js 16 App Router + SQLite (`better-sqlite3`).
 - Demo institution: fictional **Northstar Institute of Applied Technology**.
-- All 29 Vitest tests, 3 Playwright E2E tests, typecheck, lint and production
-  build passed on this date.
+- Independently reverified: 44 Vitest tests, 5 Playwright E2E tests, typecheck,
+  lint and production build. Local production restart/session/booking and
+  backup checks also passed; see `docs/VERIFICATION.md`.
 - **Not deployed.** No public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.
+- **Source is public** at
+  <https://github.com/Dhaksith-S/labloop-hackathon>, branch `main`. A public
+  repository is not a deployed application.
 - `supabase/` is a **prepared, unapplied, unverified** PostgreSQL + RLS port.
   Do not describe it as the running backend.
 
@@ -32,14 +36,18 @@ npm run build
 npm start            # prestart runs setup-db
 npm run typecheck
 npm run lint
-npm test             # Vitest, 29 tests
+npm test             # Vitest, 44 tests
 npm run test:e2e     # prepare-e2e (data/e2e.db) then Playwright on :3100
 npm run db:setup     # idempotent; seeds only when profiles table is empty
 npm run db:reset     # deletes and reseeds data/labloop.db
+npm run db:backup -- data/backups/UNIQUE.db  # WAL-safe; refuses overwrite
+npm run start:production  # guarded configuration; real persistent mount required
+npm run verify:production # requires build; creates isolated private fixture
 ```
 
-Never run `db:reset` or `prepare-e2e` if the user has data they might need; the
-scripts refuse paths that do not end in `.db`, but they still delete that file.
+Never run `db:reset` if the user has data they might need. E2E preparation now
+refuses every target except the resolved `data/e2e.db`, and refuses production.
+It still deletes that dedicated fixture: preserve valuable E2E records first.
 
 ## Architecture map
 
@@ -120,11 +128,18 @@ storage uploads. Those do not exist. If asked to deploy:
 
 1. Get explicit authorization and credentials.
 2. Choose a persistent store (Supabase/Postgres port or a persistent volume).
-3. Port data access, auth and seed; run the RLS matrix in `docs/SECURITY.md`.
+3. For Postgres, port data access/auth/seed and run the RLS matrix. For SQLite,
+   verify the actual volume mount, one instance, restart durability and backups.
 4. Set `LABLOOP_SESSION_SECRET` and HTTPS cookies.
 5. Only then run a deployment and record the real URL and command output.
 
 Detailed continuation plan: `docs/CODEX_HANDOFF.md`.
+
+The user currently authorizes deployment preparation only, **no paid resources**.
+`deploy/render.yaml` is a paid template, unapplied. See `docs/DEPLOYMENT.md`.
+Official brief/rubric: `docs/OFFICIAL_PROBLEM_STATEMENT.md`. Report/PDF remain
+provisional pending the official template and verified participant information.
+Never submit the form automatically.
 
 ## Next.js rule
 

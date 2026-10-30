@@ -15,12 +15,15 @@ fictional Northstar Institute of Applied Technology.
 | App | Next.js 16.4.3 App Router, React 19.3, strict TypeScript, Tailwind v4 |
 | Backend | Persistent SQLite via `better-sqlite3`; self-hosted auth |
 | Demo data | Idempotent fictional seed; five accounts; seven resources |
-| Unit/integration tests | 29 passed (Vitest) |
-| Browser tests | 3 passed (Playwright, Chromium) |
+| Unit/integration tests | 44 passed across 4 files (Vitest), independently rerun by Codex |
+| Browser tests | 5 passed (Playwright, Chromium), including listing/discovery and phone viewport |
 | Typecheck/lint/build | Passed |
 | Public deployment | **None. No URL. No Vercel project/token.** |
 | Supabase | Schema + RLS prepared in `supabase/`; **never applied or verified** |
-| Git | Local `main`; inspect `git log` for the milestone history |
+| Git | Public `main` at <https://github.com/Dhaksith-S/labloop-hackathon>; inspect `git log` for milestone history |
+| Local production | Guarded startup; browser custody and Secure cookie verified; session/completed booking/conditions survive process restart; backup integrity passed |
+| Hosting preparation | `deploy/render.yaml` + startup/backup/runbook, unapplied; no paid resources authorized |
+| Submission | Official brief/rubric transcribed; report/PDF provisional; official template and real participant/contribution details pending; no submission made |
 
 If a task depends on a live deployment, Supabase verification, email, uploads or
 real institution data, it is **not** already done. Do not imply otherwise.
@@ -29,13 +32,14 @@ real institution data, it is **not** already done. Do not imply otherwise.
 
 ```bash
 node --version                  # require 24+
-npm install
-npm run db:reset                # clean seeded data/labloop.db
+npm install                     # only when dependencies are missing/out of sync
+npm run db:setup                # preserve existing profiles; NEVER blindly reset
 npm run typecheck
 npm test
 npm run lint
 npm run test:e2e                # fresh data/e2e.db on port 3100
 npm run build
+npm run verify:production       # private temp fixture, local production restart
 npm run dev                     # http://localhost:3000
 ```
 
@@ -137,15 +141,16 @@ npm run lint
 Run `npm run test:e2e` for routing, auth, forms, booking/custody or theme/layout
 changes. Run `npm run build` before claiming production readiness.
 
-Expected current results: 29 Vitest tests, 3 Playwright tests, zero type/lint
+Expected current results: 44 Vitest tests, 5 Playwright tests, zero type/lint
 errors, successful build.
 
 Notes:
 
 - E2E reserves port 3100 and uses `data/e2e.db`. Do not point it at
   `data/labloop.db`.
-- `prepare-e2e.ts` deletes the target `.db` and its WAL/SHM files. It refuses
-  paths not ending in `.db`.
+- `prepare-e2e.ts` deletes only the resolved `data/e2e.db` and WAL/SHM siblings.
+  It refuses every other configured path and production execution. Preserve
+  valuable fixture records first.
 - If route deletion leaves stale `.next` types, remove `.next` before typecheck.
 - The Vitest ESM/CommonJS config warning is benign; do not "fix" it by switching
   the project to ESM without checking Next.
@@ -168,7 +173,25 @@ Production without `LABLOOP_SESSION_SECRET` throws. Do not add a fallback.
 
 ## 8. Highest-priority work
 
-### A. Supabase/Postgres port (the real backend milestone)
+### A. Authorized persistent hosting (selected route)
+
+The user explicitly selected persistent SQLite preparation and **no paid
+resources**. Read `docs/DEPLOYMENT.md`. Do not apply `deploy/render.yaml` without
+new authorization: its compute/disk are paid. No provider account is connected.
+Do not replace the working backend with an unverified port under deadline pressure.
+
+Prepared: one native Node instance, `/var/data/labloop.db`, generated secret,
+explicit fictional seed, HTTPS URL requirement, manual deployment, WAL-safe
+backup/restore, local production restart verifier. Not yet verified: provider
+configuration/API validation, Linux native-module installation, actual volume,
+public judge flow, hosted restart and off-host backup schedule.
+
+Next action: the user must authorize a compatible existing persistent host or
+a specific provider account/plan/spending cap and connect it through the provider.
+No credentials should be pasted in chat or committed. Continue local tasks while
+that decision is pending; do not create resources or incur charges.
+
+### B. Supabase/Postgres port (alternative, deferred)
 
 Acceptance criteria:
 
@@ -187,7 +210,7 @@ Acceptance criteria:
 Do not simply add `@supabase/supabase-js` and call the port complete while the
 app still reads SQLite.
 
-### B. Deployment (only with authorization)
+### C. Deployment acceptance (only with authorization)
 
 Acceptance criteria:
 
@@ -202,10 +225,10 @@ Acceptance criteria:
    confirm, restart persistence.
 7. Record the real URL, deployment command and timestamp.
 
-If credentials are still absent, document the blocker and stop. Do not invent a
-URL.
+If hosting authorization is absent, record the precise blocker and continue
+independent documentation/testing work. Do not invent a URL.
 
-### C. Product gaps, in order
+### D. Product gaps, in order
 
 1. Waitlist expiry/reminders and review SLA.
 2. Appeal/second-review workflow.
@@ -243,7 +266,8 @@ URL.
 2. Update `db-types.ts`.
 3. Add/adjust migrations for existing databases. The current SQLite loader uses
    `CREATE TABLE IF NOT EXISTS`; it does not run ALTER migrations.
-4. Reset the demo DB and rerun all tests.
+4. Verify against fresh test fixtures and a backed-up copy of an existing DB;
+   do not reset the user's demo DB. Apply additive changes safely on opening.
 5. Never edit append-only rows to "fix" data; write a correcting record.
 
 ### Change auth
@@ -286,16 +310,19 @@ URL.
 
 ## 12. Handoff checklist
 
-- [ ] `npm install` succeeds on Node 24+.
-- [ ] `npm run db:reset` seeds the demo.
-- [ ] `npm test` → 29 passed.
-- [ ] `npm run test:e2e` → 3 passed (port 3100 free).
-- [ ] `npm run typecheck && npm run lint && npm run build` pass.
-- [ ] Demo loop completes manually.
-- [ ] Read `docs/SECURITY.md` before changing auth.
-- [ ] Read `docs/FAIRNESS.md` before changing allocation.
-- [ ] Confirm no deployment/Supabase claim is added without evidence.
-- [ ] Update `docs/CHANGELOG.md` for every material change.
+- [x] Existing dependencies usable on Node 24.18.0; no reinstall needed.
+- [x] Existing application DB and interrupted documentation backed up before work.
+- [x] `npm test` → 44 passed.
+- [x] `npm run test:e2e` → 5 passed (isolated DB, port 3100).
+- [x] Typecheck, lint and production build pass.
+- [x] Browser custody loop and independent local production restart check pass.
+- [x] Security/fairness docs read and updated; findings have regression tests.
+- [x] Deployment and Supabase status remain explicit and unverified remotely.
+- [x] Official brief and all seven judging criteria mapped to actual evidence.
+- [ ] Authorized persistent cloud host and public URL verified.
+- [ ] Official PDF template supplied and report transferred to it.
+- [ ] Team names/IDs/real contributions and provenance verified by humans.
+- [ ] Each participant reviews and submits individually before 1 November, 10:00 AM IST.
 
 ## 13. Where to look first
 
@@ -311,6 +338,32 @@ URL.
 | What is prepared for Postgres? | `supabase/`, `supabase/README.md` |
 | What must not be claimed? | `README.md`, `docs/HACKATHON_REPORT.md`, this file |
 
-The product is coherent and tested. The honest gap is infrastructure: an
-authorized persistent store and deployment. Finish that without weakening the
-domain rules or overstating what exists.
+## 14. Takeover recovery, findings and final Git state
+
+Initial local/remote `main` both matched `921d406bcd2d7ed93e52e162fb7fae90b97be5fc`.
+The four interrupted documentation changes were preserved. The handoff had one
+Git row; no duplicate was present. Private recovery copies and binary Git patches
+are under `%LOCALAPPDATA%/LabLoop/recovery-20261030-134815`; consistent backups
+include the original app database (5 profiles, 5 bookings) and E2E database.
+No hard reset, checkout, pull, application DB reset or remote history rewrite ran.
+
+Security fixes: service-level staff role checks; multi-organisation owner scope;
+suspended staff private reads; browser URL normalization on login; additive
+resource-reassignment overlap trigger; current membership rechecked at check-in
+after approval. E2E prep now refuses non-fixture paths.
+Mobile auth headings are visible H1s. High-risk lifecycle/session/backup tests
+were added. See `docs/VERIFICATION.md` for executed commands and failures/fixes.
+
+Final runtime/source commit and push evidence are recorded in
+`docs/VERIFICATION.md`; use `git log -3 --oneline` for the latest documentation
+commit and compare `git rev-parse HEAD` to `git ls-remote origin refs/heads/main`.
+The final documentation commit includes this handoff, so it does not embed its
+own impossible self-referential hash. No database, backup or secret belongs in Git.
+
+Required human actions: provide/authorize a persistent host within the spending
+constraint; supply the official PDF format and real participant/contribution
+details; confirm any pre-existing assets and development-window compliance;
+review links and submit individually. Codex must not submit the Google form.
+
+The local product is verified. Submission remains incomplete because public
+deployment, official-format PDF and participant details are outstanding.

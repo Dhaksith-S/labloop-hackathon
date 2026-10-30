@@ -3,11 +3,11 @@
 A complete, factual walkthrough for judges. Everything below works against the
 local SQLite build. Nothing here implies a public deployment.
 
-## 0. Start clean
+## 0. Start safely
 
 ```bash
 npm install
-npm run db:reset
+npm run db:setup
 npm run dev
 ```
 
@@ -15,7 +15,7 @@ Open `http://localhost:3000`.
 
 - Node 24+.
 - No Supabase, Vercel, email or storage account is needed.
-- `data/labloop.db` is recreated with the fictional Northstar dataset.
+- An empty `data/labloop.db` receives the fictional Northstar dataset; existing records are preserved.
 - The landing page is public. The workspace requires sign-in.
 
 ### Accounts
@@ -213,16 +213,24 @@ SQL manually.
 
 Say exactly this:
 
-> "The product is fully runnable locally and verified by 29 integration/unit
-> tests and 3 browser tests. It is not publicly deployed. We had no Vercel or
-> Supabase authorization, and the current SQLite store is not persistent on a
-> serverless host. The Supabase schema and RLS are prepared but unapplied and
-> unverified."
+> "The product is locally verified by 44 unit/integration tests and 5 browser
+> tests. A local production restart preserved the session, completed booking
+> and condition reports. It is not publicly deployed. Persistent SQLite hosting
+> is prepared, with no paid resources authorized. Supabase SQL/RLS remain
+> unapplied and unverified."
 
 Do not claim a live URL, production readiness, RLS coverage, storage uploads or
 real institutional adoption.
 
-## 9. Reset between judges
+## 9. Preserve judge records
+
+Do not reset between judges who need their records. Back up first:
+
+```bash
+npm run db:backup -- data/backups/UNIQUE-JUDGE-SNAPSHOT.db
+```
+
+Only for an explicitly disposable demonstration database:
 
 ```bash
 npm run db:reset

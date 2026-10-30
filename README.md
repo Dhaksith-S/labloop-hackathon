@@ -7,6 +7,9 @@ Northstar Institute of Applied Technology. Verified owners publish equipment;
 students discover it, see exactly which rules they meet, request a slot, and
 track a human-reviewed custody record from approval to return.
 
+**Source repository:** <https://github.com/Dhaksith-S/labloop-hackathon> (public
+code; the application itself is not hosted).
+
 > **Status, stated plainly:** the application is fully runnable locally with a
 > persistent SQLite database. It has **not** been deployed publicly. No Vercel
 > credentials or authorization existed in the build environment, and SQLite on a
@@ -61,7 +64,7 @@ The login page includes a demo-account picker that fills the form.
 
 ## Quick start
 
-Requirements: **Node.js 24+** and npm. No external services are required.
+Requirements: **Node.js 24+** and npm (verified with Node 24.18.0). No external services are required.
 
 ```bash
 npm install
@@ -70,7 +73,9 @@ npm run dev          # http://localhost:3000
 ```
 
 `npm run dev` and `npm start` also run the idempotent setup step automatically.
-The SQLite file lives in `data/` and is gitignored. To return to a clean demo:
+The SQLite file lives in `data/` and is gitignored. Preserve any judge/user records
+with `npm run db:backup -- data/backups/UNIQUE.db` first. Only for a disposable
+database, return to a clean demo with:
 
 ```bash
 npm run db:reset
@@ -103,12 +108,15 @@ in [`docs/DEMO.md`](docs/DEMO.md).
 | `npm start` | Serve the production build (runs DB setup first) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint |
-| `npm test` | 29 Vitest unit + integration tests |
+| `npm test` | 44 Vitest unit + integration tests |
 | `npm run test:watch` | Vitest in watch mode |
-| `npm run test:e2e` | Fresh `data/e2e.db`, then 3 Playwright Chromium tests |
+| `npm run test:e2e` | Fresh `data/e2e.db`, then 5 Playwright Chromium tests |
 | `npm run db:setup` | Create schema and seed only when empty |
 | `npm run db:seed` | Seed an empty database |
 | `npm run db:reset` | Delete and recreate the demo database |
+| `npm run db:backup -- NEW-PATH.db` | WAL-safe backup, integrity check, refuses overwrite |
+| `npm run start:production` | Validate production configuration, idempotent setup, start on `$PORT` |
+| `npm run verify:production` | Verify an existing production build with a private fixture, browser custody and restart |
 
 ## Stack
 
@@ -126,19 +134,21 @@ No UI component kit, ORM or external API is used. The visual system is original
 CSS, Lucide icons and locally bundled fonts. See
 [`docs/THIRD_PARTY_DISCLOSURES.md`](docs/THIRD_PARTY_DISCLOSURES.md).
 
-## Verification (run 30 Oct 2026)
+## Independent verification (Codex takeover, 30 Oct 2026)
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 2 files, **29 passed** |
-| `npm run test:e2e` | **3 passed** in Chromium (public catalog/theme, role guard, full custody loop) |
+| `npm test` | 4 files, **44 passed** |
+| `npm run test:e2e` | **5 passed** in Chromium (catalog/theme, role guard, custody, listing/discovery, phone viewport) |
 | `npm run typecheck` | Passed |
 | `npm run lint` | Passed |
 | `npm run build` | Passed; all application routes compiled |
-| `npm start` local smoke test | Home, login and catalog returned HTTP 200 on port 3200; security headers present |
+| `npm run verify:production` | HTTP 200 and security headers; production browser custody, Secure cookie, session/booking/condition persistence after restart; backup integrity |
 
 The E2E suite runs against a separate, freshly seeded `data/e2e.db` on port
-3100. It never touches your demo database. Details and coverage mapping:
+3100. It refuses a different reset path, including `data/labloop.db`. Existing
+demo data was backed up and preserved during this takeover. Command log and
+failures/fixes: [`docs/VERIFICATION.md`](docs/VERIFICATION.md). Coverage mapping:
 [`docs/TESTING.md`](docs/TESTING.md).
 
 ## Deployment status
@@ -160,8 +170,26 @@ Confirmed blockers:
    and the application still uses `better-sqlite3`. See
    [`supabase/README.md`](supabase/README.md).
 
-The production build itself succeeds locally. What remains is infrastructure
-authorization and a store port — not a claim of completion.
+The chosen preparation route is a single Node instance with a persistent SQLite
+volume. [`deploy/render.yaml`](deploy/render.yaml), guarded startup and backup
+tooling are prepared. **The template uses paid resources and has not been applied;
+the user currently prohibits paid resources.** A Postgres port is optional for
+this route. [Deployment comparison and runbook](docs/DEPLOYMENT.md).
+
+## Submission readiness
+
+The authoritative organiser brief and 100-point rubric are transcribed in
+[`docs/OFFICIAL_PROBLEM_STATEMENT.md`](docs/OFFICIAL_PROBLEM_STATEMENT.md).
+[`docs/JUDGING_TRACEABILITY.md`](docs/JUDGING_TRACEABILITY.md) maps all seven
+criteria to implementation, tests and gaps. The report and PDF are provisional:
+the official template and verified participant/contribution details are pending.
+The public application requirement is unmet. No form has been submitted.
+Deadline: **1 November 2026, 10:00 AM IST**.
+
+[Download the provisional report PDF](output/pdf/LabLoop-Provisional-Report.pdf).
+Its source is `docs/HACKATHON_REPORT.md`; regenerate with
+`python scripts/build-report.py` after installing documentation-only dependencies
+`reportlab` and `pymupdf`. The application does not need Python.
 
 ## Project map
 
@@ -186,6 +214,10 @@ docs/                     architecture, security, fairness, demo, handoff
 - [Fairness](docs/FAIRNESS.md)
 - [Demo script](docs/DEMO.md)
 - [Hackathon report](docs/HACKATHON_REPORT.md)
+- [Official brief](docs/OFFICIAL_PROBLEM_STATEMENT.md)
+- [Judging traceability](docs/JUDGING_TRACEABILITY.md)
+- [Verification log](docs/VERIFICATION.md)
+- [Persistent hosting preparation](docs/DEPLOYMENT.md)
 - [Third-party disclosures](docs/THIRD_PARTY_DISCLOSURES.md)
 - [Changelog](docs/CHANGELOG.md)
 - [Codex handoff](docs/CODEX_HANDOFF.md)

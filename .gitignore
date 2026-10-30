@@ -22,6 +22,7 @@
 
 # production
 /build
+/tmp/
 
 # local persistent data (SQLite demo database + evidence)
 /data/

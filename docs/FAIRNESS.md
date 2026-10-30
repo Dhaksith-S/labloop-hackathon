@@ -34,8 +34,9 @@ prove equitable outcomes.
    being silently deleted or blocked.
 8. **Custody evidence is symmetric.** Both check-in and return conditions are
    append-only and shown together. A borrower can record existing wear before
-   taking custody; an owner can record the return state. Neither can rewrite the
-   other's report.
+   taking custody; the borrower records final condition and the owner inspects
+   the hand-back and can add a confirmation note. Neither can rewrite condition
+   evidence after it has been recorded.
 9. **No automated punishment.** A reported incident does not automatically
    suspend a member or alter eligibility. A reviewer records an outcome with a
    note. Qualification status is the only credential gate, and a human verifies

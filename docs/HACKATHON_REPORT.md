@@ -1,4 +1,13 @@
-# Hackathon report
+# LabLoop - provisional hackathon project report
+
+**Document status:** Provisional content and PDF. The official PDF template is
+unavailable; this document does not claim format compliance. Team identities,
+participant IDs and real contributions await confirmation. Nothing has been
+submitted automatically.
+
+**Authority:** The organiser brief and 100-point rubric were supplied by the
+project owner and transcribed in `docs/OFFICIAL_PROBLEM_STATEMENT.md`. The campus
+use case is the selected scope. The deadline is **1 November 2026, 10:00 AM IST**.
 
 **Challenge:** Unlock Underused Equipment and Spaces
 
@@ -9,6 +18,9 @@
 **Status:** Locally runnable and tested. **Not publicly deployed.** Supabase
 schema/RLS prepared but unapplied. No invented adoption, usage or deployment
 claims.
+
+**Source:** <https://github.com/Dhaksith-S/labloop-hackathon> (public repository;
+no hosted application).
 
 ---
 
@@ -32,7 +44,9 @@ approval.
 
 The product is a complete Next.js monolith with a persistent database, demo
 institution, role-aware UI, audit trail, incidents and credential verification.
-It is verified by 29 unit/integration tests and 3 Chromium end-to-end tests.
+It is independently verified locally by 44 unit/integration tests and 5 Chromium
+browser tests. This does not satisfy the mandatory public application requirement
+yet: there is no hosted URL.
 
 ## 2. The problem, concretely
 
@@ -44,6 +58,41 @@ who had the kit.
 
 The brief asks for underused equipment and spaces to be unlocked. The hard part
 is not a calendar. It is **eligibility plus accountability**.
+
+### Target users and selected use case
+
+| User | Need | LabLoop response |
+| --- | --- | --- |
+| Students and researchers | Find equipment they cannot individually afford; understand access conditions | Public discovery, requirements, explained eligibility, booking and custody timeline |
+| Verified resource owners / lab stewards | Share underused assets while retaining control | Institution-assigned owner role, own-resource listings, written human decisions, return confirmation |
+| Lab managers / administrators | Verify credentials and oversee safety and allocation | Organisation-wide review, credential verification, incidents and audit history |
+| Judges / new demo users | Independently exercise a complete journey | Fictional accounts, visible demo picker, reproducible setup and step-by-step walkthrough |
+
+The focused demonstration is one fictional campus. The wider brief also covers
+communities and small businesses, but LabLoop does not claim a multi-community
+marketplace, payments, seat inventory or real institutional integration.
+
+### Problem evidence and assumptions
+
+The organiser-provided brief identifies the access and trust problem. The lab
+scenario above is a reasoned illustration, not an interview or measured study.
+No utilisation baseline, savings estimate, demographic finding, market survey or
+adoption metric was collected. Future validation should interview borrowers and
+stewards, test whether requirements are understandable, and measure completed
+loans and owner workload with consent before making impact claims.
+
+### Complete transaction workflow
+
+1. An institution assigns an owner/manager role; student signup never grants staff authority.
+2. The owner publishes a resource with rules, condition, location, hours, caps and optional required credentials.
+3. A student searches/filter the public catalog and checks the listed requirements.
+4. The request form checks active membership, human-verified credentials, duration, hours, blackouts, conflicts and fair use.
+5. A passing request enters pending; the owner or authorised manager reviews it.
+6. Approval rechecks eligibility; rejection/waitlisting records a written reason. Conflicting approved slots are blocked in SQL.
+7. The approved borrower acknowledges rules and checks in inside the permitted window, appending initial condition/accessory evidence.
+8. The borrower submits final condition and return notes. The owner independently confirms the hand-back.
+9. Damage, delay or access conflicts can be reported for human review. Overdue state is derived from time; no automatic penalty is applied.
+10. Borrower and authorised staff inspect the timeline, both condition reports and attached incidents. History cannot be edited through application paths.
 
 ## 3. What was built
 
@@ -67,7 +116,7 @@ is not a calendar. It is **eligibility plus accountability**.
 ### Owner studio
 
 - Owner dashboard scoped to owned resources.
-- Request queue with approve / reject / waitlist and mandatory written reasons.
+- Request queue with approve / reject / waitlist; rejection and waitlisting require written reasons.
 - Custody queue and return confirmation.
 - Incident queue with human resolution notes and self-review blocking.
 - Listing management: create, edit, pause/archive, requirements, weekly
@@ -108,20 +157,27 @@ The following were executed on 30 October 2026 in this workspace:
 
 | Verification | Result |
 | --- | --- |
-| `npm test` | 2 files, 29 tests passed |
-| `npm run test:e2e` | 3 tests passed, Chromium |
+| `npm test` | 4 files, 44 tests passed |
+| `npm run test:e2e` | 5 tests passed, Chromium; includes listing/discovery and 390 px mobile checks |
 | `npm run typecheck` | passed |
 | `npm run lint` | passed |
 | `npm run build` | passed, all routes compiled |
-| `npm start` local smoke test | home/login/catalog HTTP 200; security headers present |
-| `npm run db:reset` | recreated and seeded SQLite database |
+| `npm run verify:production` | home/login/catalog HTTP 200; headers and Secure cookie; browser custody; session/completed booking/condition records survive local process restart; verified backup |
+| Existing demo database | Preserved; recovery backup made before testing; no reset run in this takeover |
 
 The E2E test completes request → approve → check-in → return → confirm across
-three real accounts in a browser. It is not a mocked component test.
+student and owner accounts in a browser. It is not a mocked component test.
 
 The integration suite includes a direct SQL insert that bypasses application
 code and is rejected by the database overlap trigger, and direct UPDATE/DELETE
 attempts rejected by append-only triggers.
+
+The takeover also tests direct student access to staff queues, multi-organisation
+owner scoping, suspended staff, token expiry/revocation, production-secret
+failure, URL redirect normalization, skipped custody transitions, revoked
+credentials at approval, self-return confirmation and WAL-safe backups. The
+command/evidence log is `docs/VERIFICATION.md`; detailed inventory and limitations
+are in `docs/TESTING.md`.
 
 ## 5. Design decisions
 
@@ -141,12 +197,37 @@ plainly.
 This is a deliberate trade-off: excellent local reproducibility, but not
 serverless-persistent. It is the main deployment blocker.
 
+### Architecture and technology stack
+
+The browser sends forms to Next.js 16.4.3 Server Actions. Actions validate with
+Zod 4 and resolve the authenticated session; plain TypeScript services enforce
+membership, role, resource ownership, eligibility and legal state transitions.
+Services issue bound SQL through better-sqlite3. Booking state, evidence, audit
+and notifications commit together in immediate SQLite transactions. Database
+triggers enforce append-only evidence and resource overlap protection.
+
+| Layer | Actual technology / data |
+| --- | --- |
+| UI and server rendering | React 19.3, Next.js 16 App Router, TypeScript, Tailwind CSS v4 |
+| Interaction | Server Actions, small client components for forms, theme and navigation |
+| Authentication | Node scrypt password hashes, random opaque tokens stored as HMAC hashes, secure production cookies |
+| Persistence | Local SQLite file, WAL, foreign keys, prepared statements, transactions and triggers |
+| Core records | Profiles, memberships, resources, requirements, qualifications, availability, bookings, conditions, incidents, timeline, audit, notifications and sessions |
+| Verification | Vitest 5.0.5, Playwright 1.64.1 Chromium, TypeScript, ESLint, Next production build |
+| Prepared alternative | Supabase/PostgreSQL schema and RLS SQL only; not connected or tested |
+
+Timestamps are stored as ISO UTC and availability/display interpreted in
+Asia/Kolkata. Public catalog reads exclude inactive resources. Private booking
+pages authorize the borrower, active resource owner or active organisation
+manager/admin. The complete architecture is in `docs/ARCHITECTURE.md`.
+
 ### Human decision over auto-approval
 
 Eligibility is necessary but not sufficient. Owners see context a rule engine
 cannot: a broken fixture, a student who needs accommodation, a lab tech's
 judgment. The product automates verification and evidence, not allocation.
-Every override requires a reason.
+Rejection and waitlisting require written reasons. Approval cannot waive a
+required eligibility rule.
 
 ### Transparency over a hidden score
 
@@ -178,27 +259,36 @@ status.
 
 Blockers:
 
-1. No Vercel CLI, token, project or explicit authorization in the environment.
+1. No hosting provider account is connected for this work. The user authorises
+   deployment preparation only and explicitly prohibits paid resources.
 2. The SQLite file is not persistent on serverless functions. Deploying the
    build unchanged would lose sessions, bookings and audit rows. A persistent
    volume or the PostgreSQL port is required.
 3. Supabase is not provisioned. The two SQL migrations have never run against
    PostgreSQL; the app is not wired to Supabase Auth or Postgres.
 
-What is ready: a passing production build, environment documentation, a
-migration path and a deployment checklist. What is missing: infrastructure
-authorization and a persistent-store port.
+The selected preparation route is one Node instance plus a durable SQLite volume,
+preserving the verified implementation. `deploy/render.yaml`, guarded production
+startup, WAL-safe backup tooling and a recovery runbook are prepared. The Render
+template requires paid compute/disk and has **not** been applied. A PostgreSQL
+port is an alternative, not a prerequisite for persistent-volume hosting.
+
+No service, volume, subscription or URL has been created. A compatible account,
+permitted plan/budget, real HTTPS settings, Linux/native-module validation,
+public workflow verification and hosted restart/restore evidence remain. See
+`docs/DEPLOYMENT.md` for the comparison and precise next actions.
 
 ## 8. Limitations
 
 - No public deployment; no Vercel/Supabase verification.
 - Supabase SQL and RLS are unexecuted and untested.
-- Chromium-only E2E; no Firefox/WebKit or mobile device project.
+- Chromium-only E2E; desktop and 390 px viewport, no real mobile device or Firefox/WebKit matrix.
 - No automated accessibility audit; no WCAG conformance claim.
 - No load or concurrency stress test.
 - No email verification, password reset, MFA or OAuth.
 - No photo upload or storage bucket, despite `photo_url` in the model.
 - No background scheduler for waitlist expiry or reminders.
+- No scheduled overdue notifications: approval/cancellation/custody messages are in-app, while overdue is a derived indicator.
 - No appeal/second-review workflow.
 - No incident-to-eligibility policy; incidents are recorded but do not
   automatically restrict future access.
@@ -212,10 +302,10 @@ authorization and a persistent-store port.
 
 Priority order:
 
-1. **Persistent hosted store.** Port data access to Supabase/Postgres, apply
-   migrations, run the RLS matrix and a concurrent-approval test.
-2. **Deploy with authorization.** Vercel or a Node host with a persistent
-   volume; set a real session secret; verify HTTPS cookies.
+1. **Authorized persistent hosting.** Apply the prepared single-instance Node
+   configuration only after a compatible persistent host and budget are approved.
+2. **Public acceptance.** Verify the full loop, permissions, restart durability,
+   backups, HTTPS cookies and independent judge access at the real URL.
 3. **Waitlist operations.** Expiry, reminders, review SLA and aging indicators.
 4. **Appeals and second review.** Preserve the first decision, add an independent
    reviewer.
@@ -228,18 +318,20 @@ Priority order:
 8. **Operational reporting.** Incident consistency review, utilization without
    fabricated metrics, exportable audit for institutional review.
 
-## 10. Judge checklist
+## 10. Official judging rubric - evidence, not a predicted score
 
-| Criterion | Where to look |
-| --- | --- |
-| Originality | Custody loop with condition evidence, waitlist human-review rule, self-dealing blocks |
-| Technical depth | Eligibility engine, SQLite triggers, atomic transactions, approval re-check, prepared Postgres exclusion constraint |
-| Completeness | Listing → discovery → request → decision → check-in → return → confirmation → incident → audit |
-| UX | Responsive themed UI, eligibility explanations, role-aware navigation, empty/error states |
-| Security | Server-side authz, scrypt + hashed sessions, self-approval/review blocks, append-only audit |
-| Fairness | Published rules, written reasons, FIFO waitlist, fair-use caps, no auto-approval |
-| Test quality | 29 Vitest tests including database-bypass tests; 3 real-browser E2E tests |
-| Honesty | This report and README explicitly state no deployment and unverified Supabase |
+| Official criterion | Points | Actual evidence / gap |
+| --- | --- | --- |
+| Understanding of the Problem | 15 | Access/trust/accountability scenario and target users; no invented research |
+| Strength of the Core Solution | 20 | Focused listing-to-custody services, eligibility and human decisions |
+| Working End-to-End Product | 20 | Local browser listing and complete custody loop; public access still missing |
+| Technical Depth and Reliability | 15 | Domain services, atomic lifecycle, database guards, 44 tests and production build |
+| Trust, Safety and Accountability | 10 | Roles, verified credentials, immutable conditions and human incident review; formal disputes absent |
+| Fair Allocation and Accessibility | 10 | FIFO, fair-use caps, published reasons, mobile/semantic checks; no WCAG certification |
+| Originality and Real-World Potential | 10 | Eligibility plus custody/evidence differentiates the workflow; adoption unvalidated |
+
+`docs/JUDGING_TRACEABILITY.md` maps all seven criteria and mandatory workflow
+steps to actual code paths, executed tests and gaps. No marks are self-awarded.
 
 ## 11. Claim boundaries
 
@@ -257,3 +349,109 @@ Not true / not claimed:
 - Real institutional adoption, user counts or utilization metrics.
 - WCAG compliance, penetration-test clearance or load capacity.
 - Any integration with a real campus identity provider.
+
+## 12. Security, privacy and fairness
+
+Staff authority is checked in services as well as pages. The takeover closed
+missing student-role guards in staff queues, organisation leakage for owners,
+suspended-staff read gaps, a browser-normalized redirect edge case and a direct
+SQL resource-reassignment overlap gap. Check-in also rechecks current database
+membership, preventing custody after suspension. Regression tests cover these findings.
+Owners cannot approve their own booking or confirm their own return; reporters
+cannot review their own incident; managers cannot verify their own qualification.
+
+Profiles contain email/name and password hashes; sessions store hashes only.
+Condition notes, incident descriptions and decisions can be sensitive even when
+no photo is uploaded. Public resource pages expose listing information and
+owner display details, while participant records require authorization. There
+is no analytics, advertising, external font request or runtime AI service.
+Databases, backups and secrets must remain private and excluded from Git.
+
+The public seed and accounts are fictional demonstration data. Judges should
+avoid real personal information and use test credentials. Real institutional
+onboarding requires identity verification, recovery/MFA strategy, rate limits,
+HTTPS/security headers, private backups, retention/deletion policy and an
+operational owner. These are not a security certification or legal compliance
+claim. SQLite file administrators can still change schema or restore old files.
+
+Fairness is procedural: published requirements, the same resource cap for each
+member, written reasons, submission-time queue order, eligibility rechecks and
+human final decisions. Incidents do not impose automatic penalties. There is
+no demographic scoring, priority purchase or hidden reputation score. Formal
+appeals, review SLAs, accommodations and cross-resource caps remain future work.
+
+## 13. Judge instructions and submission readiness
+
+For local review, use Node 24+, run `npm install`, `npm run db:setup`, then
+`npm run dev`. Setup preserves existing profiles; do not reset a database with
+judge-created records. Open `http://localhost:3000` and the visible demo picker.
+All fictional demo accounts use `LabLoop!2026`.
+
+1. As `owner@labloop.demo`, publish a listing with rules and hours; inspect it in Discover.
+2. As `priya@labloop.demo`, choose Open Maker Bench 04, request a slot starting in about 15 minutes and ending one hour later, enter a purpose and acknowledge rules.
+3. As the owner, open the booking and approve after reviewing eligibility.
+4. As Priya, check in with initial condition, then submit return with final condition.
+5. As the owner, confirm return; refresh and inspect completed status, both condition reports and timeline.
+6. For incident handling, use the booking's incident form and the owner's Incident desk. A different authorised reviewer handles the outcome.
+7. As `manager@labloop.demo`, inspect the organisation overview and verify a pending qualification.
+
+The mandatory public application is **pending**. Source is accessible at the
+existing public GitHub repository. The report PDF is provisional. Official
+template conversion, verified team/participant details and each member's own
+submission are pending. The form is `https://forms.gle/QTD1ZRuPX37Yef37A`; it has
+not been submitted by Codex.
+
+## 14. Team and actual personal contributions - pending verification
+
+**Team name:** [TO BE CONFIRMED BY TEAM]
+
+| Participant name | Participant ID | Actual role | Actual personal contribution and evidence |
+| --- | --- | --- | --- |
+| [MEMBER 1 - REAL NAME PENDING] | [ID PENDING] | [ROLE PENDING] | [VERIFIED CONTRIBUTION / COMMITS PENDING] |
+| [MEMBER 2 - REAL NAME PENDING] | [ID PENDING] | [ROLE PENDING] | [VERIFIED CONTRIBUTION / COMMITS PENDING] |
+| [ADD / REMOVE ROWS TO MATCH ACTUAL TEAM] | [ID PENDING] | [ROLE PENDING] | [VERIFIED CONTRIBUTION PENDING] |
+
+Demo account names are fictional users, **not team members**. Git authorship
+alone does not establish an individual's personal contribution. The team must
+review this table, confirm provenance and prepare individual submissions.
+
+## 15. Libraries, pre-existing material and AI assistance
+
+The original framework scaffold and third-party packages are allowed external
+building blocks, not original project inventions. Next.js/React/TypeScript,
+Tailwind, better-sqlite3, Zod, Lucide, Radix Slot, Fontsource, Vitest, Playwright
+and supporting libraries are listed with versions/licenses in
+`docs/THIRD_PARTY_DISCLOSURES.md`. No stock imagery, tutorial theme, paid asset,
+runtime AI integration, Supabase service or Vercel deployment is claimed.
+
+**DeepSeek assistance:** The project owner reports that DeepSeek V4.1 Flash
+assisted the existing application and documentation before its quota expired.
+The precise model label and per-file authorship are user-reported, not verified
+by Codex. Baseline commits, code and tests were inherited and preserved.
+
+**Codex assistance:** Codex inspected and backed up interrupted work, verified
+the baseline independently, audited services, implemented the documented
+security/test-safety fixes, expanded tests, prepared persistent-volume startup
+and backup tooling, and prepared evidence-based documentation and this
+provisional PDF. Report generation uses Python ReportLab; PyMuPDF renders pages
+for visual review. These are development tools, not application integrations.
+
+**Provenance and development window:** The organiser specifies a 48-hour window
+from 30 October 2026, 10:00 AM IST to 1 November 2026, 10:00 AM IST. The first
+five Git commit author timestamps are on 30 October between 13:11 and 13:41 IST.
+This provides development evidence but does not independently prove the origin
+of every line. [TEAM TO CONFIRM ANY OTHER PRE-EXISTING CODE/ASSETS AND THEIR
+LICENCES BEFORE SUBMISSION.] No invented human contribution is assigned.
+
+## 16. Evidence and references
+
+- Organiser-provided problem statement/rubric, transcribed in `docs/OFFICIAL_PROBLEM_STATEMENT.md`.
+- Existing public source: `https://github.com/Dhaksith-S/labloop-hackathon`.
+- Code/test traceability: `docs/JUDGING_TRACEABILITY.md` and `docs/TESTING.md`.
+- Independently executed commands, failures/fixes and limits: `docs/VERIFICATION.md`.
+- Architecture, privacy/security and fairness: `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/FAIRNESS.md`.
+- Persistent-store comparison and provider documentation: `docs/DEPLOYMENT.md`.
+
+No research citations, live URL, institutional endorsement or measured impact
+are fabricated. This content must be transferred to the official PDF template
+when received, then reviewed by every participant before individual submission.

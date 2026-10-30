@@ -1,6 +1,8 @@
 # Third-party disclosures
 
-LabLoop application code is original work. It depends on the open-source
+LabLoop application code was developed with substantial AI assistance. The team
+must confirm provenance and disclose any additional pre-existing material before
+submission; no claim of human-only authorship is made. It depends on the open-source
 packages below. Versions are the ranges declared in `package.json`; the exact
 resolved versions are recorded in `package-lock.json`.
 
@@ -95,3 +97,20 @@ Next.js and Vercel are trademarks of their respective owners. Supabase is a
 trademark of Supabase Inc. LabLoop and Northstar Institute of Applied Technology
 are fictional names used for this hackathon project. No affiliation or
 endorsement is claimed.
+
+## Development tools and AI assistance
+
+- The project owner reports DeepSeek V4.1 Flash assisted the inherited build and
+  documentation until its quota expired. Codex did not independently authenticate
+  that model/version or per-file authorship.
+- Codex preserved inherited work, independently reran baseline/final checks,
+  audited services, fixed the documented security and test-data issues, expanded
+  tests, and prepared persistent hosting operations and submission documentation.
+- Python ReportLab generates the provisional report PDF; PyMuPDF renders pages
+  for visual review. These are local documentation tools, not runtime services.
+- Existing Next.js scaffolding, dependency packages, Lucide icons and Fontsource
+  fonts are pre-existing external building blocks. The team must confirm any
+  additional assets or code and their licenses; unknown contributions are not
+  assigned to participants by AI.
+- No AI model makes runtime access/safety/penalty decisions. No runtime AI API
+  or autonomous submission is implemented.

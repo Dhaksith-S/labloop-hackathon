@@ -4,6 +4,37 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions use semantic
 versioning for the application.
 
+## [Unreleased] - 2026-10-30 Codex takeover
+
+### Fixed and verified
+
+- Preserved the four interrupted documentation edits and private recovery copies.
+- Denied direct student access to staff booking/incident/audit listing services.
+- Scoped multi-organisation owner queues/listings and denied suspended staff reads.
+- Rechecked current database membership before taking custody, preventing check-in
+  after suspension while preserving the ability to return equipment.
+- Rejected browser-normalized external/control-character login redirect targets.
+- Added an overlap trigger for resource reassignment, including existing SQLite stores.
+- Restricted destructive E2E preparation to its dedicated fixture and non-production execution.
+- Made login/signup primary headings visible on mobile.
+- Independently passed 44 Vitest tests, 5 Chromium browser tests, typecheck, lint
+  and production build. Local production browser custody, Secure cookie, process
+  restart persistence and backup integrity also passed.
+
+### Prepared
+
+- Guarded production startup, WAL-safe backup/restore and repeatable local restart verification.
+- Single-instance persistent SQLite deployment template and operational runbook.
+  The paid template is unapplied; no paid resources are authorized or created.
+- Authoritative organiser brief transcription, exact seven-criterion traceability,
+  comprehensive provisional report/PDF, team/contribution placeholders and AI disclosure.
+
+### Still pending
+
+- Authorized hosting/public URL and public full-flow/restart checks.
+- Official PDF template, verified participant details, human review and individual submissions.
+- Supabase/PostgreSQL execution and RLS verification (alternative route, deferred).
+
 ## [1.0.0] — 2026-10-30
 
 First complete hackathon build. Locally runnable; not publicly deployed.

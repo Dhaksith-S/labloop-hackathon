@@ -30,7 +30,7 @@ Primary threats considered:
 | Password cracking | Offline dump of hashes | scrypt with per-password salt |
 | SQL injection | Search query manipulation | Prepared statements with bound parameters |
 | XSS | User-entered purpose rendered as HTML | React escaping; no user HTML injection |
-| Open redirect | `next=//evil.example` after login | `safeNextPath` allows local single-slash paths only |
+| Open redirect | Protocol-relative or backslash-normalized login target | `src/lib/redirects.ts` rejects external URLs/control characters and checks normalized origin |
 | Self-review | Reporter resolves their own incident | `SELF_REVIEW` rejection |
 | Enumeration | Login reveals whether email exists | Generic error + dummy scrypt derivation |
 | Brute force | Repeated password guesses | In-process throttle, 8 per 15 min per email |
@@ -79,8 +79,15 @@ Authorization is enforced in domain services, not only in pages:
 - A borrower cannot review their own request, confirm their own return, or
   review their own incident.
 - Qualification verification requires manager/admin.
+- Check-in rechecks the borrower's current database membership, so suspension
+  after approval prevents taking custody even with an older session snapshot.
+  Return submission remains available so suspended borrowers can hand back equipment.
 - Incident review requires resource authority and a reviewer different from the
   reporter.
+- Staff listing services reject student callers and suspended memberships.
+  Owner bookings, incidents and listings are scoped to the selected organisation.
+  An inactive/former owner cannot read a booking merely because `owner_id` matches;
+  borrowers retain access to their own transaction history.
 
 The Admin/Organization console is restricted to manager/admin in the page **and**
 `getOrganizationOverview()` throws for anyone else.
@@ -97,6 +104,8 @@ The Admin/Organization console is restricted to manager/admin in the page **and*
   `condition_reports`.
 - SQLite triggers reject overlapping `approved`/`checked_in`/`return_submitted`
   rows for the same resource, even on a direct SQL insert that bypasses services.
+- An additive trigger also rejects direct `resource_id` changes onto an occupied
+  resource, including on databases created before this takeover.
 - Reasons are required for reject/waitlist and manager cancellation. Check-in
   requires explicit rule acknowledgement and records initial condition.
 - Notifications are derived from the same transaction as the state change.
@@ -115,7 +124,7 @@ infrastructure administrator.
   built from placeholder counts, not interpolated values.
 - React escapes rendered text. The only `dangerouslySetInnerHTML` is a fixed
   theme bootstrap script with no user input.
-- `safeNextPath()` blocks protocol-relative and `/login` redirects.
+- `safeNextPath()` blocks external, backslash/control-character and normalized `/login` redirects.
 - Response headers from `next.config.ts`:
   - `X-Content-Type-Options: nosniff`
   - `X-Frame-Options: DENY`
@@ -210,7 +219,31 @@ Until rows 1–16 have real results, the Supabase path is unverified.
 - [ ] Remove or rotate demo accounts and public credentials.
 - [ ] Add CSP, HSTS and a shared rate limiter.
 - [ ] Add email verification and password reset if real users are onboarded.
-- [ ] Apply Supabase migrations and execute the RLS matrix above.
-- [ ] Store the service-role key only in server-side environment variables.
+- [ ] If selecting Supabase, apply migrations and execute the RLS matrix above.
+- [ ] If selecting Supabase, store the service-role key only in server-side environment variables.
 - [ ] Back up the database and test restore.
 - [ ] Define an incident-response owner and disclosure channel.
+
+## 10. Takeover audit and operational evidence - 30 October 2026
+
+Fixed and regression-tested: missing student-role guards in staff booking/incident
+lists; owner queue/listing organisation leakage; suspended staff overview/private
+booking access; browser-normalized redirect handling; direct SQL overlap on
+resource reassignment; E2E prep accepting a non-fixture `.db` path. Page guards
+already blocked some routes; service fixes provide defense at the data boundary.
+Current membership is also rechecked before taking custody; the lifecycle test
+revokes/restores membership after approval and verifies the suspended check-in fails.
+
+`npm run verify:production` independently confirmed a local production custody
+flow, cookie flags and session/booking/condition persistence after a process
+restart. Online backup/restore and overwrite refusal are tested. Guarded hosted
+startup validates required configuration before opening the store. No remote
+penetration test, hosted backup schedule, RLS execution or real-user security
+readiness is claimed. The persistent-hosting template is unapplied and paid
+resources remain prohibited by the user.
+
+Prepared Supabase SQL is still subject to review before use. In particular,
+its owner helpers do not yet mirror the new active-owner checks, and the public
+owner-profile policy does not itself supply anonymous SELECT grants or column
+privacy. Resolve those grant/policy issues and run the entire client matrix
+before exposing Postgres; this SQLite audit does not validate that port.

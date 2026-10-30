@@ -7,28 +7,31 @@ against a real seeded database, and browser tests against a running Next.js app.
 
 | Command | Result |
 | --- | --- |
-| `npm test` | 2 files, **29 tests passed** |
-| `npm run test:e2e` | **3 tests passed** (Chromium, 1 worker) |
+| `npm test` | 4 files, **44 tests passed** |
+| `npm run test:e2e` | **5 tests passed** (Chromium, 1 worker) |
 | `npm run typecheck` | Passed |
 | `npm run lint` | Passed |
 | `npm run build` | Passed |
-| `npm start` smoke test (local, port 3200) | Home, login and catalog returned HTTP 200; `X-Frame-Options: DENY` and `X-Content-Type-Options: nosniff` present |
+| `npm run verify:production` | HTTP 200/security headers; production approval-to-return browser flow; Secure cookie; existing session, completed booking and two conditions survived a local process restart; verified backup |
 
 Environment: Windows, Node 24, Next 16.4.3, Vitest 5.0.5, Playwright 1.64.1.
 Playwright used the installed Chromium build. E2E ran on a freshly created
 `data/e2e.db` on `http://127.0.0.1:3100`.
 
-These are the only test results claimed. No coverage percentage, load test or
+These were independently run by Codex; see `docs/VERIFICATION.md` for baseline,
+failures/fixes and final commands. No coverage percentage, load test or
 cross-browser matrix is asserted.
 
 ## Commands
 
 ```bash
-npm test             # Vitest run (29)
+npm test             # Vitest run (44)
 npm run test:watch   # Watch mode
 npm run typecheck
 npm run lint
 npm run test:e2e     # prepare e2e DB, start dev server on 3100, run Playwright
+npm run build
+npm run verify:production  # requires existing build; creates private temporary fixture
 ```
 
 ### E2E isolation
@@ -36,7 +39,7 @@ npm run test:e2e     # prepare e2e DB, start dev server on 3100, run Playwright
 `npm run test:e2e` runs `scripts/prepare-e2e.ts` first. That script:
 
 1. resolves `LABLOOP_DB_PATH` (default `data/e2e.db`);
-2. refuses any path not ending in `.db`;
+2. refuses every resolved path except the fixed `data/e2e.db`, and refuses `NODE_ENV=production`;
 3. deletes the database plus `-wal`/`-shm` siblings;
 4. opens it, applies `src/db/sqlite-schema.sql`, and seeds the fictional demo.
 
@@ -49,6 +52,9 @@ Playwright starts `npm run dev -- --port 3100` with:
 
 The normal demo at `data/labloop.db` is never touched. The suite is serial
 (`workers: 1`, `fullyParallel: false`) because tests share one database.
+The fixture and server share the same path constant. Preserve existing E2E
+records before the intentionally destructive preparation step. The takeover
+created private recovery backups of both databases before the first run.
 
 ## Test inventory
 
@@ -85,7 +91,7 @@ Uses a fixed clock: Monday 1 June 2026, 09:30 IST. The base request is
 - orders by `created_at` and excludes non-waitlisted rows;
 - returns zero position for a non-waitlisted booking while reporting total.
 
-### `tests/lifecycle.test.ts` — 10 tests
+### `tests/lifecycle.test.ts` — 13 tests
 
 Each test opens a fresh `:memory:` database, runs the real seed, and builds real
 `SessionUser` objects from the database. No mocked services.
@@ -114,15 +120,40 @@ Each test opens a fresh `:memory:` database, runs the real seed, and builds real
 - A direct overlapping `approved` insert bypassing the service layer is rejected
   by the `BOOKING_CONFLICT` trigger.
 
+Additional lifecycle regressions: revoked credentials are rechecked at approval;
+current database membership is rechecked at check-in after an approval-time suspension;
+rule acknowledgement and legal transition order are enforced; another borrower
+cannot submit a return; repeated closure fails; an owner cannot confirm their
+own return after a manager independently approved the request. All six
+UPDATE/DELETE combinations are exercised across the three append-only tables.
+
 **Human review services (3)**
 
-- only a manager records an incident outcome; the reporter is notified;
+- only an authorised resource owner or organisation manager/admin records an incident outcome; the reporter is notified;
 - an incident reporter cannot review their own incident (`SELF_REVIEW`), while a
   different manager can;
 - only a manager verifies a qualification; reviewer and expiry are recorded and
   the member is notified. (A student attempt fails `FORBIDDEN`.)
 
-### `e2e/labloop.spec.ts` — 3 tests
+### `tests/security.test.ts` — 9 tests
+
+- Student direct service calls cannot list staff bookings, incidents or audit activity.
+- Suspended managers/owners lose staff access, including overview and private booking reads.
+- Multi-organisation owners see queues/listings only in the selected organisation.
+- Students cannot create listings; another owner cannot modify a resource.
+- Direct SQL reassignment of an approved row onto an occupied resource fails.
+- Sessions store hashes, reject forged/expired tokens and stop working after deletion.
+- Missing/short production secrets fail closed.
+- E2E preparation rejects application/custom DB paths and production execution.
+- Login redirects reject external URLs, backslashes, control characters and normalized login paths.
+
+### `tests/operations.test.ts` — 3 tests
+
+- Production config accepts explicit absolute DB path, HTTPS and sufficiently long secret.
+- Missing secret, relative DB path, insecure cookies, HTTP URL and implicit seed are refused.
+- WAL content backs up and restores intact; existing destinations/source overwrite are refused.
+
+### `e2e/labloop.spec.ts` — 5 tests
 
 1. **Public catalog, detail and theme** — landing H1, catalog H1/search result,
    resource detail shows the required credential and sign-in CTA; theme toggle
@@ -134,16 +165,32 @@ Each test opens a fresh `:memory:` database, runs the real seed, and builds real
    a slot starting in 15 minutes, Maya approves, Priya checks in with condition
    evidence, submits the return, Maya confirms; the final page shows completed
    status, both condition reports and the timeline.
+4. **Listing creation and discovery** - owner publishes a resource with a required
+   credential; a student finds it through search and sees that requirement.
+5. **Phone viewport** - 390 x 844 public catalog/auth pages and dashboard fit
+   without horizontal overflow; navigation opens and My bookings is reachable.
+   This exposed and fixed hidden mobile H1s on login/signup.
 
 The browser test uses visible text and roles rather than CSS selectors wherever
 possible. It is intentionally one long serial flow because it verifies state
-carried across three accounts.
+carried across borrower and owner sessions.
+
+### `scripts/verify-production.ts` — local operational smoke
+
+Runs the guarded startup against a newly created private temporary database and
+a free local port. Chromium verifies approval, check-in, return and confirmation
+on the compiled production server. The cookie is Secure/HttpOnly/SameSite=Lax.
+The script stops and restarts its own process tree, revisits the completed
+booking using the existing authenticated browser, asserts both reports and SQL
+integrity, and makes a verified backup. A random secret stays in process memory.
+The private fixture is retained for diagnosis and never committed. This is a
+local restart check, **not** cloud volume durability or HTTPS-host verification.
 
 ## Requirement coverage
 
 | Brief requirement | Evidence |
 | --- | --- |
-| Verified owner lists a resource | Owner studio listing form + tests of ownership boundaries; E2E indirectly exercises seeded listings |
+| Verified owner lists a resource | Real browser creation/discovery test + service ownership denial tests |
 | Student discovers | Public catalog test + search/category/detail implementation |
 | Eligibility-checked request | 16 engine tests + E2E submit |
 | Owner approve/reject/waitlist | Lifecycle tests; E2E approve; waitlist integration test |
@@ -164,7 +211,7 @@ Be explicit with judges and reviewers:
 - **Supabase/PostgreSQL migrations have never run.** There is no database or
   credential. The RLS matrix in `docs/SECURITY.md` is a plan, not a result.
 - **No deployment test.** No public URL or hosting project exists.
-- **Chromium only.** No Firefox/WebKit run, no mobile device emulation project.
+- **Chromium only.** Desktop and phone viewport checks; no Firefox/WebKit, mobile browser/device or screen-reader matrix.
 - **No automated accessibility audit.** Semantics, labels and focus styles were
   implemented and manually reviewed; axe/Lighthouse was not run. Do not claim a
   WCAG conformance level.
@@ -176,7 +223,7 @@ Be explicit with judges and reviewers:
 
 Useful when a judge wants to confirm behavior without reading code:
 
-1. `npm run db:reset && npm run dev`
+1. `npm run db:setup` then `npm run dev` (preserves existing records)
 2. Public `/resources`: search "printer", filter categories, open a listing.
 3. Sign in as Priya; submit a bench request starting 15 minutes from now.
 4. As Maya, open Requests; approve with a reason.
