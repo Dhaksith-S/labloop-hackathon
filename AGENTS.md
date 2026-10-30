@@ -20,13 +20,18 @@ real, what is prepared, and which invariants must not be broken.
 - Independently reverified: 44 Vitest tests, 5 Playwright E2E tests, typecheck,
   lint and production build. Local production restart/session/booking and
   backup checks also passed; see `docs/VERIFICATION.md`.
-- Subsequent Funnel preparation: 48 Vitest tests and 5 E2E tests pass; existing
+- Subsequent Funnel preparation: 48 Vitest tests and 5 E2E tests passed; existing
   production artifact retained. Isolated judge data is outside OneDrive. Tailscale
   1.104.4 installation and user sign-in are verified. The actual assigned origin
   is configured and tested locally. The user approved the exact Funnel route and
   enabled HTTPS/Funnel. CLI setup succeeded, but public verification timed out;
   the route was disabled and final status is `{}`. Do not automatically re-enable.
   No verified working public URL. See `docs/TAILSCALE_FUNNEL.md`.
+- Cloudflare software/local preparation is separately approved. Portable
+  cloudflared 2026.10.6 signature/checksum/version verified; no tunnel started.
+  Latest 51 Vitest tests, typecheck/lint, Cloudflare-mode production journey,
+  restart/session persistence and backup restore pass locally. No public
+  allocation or app exposure is approved. See `docs/CLOUDFLARE_QUICK_TUNNEL.md`.
 - **Not deployed.** No verified working public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.
 - **Source is public** at
@@ -43,7 +48,7 @@ npm run build
 npm start            # prestart runs setup-db
 npm run typecheck
 npm run lint
-npm test             # Vitest, 48 tests (44 baseline + 4 ingress tests)
+npm test             # Vitest, 51 tests (44 baseline + 7 ingress tests)
 npm run test:e2e     # prepare-e2e (data/e2e.db) then Playwright on :3100
 npm run db:setup     # idempotent; seeds only when profiles table is empty
 npm run db:reset     # deletes and reseeds data/labloop.db

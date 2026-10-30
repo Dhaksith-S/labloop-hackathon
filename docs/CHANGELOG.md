@@ -6,6 +6,20 @@ versioning for the application.
 
 ## [Unreleased] - 2026-10-30 Codex takeover
 
+### Cloudflare fallback - approved software/local preparation only
+
+- Reverified official portable cloudflared 2026.10.6 checksum/signature; version
+  and CLI help executed after approval. No tunnel/account/service was started.
+- Added explicit Cloudflare exact-Host ingress mode, provider-specific origin
+  validation, forwarding/identity-header sanitization and local verifier mode.
+  Kept Tailscale default and Next.js configuration unchanged.
+- Latest 51 tests, typecheck/lint, Cloudflare-mode production custody journey,
+  restart/session persistence and fresh backup restoration pass locally.
+- Fixed verifier route-cleanup race and raw header error output; revoked the one
+  affected fictional session. Acceptance now records only after clean teardown.
+- Original DB, saved profile, DPAPI secret and production build preserved.
+  Funnel remains off; no Cloudflare URL allocated. Public approvals remain.
+
 ### Approved Funnel attempt (disabled after failed public verification)
 
 - User approved the exact HTTPS hostname/443 -> loopback 3211 -> production

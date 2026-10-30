@@ -3,6 +3,8 @@ param(
     [ValidateSet('Prepare','Configure','Start','Stop','Status','Backup')]
     [string]$Action,
     [string]$PublicUrl,
+    [ValidateSet('Tailscale','Cloudflare')]
+    [string]$Provider = 'Tailscale',
     [switch]$LocalPreflight
 )
 $ErrorActionPreference = 'Stop'
@@ -86,24 +88,34 @@ if ($Action -eq 'Configure') {
     $uri = [Uri]$PublicUrl
     if (-not $uri.IsAbsoluteUri -or $uri.Scheme -ne 'https' -or -not $uri.IsDefaultPort -or
         $uri.AbsolutePath -ne '/' -or $uri.Query -or $uri.Fragment -or $uri.UserInfo -or
-        $uri.Host -notmatch '^[a-z0-9.-]+\.ts\.net$') { throw 'Provide only the exact device HTTPS .ts.net origin.' }
-    $tailscale = Find-Tailscale
-    $statusText = & $tailscale status --json
-    if ($LASTEXITCODE -ne 0) { throw 'Could not read Tailscale authentication status.' }
-    $tailStatus = $statusText | ConvertFrom-Json
-    if ($tailStatus.BackendState -ne 'Running' -or $tailStatus.Self.DNSName.TrimEnd('.') -ne $uri.Host) {
-        throw 'The URL must match the authenticated device DNS name.'
+        $uri.Host -notmatch '^[a-z0-9.-]+$') { throw 'Provide only one exact HTTPS origin without port, credentials or path.' }
+    if ($Provider -eq 'Cloudflare') {
+        if ($uri.Host -notmatch '^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.trycloudflare\.com$') {
+            throw 'Cloudflare requires the exact single hostname printed by the approved Quick Tunnel.'
+        }
+    } else {
+        if ($uri.Host -notmatch '^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+ts\.net$') { throw 'Provide only the exact device HTTPS .ts.net origin.' }
+        $tailscale = Find-Tailscale
+        $statusText = & $tailscale status --json
+        if ($LASTEXITCODE -ne 0) { throw 'Could not read Tailscale authentication status.' }
+        $tailStatus = $statusText | ConvertFrom-Json
+        if ($tailStatus.BackendState -ne 'Running' -or $tailStatus.Self.DNSName.TrimEnd('.') -ne $uri.Host) {
+            throw 'The URL must match the authenticated device DNS name.'
+        }
     }
     if (Test-Path -LiteralPath $processFile) { throw 'Stop the judge processes before changing their origin.' }
     $profile.publicUrl=$uri.GetLeftPart([UriPartial]::Authority)
+    $profile | Add-Member -NotePropertyName provider -NotePropertyValue $Provider.ToLowerInvariant() -Force
     $profile | ConvertTo-Json | Set-Content -LiteralPath $profileFile -Encoding utf8
     Write-Output "Configured exact judge origin: $($profile.publicUrl). Public access is still disabled until separately approved."
     return
 }
-if ($Action -eq 'Stop') { Stop-OwnedProcesses; Write-Output 'Recorded app and ingress processes stopped. This does not change Tailscale Funnel settings.'; return }
+if ($Action -eq 'Stop') { Stop-OwnedProcesses; Write-Output 'Recorded app and ingress processes stopped. This does not change public tunnel settings or stop a tunnel process.'; return }
 if ($Action -eq 'Status') {
+    $running=$(if (Test-Path -LiteralPath $processFile) { Get-Content -LiteralPath $processFile -Raw | ConvertFrom-Json } else { $null })
     [PSCustomObject]@{ Runtime=$runtime; Database=$profile.dbPath; PublicUrl=$profile.publicUrl;
         BuildId=$profile.buildId; SecretProtected=(Test-Path -LiteralPath $secretFile);
+        RunningOrigin=$running.origin; RunningProvider=$running.provider;
         ProcessesRecorded=(Test-Path -LiteralPath $processFile) }
     Get-NetTCPConnection -LocalPort $profile.appPort,$profile.ingressPort -State Listen -ErrorAction SilentlyContinue |
         Select-Object LocalAddress,LocalPort,OwningProcess
@@ -129,6 +141,7 @@ if ($Action -eq 'Start') {
     }
     $selectedUrl=$profile.publicUrl
     if ($LocalPreflight) { $selectedUrl='https://labloop-preflight.invalid' }
+    $selectedProvider=$(if ($LocalPreflight) { $Provider.ToLowerInvariant() } elseif ($profile.provider) { $profile.provider } else { 'tailscale' })
     if (-not $selectedUrl) { throw 'Authenticate and configure the real device URL, or explicitly choose -LocalPreflight.' }
     $secure = ConvertTo-SecureString -String ((Get-Content -LiteralPath $secretFile -Raw).Trim())
     $credential = New-Object Management.Automation.PSCredential('LabLoopSession', $secure)
@@ -136,9 +149,10 @@ if ($Action -eq 'Start') {
         LABLOOP_SEED_DEMO='0'; LABLOOP_INSECURE_COOKIES='0'; LABLOOP_BIND_HOST='127.0.0.1';
         PORT=[string]$profile.appPort; LABLOOP_INGRESS_PORT=[string]$profile.ingressPort;
         NEXT_PUBLIC_APP_URL=$selectedUrl; NEXT_TELEMETRY_DISABLED='1';
+        LABLOOP_INGRESS_PROVIDER=$selectedProvider;
         LABLOOP_FUNNEL_PREFLIGHT=$(if ($LocalPreflight) {'1'} else {'0'}) }
     $previous=@{}; foreach ($key in $settings.Keys) { $previous[$key]=[Environment]::GetEnvironmentVariable($key,'Process') }
-    $record=@{ app=$null; ingress=$null; mode=$(if ($LocalPreflight) {'local-preflight'} else {'configured'}); origin=$selectedUrl }
+    $record=@{ app=$null; ingress=$null; provider=$selectedProvider; mode=$(if ($LocalPreflight) {'local-preflight'} else {'configured'}); origin=$selectedUrl }
     try {
         foreach ($key in $settings.Keys) { [Environment]::SetEnvironmentVariable($key,[string]$settings[$key],'Process') }
         $app=Start-Process -FilePath $node -ArgumentList @('--import','tsx','scripts/start-production.ts') -WorkingDirectory $repoRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $runtime 'logs/app.out.log') -RedirectStandardError (Join-Path $runtime 'logs/app.err.log')
@@ -159,7 +173,7 @@ if ($Action -eq 'Start') {
             throw 'Judge processes did not become ready. Inspect private logs.'
         }
         Write-Output "Judge production build running on 127.0.0.1:$($profile.appPort); ingress on 127.0.0.1:$($profile.ingressPort). Mode: $($record.mode)."
-        Write-Output 'This command does not enable Funnel or expose anything publicly.'
+        Write-Output 'This command does not start a public tunnel. An independently running tunnel could forward to this ingress; check tunnel state before starting.'
     } catch { Stop-OwnedProcesses; throw }
     finally {
         foreach ($key in $previous.Keys) { [Environment]::SetEnvironmentVariable($key,$previous[$key],'Process') }

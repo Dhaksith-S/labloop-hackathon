@@ -4,17 +4,23 @@ import path from "node:path";
 import { chromium, expect } from "@playwright/test";
 import Database from "better-sqlite3";
 
-interface JudgeProfile { publicUrl: string | null; dbPath: string; appPort: number; ingressPort: number; buildId: string }
+interface JudgeProfile { publicUrl: string | null; dbPath: string; appPort: number; ingressPort: number; buildId: string; provider?: "tailscale" | "cloudflare" }
 const runtime = path.join(process.env.LOCALAPPDATA ?? path.join(os.homedir(), "AppData/Local"), "LabLoop/judge-demo");
 const profile = JSON.parse(fs.readFileSync(path.join(runtime, "profile.json"), "utf8").replace(/^\uFEFF/, "")) as JudgeProfile;
 const local = process.argv.includes("--local");
 const loopback = process.argv.includes("--loopback");
-if (local && loopback) throw new Error("Choose --local or --loopback, not both.");
-const intercepted = local || loopback;
+const cloudflareLocal = process.argv.includes("--cloudflare-local");
+if ([local, loopback, cloudflareLocal].filter(Boolean).length > 1) throw new Error("Choose one local verification mode.");
+const intercepted = local || loopback || cloudflareLocal;
 const revisit = process.argv.includes("--revisit");
-const baseURL = local ? "https://labloop-preflight.invalid" : profile.publicUrl;
+const baseURL = local || cloudflareLocal ? "https://labloop-preflight.invalid" : profile.publicUrl;
 if (!baseURL) throw new Error("No authenticated, configured public URL. Only --local preflight is currently available.");
-const mode = local ? "local-preflight" : loopback ? "configured-loopback" : "public-funnel";
+const provider = cloudflareLocal ? "cloudflare" : local ? "tailscale" : profile.provider ?? "tailscale";
+const mode = cloudflareLocal ? "cloudflare-local-preflight" : local ? "local-preflight" : loopback ? "configured-loopback" : provider === "cloudflare" ? "public-cloudflare" : "public-funnel";
+const processes = JSON.parse(fs.readFileSync(path.join(runtime, "processes.json"), "utf8").replace(/^\uFEFF/, "")) as { origin: string; provider?: string };
+if (processes.origin !== baseURL || (processes.provider ?? "tailscale") !== provider) {
+  throw new Error("The running judge origin/provider does not match this verification mode.");
+}
 const evidencePath = path.join(runtime, `${mode}-evidence.json`);
 const sessionPath = path.join(runtime, `${mode}-session.json`);
 
@@ -28,13 +34,19 @@ async function main() {
     // Only a local simulation: browser sees HTTPS and sends same-origin Secure
     // cookies, but this route fulfills requests from our loopback ingress.
     await context.route(`${baseURL}/**`, async route => {
-      const request = route.request();
-      const url = new URL(request.url());
-      const response = await context.request.fetch(`http://127.0.0.1:${profile.ingressPort}${url.pathname}${url.search}`, {
-        method: request.method(), headers: { ...await request.allHeaders(), "x-forwarded-host": hostname },
-        data: request.postDataBuffer() ?? undefined, maxRedirects: 0,
-      });
-      await route.fulfill({ response });
+      try {
+        const request = route.request();
+        const url = new URL(request.url());
+        const response = await context.request.fetch(`http://127.0.0.1:${profile.ingressPort}${url.pathname}${url.search}`, {
+          method: request.method(), headers: { ...await request.allHeaders(), host: hostname, "x-forwarded-host": hostname },
+          data: request.postDataBuffer() ?? undefined, maxRedirects: 0,
+        });
+        await route.fulfill({ response });
+      } catch {
+        // Playwright request errors can contain Cookie headers. Do not print
+        // raw transport errors or allow an unhandled route rejection to do so.
+        await route.abort().catch(() => {});
+      }
     });
   }
   const page = await context.newPage();
@@ -50,6 +62,7 @@ async function main() {
     await page.getByRole("button", { name: "Sign out" }).first().click();
     await page.waitForURL(url => url.pathname === "/");
   };
+  let completed: (() => void) | undefined;
   try {
     if (revisit) {
       const evidence = JSON.parse(fs.readFileSync(evidencePath, "utf8")) as { bookingPath: string };
@@ -62,7 +75,7 @@ async function main() {
         expect(db.pragma("integrity_check", { simple: true })).toBe("ok");
         expect(db.prepare("SELECT status FROM bookings WHERE id = ?").pluck().get(evidence.bookingPath.split("/").pop())).toBe("completed");
       } finally { db.close(); }
-      console.log(`${mode}: existing session, completed booking, conditions and database integrity survived application restart.`);
+      completed = () => console.log(`${mode}: existing session, completed booking, conditions and database integrity survived application restart.`);
       return;
     }
     await page.goto("/resources");
@@ -71,7 +84,7 @@ async function main() {
       // Browser routing cannot intercept subsequent network redirects. Verify
       // the real ingress response directly without taking a network route.
       const guarded = await context.request.get(`http://127.0.0.1:${profile.ingressPort}/bookings`, {
-        headers: { "x-forwarded-host": hostname }, maxRedirects: 0,
+        headers: { host: hostname, "x-forwarded-host": hostname }, maxRedirects: 0,
       });
       expect(guarded.status()).toBe(307);
       expect(guarded.headers().location).toMatch(/^\/login/);
@@ -124,12 +137,24 @@ async function main() {
     const cookie = (await context.cookies()).find(c => c.name === "labloop_session");
     expect(cookie?.secure).toBe(true); expect(cookie?.httpOnly).toBe(true); expect(cookie?.sameSite).toBe("Lax");
     await context.storageState({ path: sessionPath });
-    fs.writeFileSync(evidencePath, JSON.stringify({ mode, configuredOrigin: baseURL,
+    const evidence = { mode, provider, configuredOrigin: baseURL,
       publicUrl: intercepted ? null : baseURL,
       bookingPath, buildId: profile.buildId, verifiedAt: new Date().toISOString(),
-      publicRelayIPv4: publicIP ?? null, cookieFlags: { secure: true, httpOnly: true, sameSite: "Lax" } }, null, 2), { mode: 0o600 });
-    console.log(`${mode}: catalog, private-route guard, admin-path block, student request, owner approval, check-in, both conditions, return confirmation, history and cookie flags passed.`);
-    console.log(intercepted ? "This is a local reverse-proxy simulation, not a public deployment." : "Public URL journey passed; independent off-tailnet device verification must be recorded separately.");
-  } finally { await context.close(); await browser.close(); }
+      publicRelayIPv4: publicIP ?? null, cookieFlags: { secure: true, httpOnly: true, sameSite: "Lax" } };
+    completed = () => {
+      fs.writeFileSync(evidencePath, JSON.stringify(evidence, null, 2), { mode: 0o600 });
+      console.log(`${mode}: catalog, private-route guard, admin-path block, student request, owner approval, check-in, both conditions, return confirmation, history and cookie flags passed.`);
+      console.log(intercepted ? "This is a local reverse-proxy simulation, not a public deployment." : "Public URL journey passed; independent off-tailnet device verification must be recorded separately.");
+    };
+  } finally {
+    // Drain in-flight Next prefetch handlers before disposing their API client.
+    if (intercepted) await context.unrouteAll({ behavior: "wait" });
+    await context.close(); await browser.close();
+    completed?.();
+  }
 }
-main().catch(error => { console.error(error); process.exitCode = 1; });
+main().catch(error => {
+  // Raw Playwright errors may include session cookies and request headers.
+  console.error(`Judge verification failed (${error instanceof Error ? error.name : "unknown error"}); this run did not finish successfully. Raw request headers are suppressed.`);
+  process.exitCode = 1;
+});

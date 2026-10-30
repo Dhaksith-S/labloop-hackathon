@@ -261,7 +261,8 @@ Cloudflare Quick Tunnels can issue an accountless temporary `trycloudflare.com`
 URL for a local HTTP service. They have no uptime guarantee, change hostname on
 each new tunnel and require the `cloudflared` executable. This would need separate
 software/public-exposure approval and an exact-host configuration adjustment;
-it has not been installed, enabled or tested here. It is a fallback demonstration
+its software/local preparation was subsequently approved and tested without
+starting a tunnel. It is a fallback demonstration
 route, not an equally stable substitute. [Official Quick Tunnel documentation](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).
 
 For review only, the official portable Windows amd64 executable **2026.10.6**
@@ -269,7 +270,10 @@ For review only, the official portable Windows amd64 executable **2026.10.6**
 `%LOCALAPPDATA%/LabLoop/installers/cloudflared-2026.10.6-windows-amd64.exe`.
 Its SHA-256 matches the official GitHub release asset digest:
 `d521b3bf68982165f0d06d76732f22d9a105ef057ff3ae4c0986f3a23190950f`.
-Authenticode status is **Valid**, signer **Cloudflare, Inc.** The executable has
-not been run, installed as a service or connected to a tunnel. Software/local
-preparation approval has been requested separately; public exposure is excluded
-from that request. [Official release](https://github.com/cloudflare/cloudflared/releases/tag/2026.10.6).
+Authenticode status is **Valid**, signer **Cloudflare, Inc.** Following separate
+software/local preparation approval, `--version` and `tunnel --help` were run.
+No service or tunnel was started. Exact-host Cloudflare ingress and local
+production lifecycle/restart/backup checks passed with 51 tests/typecheck/lint.
+Public allocation and app exposure remain unapproved. See the
+[Cloudflare runbook](CLOUDFLARE_QUICK_TUNNEL.md) for current evidence and gates.
+[Official release](https://github.com/cloudflare/cloudflared/releases/tag/2026.10.6).

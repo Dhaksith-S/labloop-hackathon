@@ -1,14 +1,25 @@
 import http from "node:http";
 import path from "node:path";
 
-export function trustedFunnelOrigin(value: string, localPreflight = false): URL {
+export type JudgeProxyProvider = "tailscale" | "cloudflare";
+
+export function judgeProxyProvider(value = "tailscale"): JudgeProxyProvider {
+  if (value !== "tailscale" && value !== "cloudflare") throw new Error("Unknown judge proxy provider.");
+  return value;
+}
+
+export function trustedFunnelOrigin(value: string, localPreflight = false, provider: JudgeProxyProvider = "tailscale"): URL {
+  const selectedProvider = judgeProxyProvider(provider);
   const url = new URL(value);
+  const trustedHostname = selectedProvider === "tailscale"
+    ? /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+ts\.net$/.test(url.hostname)
+    : /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.trycloudflare\.com$/.test(url.hostname);
   if (url.protocol !== "https:" || url.port || url.username || url.password ||
       url.pathname !== "/" || url.search || url.hash ||
       !/^[a-z0-9.-]+$/.test(url.hostname) ||
-      !(/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+ts\.net$/.test(url.hostname) ||
+      !(trustedHostname ||
         (localPreflight && url.hostname === "labloop-preflight.invalid"))) {
-    throw new Error("Use the exact device HTTPS .ts.net origin, without port, path or wildcards.");
+    throw new Error("Use one exact HTTPS origin for the selected provider, without port, path or wildcards.");
   }
   return url;
 }
@@ -26,9 +37,10 @@ function safePath(rawUrl: string): string {
 
 /** A single fixed loopback upstream; never a file server or an arbitrary URL proxy. */
 export function createJudgeIngress(options: {
-  publicUrl: string; upstreamPort: number; localPreflight?: boolean;
+  publicUrl: string; upstreamPort: number; localPreflight?: boolean; provider?: JudgeProxyProvider;
 }): http.Server {
-  const origin = trustedFunnelOrigin(options.publicUrl, options.localPreflight);
+  const provider = judgeProxyProvider(options.provider);
+  const origin = trustedFunnelOrigin(options.publicUrl, options.localPreflight, provider);
   if (!Number.isInteger(options.upstreamPort) || options.upstreamPort < 1 || options.upstreamPort > 65535) {
     throw new Error("Invalid loopback upstream port.");
   }
@@ -41,8 +53,9 @@ export function createJudgeIngress(options: {
     };
     // Tailscale overwrites X-Forwarded-Host with the real public Host. Only the
     // exact configured host is accepted here, then rewritten before Next sees it.
+    // Cloudflare mode uses Host, never a client-supplied X-Forwarded-Host.
     const forwardedHost = req.headers["x-forwarded-host"];
-    const incomingHost = forwardedHost ?? req.headers.host;
+    const incomingHost = provider === "cloudflare" ? req.headers.host : forwardedHost ?? req.headers.host;
     if (incomingHost !== origin.host) return reject(421, "Unrecognized demo hostname.");
     if (!["GET", "HEAD", "POST"].includes(req.method ?? "")) return reject(405, "Method not allowed.");
     if (req.headers.origin && req.headers.origin !== origin.origin) {
@@ -73,7 +86,7 @@ export function createJudgeIngress(options: {
     const body = Buffer.concat(chunks);
     const headers = { ...req.headers };
     for (const key of Object.keys(headers)) {
-      if (key.startsWith("x-forwarded-") || key.startsWith("tailscale-") ||
+      if (key.startsWith("x-forwarded-") || key.startsWith("tailscale-") || key.startsWith("cf-access-") ||
           ["forwarded", "connection", "transfer-encoding", "upgrade", "proxy-authorization", "proxy-connection"].includes(key)) {
         delete headers[key];
       }

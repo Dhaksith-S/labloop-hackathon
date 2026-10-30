@@ -416,10 +416,51 @@ It requires separately approved software and public exposure, plus an exact-host
 ingress/configuration adjustment. No Cloudflare tunnel has been installed/run.
 Official portable `cloudflared` 2026.10.6 has only been downloaded under the private
 LabLoop installers directory; release SHA-256 and Cloudflare Authenticode signature
-verified. It has not been executed. A separate software/local-preparation approval
-is pending; it excludes public exposure. See the Funnel guide for exact metadata.
+verified. Software/local preparation was subsequently approved and executed;
+see section 16 for the current state. Public exposure remains excluded.
 Quick Tunnel URLs change on recreation and have no uptime guarantee. Keep
 Tailscale exposure off; do not automatically restore it after this failure.
 Local app/ingress, isolated DB, DPAPI secret and backups remain intact. Public
 lifecycle/restart/off-tailnet access and URL stability are all unverified.
 No paid resources, power changes or automatic submission.
+
+## 16. Cloudflare fallback - software/local preparation complete
+
+Read `docs/CLOUDFLARE_QUICK_TUNNEL.md`. User approval covers running portable
+cloudflared 2026.10.6 and local preparation only. `--version` and `tunnel --help`
+passed after rechecking official SHA-256 and valid Cloudflare signature. No
+tunnel, account sign-in, service, paid resource or power change was created.
+
+The ingress now has explicit provider selection. Tailscale remains the default;
+Cloudflare mode checks exact Host instead of trusting forwarded-host input,
+requires exact HTTPS Origin for POST, strips forwarding/identity headers and
+retains all route/body restrictions. Only one valid allocated single-label
+trycloudflare hostname is accepted; no wildcard origin permission was added.
+Next.js allowedOrigins and the existing production build remain unchanged.
+
+`Start -LocalPreflight -Provider Cloudflare` uses the reserved invalid simulation
+origin without changing the saved profile. `--cloudflare-local` completed the
+production journey and Secure-cookie checks; after restart, `--revisit` retained
+session, completed booking and reports. The fresh final backup restored with
+integrity ok and both reports. Original DB, DPAPI secret file, configured profile
+and BUILD_ID matched preservation baselines. Latest 51 Vitest tests, typecheck
+and lint pass. The five standard E2E tests were not rerun; the actual production
+browser verification was run for these changes.
+
+A verifier cleanup race initially printed a fictional session cookie. That
+specific session was revoked; fresh full-flow/restart runs passed. Raw errors
+are suppressed, route callbacks drain before disposal, and acceptance is saved
+only after clean shutdown. A stale-backup comparison was corrected by taking a
+fresh backup after the final journey; no records were reset or rewritten.
+
+Current local services run Cloudflare local-preflight on loopback 3210/3211;
+the saved profile still contains the old Tailscale origin, which is not a live
+public route. `Status` distinguishes running origin/provider from saved origin.
+Funnel remains `{}` and no cloudflared process is running.
+
+Next: obtain **allocation-only public approval** before starting any Quick
+Tunnel. Stop local app/ingress and verify ports are unused, allocate the URL to
+closed ingress 3211, record PID/start time privately, then show the actual URL
+for a separate app-connection approval. Only after that approval configure the
+exact URL with `Configure -Provider Cloudflare`, start production, run public
+workflow/restart/backup and off-tailnet-device checks. No fake public evidence.

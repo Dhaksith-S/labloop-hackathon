@@ -1,9 +1,10 @@
-import { createJudgeIngress } from "./lib/funnel-proxy";
+import { createJudgeIngress, judgeProxyProvider } from "./lib/funnel-proxy";
 
 const server = createJudgeIngress({
   publicUrl: process.env.NEXT_PUBLIC_APP_URL ?? "",
   upstreamPort: Number(process.env.PORT ?? "3210"),
   localPreflight: process.env.LABLOOP_FUNNEL_PREFLIGHT === "1",
+  provider: judgeProxyProvider(process.env.LABLOOP_INGRESS_PROVIDER),
 });
 server.listen(Number(process.env.LABLOOP_INGRESS_PORT ?? "3211"), "127.0.0.1", () => {
   console.log("Judge ingress listening on loopback only; exact origin enforced; administrative and developer paths blocked.");

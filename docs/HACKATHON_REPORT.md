@@ -45,8 +45,9 @@ approval.
 The product is a complete Next.js monolith with a persistent database, demo
 institution, role-aware UI, audit trail, incidents and credential verification.
 The original verification passed 44 unit/integration tests and 5 Chromium browser
-tests. Subsequent deployment preparation added four ingress tests (48 total),
-retained the production build, and verified the isolated demo lifecycle locally.
+tests. Subsequent Funnel preparation added four ingress tests (48 at that stage),
+and Cloudflare preparation added three more (51 total). The production build was
+retained and the isolated demo lifecycle verified locally.
 An approved Funnel attempt failed public reachability and was disabled. The
 mandatory working public application requirement remains unsatisfied.
 
@@ -167,6 +168,10 @@ The following were executed on 30 October 2026 in this workspace:
 | `npm run verify:production` | home/login/catalog HTTP 200; headers and Secure cookie; browser custody; session/completed booking/condition records survive local process restart; verified backup |
 | Existing demo database | Preserved; recovery backup made before testing; no reset run in this takeover |
 
+The table is the original baseline. Latest checks passed 51 tests, typecheck/lint
+and the Cloudflare-mode production lifecycle, restart/session and backup restore.
+The five standard E2E tests were not rerun; public transport remains unverified.
+
 The E2E test completes request → approve → check-in → return → confirm across
 student and owner accounts in a browser. It is not a mocked component test.
 
@@ -280,13 +285,16 @@ returned HTTP 200, but the original timeout cause remains unresolved. No public
 lifecycle, certificate validation, independent-device access or URL stability
 has been verified. Do not submit that disabled address as a working application.
 
-Cloudflare Quick Tunnels is a no-cost, accountless fallback requiring separate
-software/exposure approval and an exact-host configuration change. It has not
-been installed or tested; hostnames change on recreation and uptime is not
-guaranteed. Any laptop route depends on the laptop and network staying online.
-No power settings were changed. The paid Render template remains unapplied;
+Cloudflare Quick Tunnels is a no-cost, accountless fallback. Approved local
+preparation verified portable cloudflared 2026.10.6 signature/checksum/version
+and its ingress mode's production lifecycle, restart/session and backup restore.
+No tunnel was started or URL allocated; public allocation and app exposure
+remain unapproved. Hostnames change on recreation and uptime is not guaranteed.
+The laptop and network must stay online. No power settings were changed.
+The paid Render template remains unapplied;
 Supabase remains an unapplied port. See `docs/TAILSCALE_FUNNEL.md` for commands,
-failed-attempt evidence, restart guidance and remaining acceptance tests.
+failed-attempt evidence; `docs/CLOUDFLARE_QUICK_TUNNEL.md` records the local
+fallback evidence, two approval gates and remaining public acceptance tests.
 
 ## 8. Limitations
 
@@ -461,7 +469,3 @@ LICENCES BEFORE SUBMISSION.] No invented human contribution is assigned.
 - Independently executed commands, failures/fixes and limits: `docs/VERIFICATION.md`.
 - Architecture, privacy/security and fairness: `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/FAIRNESS.md`.
 - Persistent-store comparison and provider documentation: `docs/DEPLOYMENT.md`.
-
-No research citations, live URL, institutional endorsement or measured impact
-are fabricated. This content must be transferred to the official PDF template
-when received, then reviewed by every participant before individual submission.

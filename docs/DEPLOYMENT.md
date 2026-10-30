@@ -12,6 +12,13 @@ The timeout's cause remains unresolved. See [Funnel guide](TAILSCALE_FUNNEL.md)
 for exact evidence, restart/stop commands and the accountless fallback. The paid
 Render template below remains unapplied and unauthorized.
 
+Cloudflare Quick Tunnel software/local preparation is now approved and locally
+verified: 51 tests, exact-host ingress, production workflow, restart/session
+persistence and backup restoration pass. No tunnel was started; public URL
+allocation and connecting the app remain separately unapproved. See the
+[Cloudflare fallback runbook](CLOUDFLARE_QUICK_TUNNEL.md). A temporary Quick Tunnel
+cannot promise an unchanged URL after tunnel recreation.
+
 **Status: prepared locally, not deployed.** The user authorized preparation and
 explicitly prohibited paid resources. No cloud service, disk, subscription or
 cloud production URL was created. The attempted Funnel address is disabled and

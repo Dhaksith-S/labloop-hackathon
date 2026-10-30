@@ -7,6 +7,9 @@ The two 20-point criteria receive priority. Public deployment is still missing.
 The subsequent approved Tailscale Funnel attempt failed public reachability and
 was disabled; locally intercepted production tests do not satisfy public judge
 access. See [attempt evidence](TAILSCALE_FUNNEL.md).
+The Cloudflare fallback is now locally prepared (51 tests and production
+journey/restart/backup checks), with no tunnel started or public access verified.
+See [current fallback evidence](CLOUDFLARE_QUICK_TUNNEL.md).
 
 | Official criterion | Weight | Actual product evidence and code | Executed checks / evidence | Remaining gap |
 | --- | --- | --- | --- | --- |

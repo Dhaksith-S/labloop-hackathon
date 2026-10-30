@@ -189,7 +189,16 @@ is unresolved; public workflow, external-device access and URL stability are
 unverified. Local production remains intact. A Cloudflare Quick Tunnel is an
 unapplied no-cost fallback requiring separate software/exposure approval.
 [Setup, failed-attempt evidence and restart guide](docs/TAILSCALE_FUNNEL.md).
-The earlier verification table/report record the `17fa246` baseline.
+The earlier verification table records the `17fa246` baseline; the provisional
+report adds subsequent deployment-preparation evidence.
+
+**Cloudflare fallback prepared locally:** Software/local preparation was
+separately approved. The verified portable cloudflared 2026.10.6 reports its
+version; no tunnel has been started. Exact-host Cloudflare ingress, 51 tests,
+typecheck/lint, the production custody journey, restart/session persistence and
+backup restoration pass locally. No real Cloudflare URL exists yet; public
+allocation and application exposure still require approval.
+[Evidence and approval gates](docs/CLOUDFLARE_QUICK_TUNNEL.md).
 
 The authoritative organiser brief and 100-point rubric are transcribed in
 [`docs/OFFICIAL_PROBLEM_STATEMENT.md`](docs/OFFICIAL_PROBLEM_STATEMENT.md).

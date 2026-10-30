@@ -35,7 +35,55 @@ No fallback executable was run, tunnel enabled, paid resource created or power
 setting changed. Official portable cloudflared 2026.10.6 was subsequently
 downloaded for review only; its release digest and valid Cloudflare Authenticode
 signature were verified. Software/local preparation approval is pending separately
-and excludes public exposure. Details are in `docs/TAILSCALE_FUNNEL.md`.
+and excluded public exposure at that point. The subsequent approval and executed
+local work are recorded below.
+
+## Cloudflare continuation - approved software/local checks only
+
+After user approval, rechecked the official cloudflared 2026.10.6 SHA-256 and
+valid Cloudflare Authenticode signature, then ran `--version` and `tunnel --help`.
+No public network tunnel command was executed. The installed Next.js Server
+Actions/self-hosting/config guides and official versioned Cloudflare origin proxy
+source were read before implementation.
+
+Added explicit Cloudflare provider support, exact single-host origin validation,
+Host-based acceptance, forwarding/identity-header sanitation and a separate
+local verifier mode. PowerShell syntax parsing passed. Latest executed commands:
+
+```text
+npm test                          # 51 tests across 5 files passed
+npm run typecheck                 # passed
+npm run lint                      # passed
+judge-demo.ps1 -Action Start -LocalPreflight -Provider Cloudflare
+node --import tsx scripts/verify-funnel-demo.ts --cloudflare-local
+judge-demo.ps1 -Action Stop
+judge-demo.ps1 -Action Start -LocalPreflight -Provider Cloudflare
+node --import tsx scripts/verify-funnel-demo.ts --cloudflare-local --revisit
+judge-demo.ps1 -Action Backup
+```
+
+The full production browser journey passed; restart retained the existing
+session, completed booking and both condition records. The final backup
+`judge-20261030T121352781Z.db` was restored to a fresh private file and verified
+with integrity ok, completed booking and two reports. Original app DB, DPAPI
+secret file, saved configured profile and production BUILD_ID matched the
+preparation baseline. No existing records were reset or history rewritten.
+
+An initial verifier shutdown race printed one fictional session cookie in a
+raw transport error after the restart assertions. Revoked that exact session
+(one row), drained in-flight routes before closing the request client, suppressed
+raw transport error output and delayed acceptance recording until clean teardown.
+Fresh full-journey/restart runs exited successfully. A restore check initially
+selected an older backup than the latest test transaction; taking the final new
+backup after the journey resolved that mismatch and the fresh restore passed.
+
+The five ordinary E2E tests were not rerun for these ingress-only changes. The
+production browser tests above used local interception and reserved `.invalid`;
+their evidence explicitly has `publicUrl: null`. No Cloudflare URL, public TLS,
+live cloudflared transport, off-tailnet access or public URL stability is verified.
+Current app/ingress bind loopback only; Funnel status `{}` and no cloudflared
+process. The public allocation/app-connection approval gates are documented in
+`docs/CLOUDFLARE_QUICK_TUNNEL.md`; neither public step is authorized yet.
 
 ## Recovery and initial Git evidence
 
