@@ -207,6 +207,22 @@ export function getBookingEvents(db: Db, bookingId: string): BookingEventRow[] {
     .all(bookingId) as BookingEventRow[];
 }
 
+export interface BookingEventDetail extends BookingEventRow {
+  actorName: string | null;
+}
+
+export function getBookingEventDetails(db: Db, bookingId: string): BookingEventDetail[] {
+  return db
+    .prepare(
+      `SELECT e.*, p.full_name AS actorName
+       FROM booking_events e
+       LEFT JOIN profiles p ON p.id = e.actor_id
+       WHERE e.booking_id = ?
+       ORDER BY e.created_at ASC`,
+    )
+    .all(bookingId) as BookingEventDetail[];
+}
+
 export function getConditionReports(db: Db, bookingId: string): ConditionReportRow[] {
   return db
     .prepare("SELECT * FROM condition_reports WHERE booking_id = ? ORDER BY created_at ASC")

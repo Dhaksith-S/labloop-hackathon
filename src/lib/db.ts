@@ -7,7 +7,6 @@ export type { Db } from "./database";
 export { openDatabase } from "./database";
 
 declare global {
-  // eslint-disable-next-line no-var
   var __labloopDb: Db | undefined;
 }
 

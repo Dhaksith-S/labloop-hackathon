@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { Db } from "../db";
 import { hashPassword } from "../password";
-import { logAudit, logBookingEvent, pushNotification } from "../events";
+import { logAudit } from "../events";
 import { addDays, addHours, addMinutes, fromDateTimeLocalValue, istDateKey } from "../time";
 import { DEMO_ORGANIZATION_SLUG, DEMO_PASSWORD } from "../domain";
 
@@ -96,8 +96,10 @@ export async function seedDemoDatabase(db: Db): Promise<SeedResult> {
   ).toISOString();
   const pendingEnd = addHours(pendingStart, 2);
 
-  const checkedInStart = addMinutes(nowIso, -15);
-  const checkedInEnd = addMinutes(nowIso, 105);
+  // Ends before the pending bench request starts so Arjun's two seeded
+  // bookings do not create an artificial borrower conflict at approval time.
+  const checkedInStart = addMinutes(nowIso, -120);
+  const checkedInEnd = addMinutes(nowIso, 15);
 
   const tomorrowKey = istDateKey(addDays(nowIso, 1));
   const walkInStart = fromDateTimeLocalValue(`${tomorrowKey}T14:00`);

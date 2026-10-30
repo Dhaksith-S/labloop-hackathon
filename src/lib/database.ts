@@ -20,7 +20,9 @@ export function openDatabase(
   options: OpenDatabaseOptions = {},
 ): Db {
   if (filename !== ":memory:") {
-    fs.mkdirSync(path.dirname(path.resolve(filename)), { recursive: true });
+    fs.mkdirSync(path.dirname(path.resolve(/* turbopackIgnore: true */ filename)), {
+      recursive: true,
+    });
   }
 
   const db = new Database(filename);
