@@ -1,0 +1,31 @@
+# PREPARATION ONLY. Applying this file creates PAID resources: approval required.
+# This template has not been applied to Render. Reconfirm pricing before use.
+services:
+  - type: web
+    name: labloop-demo
+    runtime: node
+    plan: 0.5c-512mb
+    repo: https://github.com/Dhaksith-S/labloop-hackathon
+    branch: main
+    numInstances: 1
+    autoDeployTrigger: "off"
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm run start:production
+    healthCheckPath: /login
+    disk:
+      name: labloop-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_VERSION
+        value: 24.18.0
+      - key: LABLOOP_DB_PATH
+        value: /var/data/labloop.db
+      - key: LABLOOP_SESSION_SECRET
+        generateValue: true
+      - key: LABLOOP_SEED_DEMO
+        value: "1"
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

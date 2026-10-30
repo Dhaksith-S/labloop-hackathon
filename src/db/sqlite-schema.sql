@@ -291,5 +291,18 @@ BEGIN
   ) THEN RAISE(ABORT, 'BOOKING_CONFLICT') END;
 END;
 
+-- Additive guard also upgrades existing databases without replacing history.
+CREATE TRIGGER IF NOT EXISTS bookings_no_overlap_resource_update
+BEFORE UPDATE OF resource_id ON bookings
+WHEN NEW.status IN ('approved', 'checked_in', 'return_submitted')
+BEGIN
+  SELECT CASE WHEN EXISTS (
+    SELECT 1 FROM bookings b
+    WHERE b.resource_id = NEW.resource_id AND b.id <> NEW.id
+      AND b.status IN ('approved', 'checked_in', 'return_submitted')
+      AND b.starts_at < NEW.ends_at AND b.ends_at > NEW.starts_at
+  ) THEN RAISE(ABORT, 'BOOKING_CONFLICT') END;
+END;
+
 INSERT INTO schema_meta (key, value) VALUES ('schema_version', '1')
 ON CONFLICT(key) DO NOTHING;

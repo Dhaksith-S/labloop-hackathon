@@ -62,7 +62,8 @@ export function listIncidentsForManager(
   scope: "all" | "open" = "all",
 ): IncidentListItem[] {
   const membership = user.memberships.find((m) => m.organizationId === organizationId);
-  if (!membership || membership.status !== "active") return [];
+  if (!membership || membership.status !== "active" ||
+      !["owner", "manager", "admin"].includes(membership.role)) return [];
   const openClause = scope === "open" ? "AND i.status IN ('open','reviewing')" : "";
   const rows =
     membership.role === "owner"
@@ -70,11 +71,11 @@ export function listIncidentsForManager(
           .prepare(
             `SELECT i.* FROM incidents i
              JOIN resources r ON r.id = i.resource_id
-             WHERE r.owner_id = ? ${openClause}
+             WHERE r.owner_id = ? AND r.organization_id = ? ${openClause}
              ORDER BY CASE i.status WHEN 'open' THEN 0 WHEN 'reviewing' THEN 1 ELSE 2 END,
                       i.created_at DESC`,
           )
-          .all(user.id) as IncidentRow[])
+          .all(user.id, organizationId) as IncidentRow[])
       : (db
           .prepare(
             `SELECT i.* FROM incidents i

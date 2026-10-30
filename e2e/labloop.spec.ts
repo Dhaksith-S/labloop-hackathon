@@ -163,3 +163,37 @@ test("full custody loop: request, approve, check in, return, confirm", async ({ 
   await expect(page.getByText("Initial · check-in")).toBeVisible();
   await expect(page.getByText("Final · return")).toBeVisible();
 });
+
+test("owner publishes a listing and a student discovers its required credential", async ({ page }) => {
+  await signIn(page, "owner@labloop.demo");
+  await page.goto("/owner/resources/new");
+  await page.getByLabel("Resource name", { exact: true }).fill("E2E Optical Inspection Bench");
+  await page.getByLabel("Category", { exact: true }).selectOption("workspace");
+  await page.getByLabel("Description", { exact: true }).fill("Fictional inspection bench used to verify the complete listing publication flow.");
+  await page.getByLabel("Location", { exact: true }).fill("Fictional Maker Wing C-104");
+  await page.getByLabel("Current condition", { exact: true }).fill("Working and inspected before publication.");
+  await page.getByLabel("Usage rules", { exact: true }).fill("Wear safety glasses and leave the inspection bench clean.");
+  await page.getByLabel("Requirement label", { exact: true }).fill("Optical Bench Orientation");
+  await page.getByRole("button", { name: "Publish listing", exact: true }).click();
+  await expect(page).toHaveURL(/\/owner\/resources\/[0-9a-z-]+\?created=1/);
+  await signOut(page);
+  await signIn(page, "priya@labloop.demo");
+  await page.goto("/resources?q=E2E%20Optical");
+  await page.getByRole("link", { name: /E2E Optical Inspection Bench/ }).first().click();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("E2E Optical Inspection Bench");
+  await expect(page.getByText("Optical Bench Orientation").first()).toBeVisible();
+});
+
+test("mobile catalog and authenticated navigation fit a phone viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const route of ["/", "/resources", "/login", "/signup"]) {
+    await page.goto(route);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  }
+  await signIn(page, "student@labloop.demo");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.getByRole("button", { name: /navigation|menu/i }).first().click();
+  await expect(page.getByRole("link", { name: /My bookings/i }).last()).toBeVisible();
+});

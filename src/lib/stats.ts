@@ -88,7 +88,8 @@ export function getOrganizationOverview(
   }>;
 } {
   const membership = user.memberships.find((m) => m.organizationId === organizationId);
-  if (!membership || !["manager", "admin"].includes(membership.role)) {
+  if (!membership || membership.status !== "active" ||
+      !["manager", "admin"].includes(membership.role)) {
     throw new Error("FORBIDDEN");
   }
   const upcomingCustody = (

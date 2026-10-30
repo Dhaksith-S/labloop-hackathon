@@ -91,7 +91,8 @@ export function getManagedActivity(
   limit = 60,
 ): ActivityItem[] {
   const membership = user.memberships.find((m) => m.organizationId === organizationId);
-  if (!membership || membership.status !== "active") return [];
+  if (!membership || membership.status !== "active" ||
+      !["owner", "manager", "admin"].includes(membership.role)) return [];
   const isManager = membership.role === "manager" || membership.role === "admin";
   const rows = isManager
     ? (db

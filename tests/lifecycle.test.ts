@@ -203,6 +203,42 @@ describe("seeded domain lifecycle", () => {
     expect(getBookingDetail(db, riya, pending.id)?.id).toBe(pending.id);
   });
 
+  it("rechecks credentials at approval after an eligible request was submitted", () => {
+    const printer = resourceByName(db, "Bambu Lab X1 Carbon");
+    const slot = istTomorrowAt(9);
+    const created = request(dev, printer.id, slot.start, slot.end, "Credential revocation regression check.");
+    db.prepare("UPDATE user_qualifications SET status = 'revoked' WHERE user_id = ? AND name = '3D Printing Safety'").run(dev.id);
+    expectDomainError(() => decideBooking(db, maya, created.bookingId, "approve", ""), "NOT_ELIGIBLE");
+    expect(getBookingRow(db, created.bookingId)?.status).toBe("pending");
+  });
+
+  it("requires rule acknowledgement and rejects skipping or repeating custody transitions", () => {
+    const pending = bookingByPurpose(db, "Fit-check the sensor enclosure");
+    expectDomainError(() => submitReturn(db, arjun, pending.id, { condition: "good", accessoriesOk: true }), "INVALID_TRANSITION");
+    expectDomainError(() => confirmReturn(db, maya, pending.id, ""), "INVALID_TRANSITION");
+    decideBooking(db, maya, pending.id, "approve", "");
+    expectDomainError(() => checkInBooking(db, arjun, pending.id, {
+      condition: "good", accessoriesOk: true, rulesAcknowledged: false,
+    }), "RULES_REQUIRED");
+    checkInBooking(db, arjun, pending.id, { condition: "good", accessoriesOk: true, rulesAcknowledged: true });
+    expectDomainError(() => submitReturn(db, priya, pending.id, { condition: "good", accessoriesOk: true }), "FORBIDDEN");
+    submitReturn(db, arjun, pending.id, { condition: "good", accessoriesOk: true });
+    confirmReturn(db, maya, pending.id, "Inspected and returned.");
+    expectDomainError(() => confirmReturn(db, maya, pending.id, ""), "INVALID_TRANSITION");
+  });
+
+  it("blocks a resource owner confirming their own return even after independent approval", () => {
+    const bench = resourceByName(db, "Open Maker Bench 04");
+    const slot = istTomorrowAt(10);
+    const created = request(maya, bench.id, slot.start, slot.end, "Independently reviewed owner booking.");
+    decideBooking(db, riya, created.bookingId, "approve", "Independent manager approval.");
+    checkInBooking(db, maya, created.bookingId, { condition: "good", accessoriesOk: true, rulesAcknowledged: true }, slot.start);
+    submitReturn(db, maya, created.bookingId, { condition: "good", accessoriesOk: true }, slot.end);
+    expectDomainError(() => confirmReturn(db, maya, created.bookingId, ""), "SELF_APPROVAL");
+    confirmReturn(db, riya, created.bookingId, "Independent return inspection.", slot.end);
+    expect(getBookingRow(db, created.bookingId)?.status).toBe("completed");
+  });
+
   it("rejects overlapping approval, waitlists fairly, then reopens review without auto-approving", () => {
     const printer = resourceByName(db, "Bambu Lab X1 Carbon");
     const slot = istTomorrowAt(9);
@@ -265,6 +301,9 @@ describe("database integrity guards", () => {
     expect(() =>
       db.prepare("UPDATE condition_reports SET notes = 'rewritten' WHERE id = ?").run(condition.id),
     ).toThrow(/CONDITION_REPORT_APPEND_ONLY/);
+    expect(() => db.prepare("DELETE FROM audit_events WHERE id = ?").run(audit.id)).toThrow(/AUDIT_APPEND_ONLY/);
+    expect(() => db.prepare("UPDATE booking_events SET summary = 'rewritten' WHERE id = ?").run(timeline.id)).toThrow(/TIMELINE_APPEND_ONLY/);
+    expect(() => db.prepare("DELETE FROM condition_reports WHERE id = ?").run(condition.id)).toThrow(/CONDITION_REPORT_APPEND_ONLY/);
   });
 
   it("rejects a direct overlapping approved insert even if application code is bypassed", () => {

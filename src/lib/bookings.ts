@@ -181,12 +181,12 @@ export function canViewBooking(
     .prepare("SELECT owner_id, organization_id FROM resources WHERE id = ?")
     .get(booking.resource_id) as { owner_id: string; organization_id: string } | undefined;
   if (!resource) return false;
-  if (resource.owner_id === user.id) return true;
   const membership = user.memberships.find((m) => m.organizationId === resource.organization_id);
   return Boolean(
     membership &&
       membership.status === "active" &&
-      (membership.role === "manager" || membership.role === "admin"),
+      (membership.role === "manager" || membership.role === "admin" ||
+        (membership.role === "owner" && resource.owner_id === user.id)),
   );
 }
 
@@ -889,17 +889,18 @@ export function listBookingsForManager(
   organizationId: string,
 ): BookingListItem[] {
   const membership = user.memberships.find((m) => m.organizationId === organizationId);
-  if (!membership || membership.status !== "active") return [];
+  if (!membership || membership.status !== "active" ||
+      !["owner", "manager", "admin"].includes(membership.role)) return [];
   const rows =
     membership.role === "owner"
       ? (db
           .prepare(
             `SELECT b.* FROM bookings b
              JOIN resources r ON r.id = b.resource_id
-             WHERE r.owner_id = ?
+             WHERE r.owner_id = ? AND r.organization_id = ?
              ORDER BY b.created_at DESC`,
           )
-          .all(user.id) as BookingRow[])
+          .all(user.id, organizationId) as BookingRow[])
       : (db
           .prepare(
             `SELECT * FROM bookings WHERE organization_id = ? ORDER BY created_at DESC`,

@@ -155,7 +155,9 @@ export function getResourcesForManager(
     return getResourcesForOrganization(db, organizationId);
   }
   if (membership.role === "owner") {
-    return getResourcesOwnedBy(db, user.id);
+    return getResourcesOwnedBy(db, user.id).filter(
+      (resource) => resource.organization_id === organizationId,
+    );
   }
   return [];
 }

@@ -20,11 +20,11 @@ export default async function SignupPage() {
         <span className="flex size-11 items-center justify-center rounded-2xl border border-border bg-card">
           <GraduationCap className="size-5 text-primary" aria-hidden />
         </span>
-        <h1 className="display-title mt-6 text-[3rem]">
+        <h2 className="display-title mt-6 text-[3rem]">
           Join the loop.
           <br />
           <em>Borrow better.</em>
-        </h1>
+        </h2>
         <p className="mt-5 max-w-md text-[0.9rem] leading-[1.8] text-ink-soft">
           A new account joins the fictional Northstar Institute as a student member. You can browse
           immediately, but access to restricted equipment still requires verified training.
@@ -48,7 +48,7 @@ export default async function SignupPage() {
       </div>
 
       <div className="mx-auto w-full max-w-md rounded-2xl border border-border bg-card p-6 card-shadow sm:p-7">
-        <h2 className="text-lg font-bold tracking-[-0.02em]">Create a member account</h2>
+        <h1 className="text-lg font-bold tracking-[-0.02em]">Create a member account</h1>
         <p className="mt-1 text-[0.78rem] text-muted-foreground">
           Joins: Northstar Institute of Applied Technology
         </p>

@@ -8,6 +8,8 @@
     "predev": "tsx scripts/setup-db.ts",
     "build": "next build",
     "start": "next start",
+    "start:production": "tsx scripts/start-production.ts",
+    "verify:production": "tsx scripts/verify-production.ts",
     "prestart": "tsx scripts/setup-db.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -16,7 +18,8 @@
     "test:e2e": "tsx scripts/prepare-e2e.ts && playwright test",
     "db:setup": "tsx scripts/setup-db.ts",
     "db:seed": "tsx scripts/seed-db.ts",
-    "db:reset": "tsx scripts/reset-db.ts"
+    "db:reset": "tsx scripts/reset-db.ts",
+    "db:backup": "tsx scripts/backup-db.ts"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

@@ -27,11 +27,11 @@ export default async function LoginPage({
         <Badge tone="primary" dot>
           Trusted campus sharing
         </Badge>
-        <h1 className="display-title mt-6 text-[3rem]">
+        <h2 className="display-title mt-6 text-[3rem]">
           Pick up the thread.
           <br />
           <em>Return it safely.</em>
-        </h1>
+        </h2>
         <p className="mt-5 max-w-md text-[0.9rem] leading-[1.8] text-ink-soft">
           Sign in to request eligible equipment, track custody, submit condition reports and
           review incoming requests as a resource owner.
@@ -66,7 +66,7 @@ export default async function LoginPage({
             <KeyRound className="size-4 text-primary" aria-hidden />
           </span>
           <div>
-            <h2 className="text-lg font-bold tracking-[-0.02em]">Sign in to LabLoop</h2>
+            <h1 className="text-lg font-bold tracking-[-0.02em]">Sign in to LabLoop</h1>
             <p className="text-[0.72rem] text-muted-foreground">Continue to your workspace</p>
           </div>
         </div>

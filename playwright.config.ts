@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { E2E_DB_PATH } from "./scripts/lib/e2e-path";
 
 const PORT = 3100;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
@@ -23,7 +24,7 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 240_000,
     env: {
-      LABLOOP_DB_PATH: "data/e2e.db",
+      LABLOOP_DB_PATH: E2E_DB_PATH,
       LABLOOP_SEED_DEMO: "1",
       LABLOOP_INSECURE_COOKIES: "1",
       LABLOOP_SESSION_SECRET: "labloop-e2e-session-secret-not-for-production",

@@ -17,6 +17,7 @@ import type { ProfileRow } from "@/lib/db-types";
 import { DEMO_ORGANIZATION_SLUG, SESSION_COOKIE } from "@/lib/domain";
 import { logAudit, pushNotification } from "@/lib/events";
 import { nowIso } from "@/lib/time";
+import { safeNextPath } from "@/lib/redirects";
 import {
   actionError,
   fieldErrorsFromZod,
@@ -60,13 +61,6 @@ function loginAttemptAllowed(key: string): boolean {
 
 function clearLoginAttempts(key: string) {
   attemptWindow.delete(key);
-}
-
-function safeNextPath(value: string): string {
-  if (!value.startsWith("/") || value.startsWith("//") || value.startsWith("/login")) {
-    return "/dashboard";
-  }
-  return value;
 }
 
 function auditLogin(userId: string, organizationId: string, summary: string) {
