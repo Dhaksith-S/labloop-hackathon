@@ -4,6 +4,9 @@ Source: [organiser brief transcribed from project-owner input](OFFICIAL_PROBLEM_
 These are the seven official criteria and weights, not a predicted score.
 Verification evidence is recorded in [VERIFICATION.md](VERIFICATION.md).
 The two 20-point criteria receive priority. Public deployment is still missing.
+The subsequent approved Tailscale Funnel attempt failed public reachability and
+was disabled; locally intercepted production tests do not satisfy public judge
+access. See [attempt evidence](TAILSCALE_FUNNEL.md).
 
 | Official criterion | Weight | Actual product evidence and code | Executed checks / evidence | Remaining gap |
 | --- | --- | --- | --- | --- |

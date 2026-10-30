@@ -44,9 +44,11 @@ approval.
 
 The product is a complete Next.js monolith with a persistent database, demo
 institution, role-aware UI, audit trail, incidents and credential verification.
-It is independently verified locally by 44 unit/integration tests and 5 Chromium
-browser tests. This does not satisfy the mandatory public application requirement
-yet: there is no hosted URL.
+The original verification passed 44 unit/integration tests and 5 Chromium browser
+tests. Subsequent deployment preparation added four ingress tests (48 total),
+retained the production build, and verified the isolated demo lifecycle locally.
+An approved Funnel attempt failed public reachability and was disabled. The
+mandatory working public application requirement remains unsatisfied.
 
 ## 2. The problem, concretely
 
@@ -254,29 +256,37 @@ from mobile to wide desktop, in both themes.
 
 ## 7. Deployment reality
 
-**There is no public URL.** This is not a modest footnote; it is the honest
-status.
+**No verified working public URL.** Paid resources are prohibited. The selected
+zero-cost route preserves the Next.js production build and persistent SQLite on
+the owner's Windows laptop, with a fictional judge database outside OneDrive.
+The original application database is unchanged. A persistent unique session
+secret is Windows-DPAPI encrypted; Secure, HttpOnly, SameSite=Lax cookies are
+verified locally. Backend and filtered ingress bind only to loopback. Exact
+Host/Origin validation is enforced; administrative and development paths are
+blocked. No unrestricted Server Actions origin wildcard was introduced.
 
-Blockers:
+The configured-origin browser journey passed locally: request, approval,
+check-in, initial/final reports, owner return confirmation and persisted history.
+Session and records survived application restart; online backup restoration
+passed SQLite integrity checking. Local interception is explicitly not public
+deployment evidence.
 
-1. No hosting provider account is connected for this work. The user authorises
-   deployment preparation only and explicitly prohibits paid resources.
-2. The SQLite file is not persistent on serverless functions. Deploying the
-   build unchanged would lose sessions, bookings and audit rows. A persistent
-   volume or the PostgreSQL port is required.
-3. Supabase is not provisioned. The two SQL migrations have never run against
-   PostgreSQL; the app is not wired to Supabase Auth or Postgres.
+After separate user approval and HTTPS/Funnel enablement, Tailscale 1.104.4
+accepted HTTPS 443 -> filtered ingress 127.0.0.1:3211 -> production app
+127.0.0.1:3210, issuing `https://dhaksith.tail3cd298.ts.net/`. Public HTTPS and
+browser catalog probes timed out before login. Funnel was disabled as required;
+final status is `{}`. Later DNS/TCP diagnostics succeeded and the local catalog
+returned HTTP 200, but the original timeout cause remains unresolved. No public
+lifecycle, certificate validation, independent-device access or URL stability
+has been verified. Do not submit that disabled address as a working application.
 
-The selected preparation route is one Node instance plus a durable SQLite volume,
-preserving the verified implementation. `deploy/render.yaml`, guarded production
-startup, WAL-safe backup tooling and a recovery runbook are prepared. The Render
-template requires paid compute/disk and has **not** been applied. A PostgreSQL
-port is an alternative, not a prerequisite for persistent-volume hosting.
-
-No service, volume, subscription or URL has been created. A compatible account,
-permitted plan/budget, real HTTPS settings, Linux/native-module validation,
-public workflow verification and hosted restart/restore evidence remain. See
-`docs/DEPLOYMENT.md` for the comparison and precise next actions.
+Cloudflare Quick Tunnels is a no-cost, accountless fallback requiring separate
+software/exposure approval and an exact-host configuration change. It has not
+been installed or tested; hostnames change on recreation and uptime is not
+guaranteed. Any laptop route depends on the laptop and network staying online.
+No power settings were changed. The paid Render template remains unapplied;
+Supabase remains an unapplied port. See `docs/TAILSCALE_FUNNEL.md` for commands,
+failed-attempt evidence, restart guidance and remaining acceptance tests.
 
 ## 8. Limitations
 

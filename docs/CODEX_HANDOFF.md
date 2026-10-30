@@ -374,16 +374,18 @@ The user authorized zero-cost laptop Funnel preparation/testing, retaining the
 existing production build. An initial automatic installer command was rejected;
 the user later completed installation and GitHub SSO independently. Tailscale
 1.104.4 is now Running/online and the Windows service is Running/Automatic.
-No further installation or sign-in is needed. Public exposure has neither been
-performed nor approved. MagicDNS is enabled; HTTPS domains/Funnel capability
-are not yet advertised, so those prerequisites are part of the pending setup.
+No further installation or sign-in is needed. The user subsequently approved the
+exact public route and enabled HTTPS/Funnel in Tailscale's website. Both
+capabilities are now advertised. The official command accepted the route and
+issued `https://dhaksith.tail3cd298.ts.net/`, but public verification failed and
+Funnel was disabled. This is an attempted address, not a verified working URL.
 
 Read `docs/TAILSCALE_FUNNEL.md`. Private runtime:
 `%LOCALAPPDATA%/LabLoop/judge-demo` (ACL restricted; encrypted DPAPI secret;
 idempotent fictional DB; never commit runtime logs/browser session files).
 The helper `scripts/funnel/judge-demo.ps1` prepares/configures/starts/stops/backups
 without enabling Funnel. Backend 3210 and filtered ingress 3211 bind only
-127.0.0.1. The public target, if separately approved, is only ingress 3211.
+127.0.0.1. The approved public target was only ingress 3211.
 Administrative/developer paths are denied. Origin/Host are pinned exactly;
 Next allowedOrigins was not widened. Local browser proxy journey, current
 session persistence after restart and actual backup/restore integrity passed.
@@ -391,17 +393,33 @@ session persistence after restart and actual backup/restore integrity passed.
 `itApzfwuOZ96pav7ZpWPX`; no production rebuild was performed.
 
 The actual authenticated device DNS name has been read from CLI status and
-stored only in the private profile; that exact origin is configured. Both Serve
-and Funnel status return `{}`. `scripts/verify-funnel-demo.ts --loopback` passed
+that exact origin is configured. Final Funnel status returns `{}` after shutdown.
+`scripts/verify-funnel-demo.ts --loopback` passed
 the configured-origin production journey; after a real app/ingress restart,
 `--loopback --revisit` retained the session, completed transaction and both reports.
 Backup restoration and direct restricted-path/foreign-origin checks also passed.
 48 tests, typecheck and lint were rerun successfully. The local services remain
 ready on loopback; there is still no public forwarding.
 
-Next: show the exact proposed URL and 443 -> 127.0.0.1:3211 -> 127.0.0.1:3210
-configuration to the user. Ask approval covering HTTPS/Funnel permission,
-fictional demo access by internet visitors and background persistence. Only after
-approval enable Funnel. Then test actual public workflow/restart/off-tailnet reachability and URL
-stability. Only then publish deployment evidence or update the provisional report
-with a real URL. No paid resources, power changes or automatic submission.
+Public attempt: pinned HTTPS curl timed out after roughly 10 seconds and the
+non-intercepted browser verifier timed out loading `/resources` after 20 seconds,
+before login or booking mutations. External web fetch also failed. Funnel was
+promptly disabled using `funnel --https=443 off`. Later diagnostics at
+2026-10-30 11:59:18 UTC found Google/Cloudflare DNS resolving both relay addresses,
+TCP 443 reachable on both, and local ingress catalog HTTP 200. A direct TLS probe
+with proxy bypass after shutdown failed its handshake; it cannot establish what
+an active route would do. The original timeout cause remains unresolved. Do not
+infer ISP blocking, a certificate failure, an app bug or a Tailscale defect.
+
+Next: present this blocker and the no-cost Cloudflare Quick Tunnel alternative.
+It requires separately approved software and public exposure, plus an exact-host
+ingress/configuration adjustment. No Cloudflare tunnel has been installed/run.
+Official portable `cloudflared` 2026.10.6 has only been downloaded under the private
+LabLoop installers directory; release SHA-256 and Cloudflare Authenticode signature
+verified. It has not been executed. A separate software/local-preparation approval
+is pending; it excludes public exposure. See the Funnel guide for exact metadata.
+Quick Tunnel URLs change on recreation and have no uptime guarantee. Keep
+Tailscale exposure off; do not automatically restore it after this failure.
+Local app/ingress, isolated DB, DPAPI secret and backups remain intact. Public
+lifecycle/restart/off-tailnet access and URL stability are all unverified.
+No paid resources, power changes or automatic submission.

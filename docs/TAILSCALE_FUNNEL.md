@@ -1,7 +1,7 @@
 # Windows judge demo: Tailscale Funnel preparation and evidence
 
-**30 October 2026 - authenticated device and production preparation verified;
-public exposure awaiting approval. No live public URL yet.**
+**30 October 2026 - approved Funnel setup attempted; public verification failed;
+Funnel disabled. No verified working public URL.**
 The user selected a zero-cost laptop-hosted demonstration and requires separate
 approval for installing software, signing into an account and public exposure.
 No paid resources, router forwarding, power-policy changes, startup tasks or
@@ -17,9 +17,9 @@ Supabase migration were created. Existing app records and Git history remain.
 | Installer prepared | Official `tailscale-setup-1.104.4-amd64.msi`, valid Tailscale Inc. Authenticode signature; SHA-256 `1d12cd8b1d6dbb447da8579b1a5268ae2fc050967bebfaa02e32d2bb645ef6ee` matched manifest |
 | Installation | Initial automated installer command was rejected; subsequent manual installation succeeded. Installed CLI version 1.104.4 independently verified |
 | Authentication / connectivity | User completed GitHub SSO; CLI reports Running, online, no pending authentication URL; Windows service Running/Automatic |
-| Public prerequisites | MagicDNS enabled; no HTTPS certificate domains or Funnel capability currently advertised. HTTPS/Funnel enablement remains part of the pending public setup |
-| Serve / Funnel | Both configuration status commands return empty objects; no existing mappings to overwrite |
-| Exposure approval | Required and still pending; no public exposure command has been run |
+| Public prerequisites | User enabled HTTPS/Funnel for DHAKSITH in Tailscale's website; CLI now advertises `https` and `funnel` capabilities |
+| Serve / Funnel | Initially empty; approved forwarding was accepted; subsequently disabled after failed public verification; final Funnel status `{}` |
+| Exposure approval | User explicitly approved the exact hostname, HTTPS 443, ingress 3211, fictional accounts and background operation; the command was run within that scope |
 | Isolated judge store | `%LOCALAPPDATA%/LabLoop/judge-demo/fictional-judge.db`, fresh fictional seed, outside OneDrive/repository |
 | Secret | Unique random 32-byte session secret, persisted encrypted with Windows DPAPI; directory ACL restricted to current Windows user and SYSTEM; never printed |
 | Listeners | Backend `127.0.0.1:3210`; filtered ingress `127.0.0.1:3211`; no LAN binding |
@@ -29,14 +29,14 @@ Supabase migration were created. Existing app records and Git history remain.
 | Restart | Reused existing browser session after stopping/starting app and ingress; completed booking and both reports remained; repeated Prepare preserved records and encrypted secret |
 | Backup | Online backup and fresh-file restore passed SQLite `integrity_check`; original application database SHA-256 unchanged |
 | Original app DB | `data/labloop.db` hash remained `6bb86410d65288e6620f552ce4340271a6483e351d27baf00befdde1d828666a` |
-| Public URL / external device | Not available or verified; `labloop-preflight.invalid` is a reserved local simulation hostname, never a deployment claim |
+| Public URL / external device | CLI generated `https://dhaksith.tail3cd298.ts.net/`; public HTTPS/catalog tests failed. Off-tailnet device access, certificate validity and public workflow remain unverified. Funnel is off |
 
 After authenticated device discovery, `--loopback` exercised the actual production
 app under the exact assigned device hostname while intercepting requests locally.
 That mode records `publicUrl: null` in its private evidence file so it cannot be
-mistaken for public verification. The actual hostname is shown to the owner for
-approval and retained in the private profile; it is not published here before
-public exposure is approved.
+mistaken for public verification. The actual hostname was subsequently approved
+by the owner for public exposure. Its appearance here records an attempted
+address, not a working deployment.
 
 This continuation reran 48 Vitest tests, typecheck and lint. The configured-origin
 production browser journey passed, then the existing authenticated session,
@@ -44,7 +44,49 @@ completed transaction and both condition reports survived a real process restart
 The new online backup was restored into a fresh private file and passed integrity
 checking. Direct requests confirmed admin/developer/hidden-file/API denial and
 foreign Host/Origin rejection. Public certificate, off-tailnet access and actual
-Funnel URL stability remain unverified until public setup is approved.
+Funnel URL stability remain unverified after the failed attempt below.
+
+## Approved public attempt and safe shutdown
+
+After the user confirmed HTTPS/Funnel enablement, the waiting official command
+completed successfully:
+
+```text
+tailscale funnel --bg --https=443 http://127.0.0.1:3211
+Available on the internet:
+https://dhaksith.tail3cd298.ts.net/
+|-- proxy http://127.0.0.1:3211
+Funnel started and running in the background.
+```
+
+The active status contained only HTTPS 443 and that exact loopback proxy, with
+`AllowFunnel` true. CLI acceptance did not establish application reachability.
+Google public DNS returned `103.84.155.153` and `103.84.155.217`. A pinned public
+HTTPS probe timed out after approximately 10 seconds; the non-intercepted
+Playwright public verifier timed out loading `/resources` after 20 seconds.
+It failed before login or any public booking mutation. An external web fetch
+also failed, but is not an independent-device acceptance test.
+
+As required, the route was disabled with `tailscale funnel --https=443 off`.
+The final configuration status is `{}`. Read-only diagnostics at
+**2026-10-30 11:59:18 UTC (17:29:18 IST)**, after disabling, found both Google and
+Cloudflare DNS returning those two addresses, TCP 443 connections succeeding to
+both relay addresses, and the local filtered catalog returning HTTP 200. A
+subsequent direct TLS probe with `--noproxy '*'` failed its handshake while the
+route was off; it cannot prove the behavior of an active route.
+
+**Precise blocker:** no successful public HTTPS application response was
+obtained while the route was active. The original timeout's cause is unresolved;
+there is insufficient evidence to claim ISP blocking, a Tailscale defect, a
+certificate problem or an application error. Official documentation allows up
+to ten minutes for public DNS propagation; DNS resolution alone did not verify
+delivery here. No public lifecycle, external-device access, restart reachability
+or URL stability passed. No alternative public tunnel has been enabled.
+
+Private diagnostic evidence is stored in the restricted runtime directory;
+secrets, session cookies, raw logs and databases remain outside Git. The local
+services remain running on loopback. The original application DB hash is
+unchanged. Do not submit this disabled, unverified address as the working app.
 
 ## Official requirements verified
 
@@ -140,10 +182,11 @@ again after testing and remain unchanged.
    check have passed without enabling Tailscale forwarding.
 5. Inspect existing `funnel status --json` and `serve status --json`; do not
    overwrite unrelated mappings or reset an existing configuration.
-6. **Separate public approval required, currently pending:** review the exact URL, only ingress
+6. **Separate public approval was obtained for this exact Tailscale route:** review the exact URL, only ingress
    port 3211, fictional accounts, public visitor access and persistent background
    behavior with the user. Funnel may require explicit HTTPS/node-policy approval
-   in Tailscale's web UI. No public command has been run during preparation.
+   in Tailscale's web UI. This was completed, but the public attempt failed and
+   was disabled; do not automatically restart public exposure after this failure.
 
 To repeat the configured-origin test without exposing the app:
 
@@ -153,7 +196,7 @@ node --import tsx scripts/verify-funnel-demo.ts --loopback
 node --import tsx scripts/verify-funnel-demo.ts --loopback --revisit
 ```
 
-Only after gate 6 is approved, the supported command prepared for this service is:
+The supported command used after gate 6 approval was:
 
 ```powershell
 & "$env:ProgramFiles\Tailscale\tailscale.exe" funnel --bg --https=443 http://127.0.0.1:3211
@@ -163,7 +206,7 @@ Only after gate 6 is approved, the supported command prepared for this service i
 Record the actual CLI URL; compare it with the configured origin before sharing.
 Do not use a file/directory target or expose backend 3210, RDP, SSH or other ports.
 
-## Public acceptance - all pending
+## Public acceptance - failed initial reachability, remaining checks pending
 
 - Confirm official HTTPS certificate and real catalog response at the generated URL.
 - Run `node --import tsx scripts/verify-funnel-demo.ts` through that URL.
@@ -181,7 +224,8 @@ Do not use a file/directory target or expose backend 3210, RDP, SSH or other por
 - Only after genuine verification update README, deployment status, handoff
   and provisional report with the actual URL and limits. No form submission.
 
-If public verification fails, disable this service promptly:
+If public verification fails, disable this service promptly (completed for this
+attempt). The optional second command also stops the local app/ingress:
 
 ```powershell
 & "$env:ProgramFiles\Tailscale\tailscale.exe" funnel --https=443 off
@@ -193,9 +237,13 @@ powershell.exe -NoProfile -File scripts/funnel/judge-demo.ps1 -Action Stop
 After signing into Windows and restoring internet access, check Tailscale status,
 run the judge helper with `-Action Start`, then check Funnel status. With the
 approved `--bg` configuration, Funnel resumes when Tailscale reconnects; if it is
-off, use the same exact approved exposure command. The profile retains the
+off intentionally after a failure, leave it off pending review. The profile retains the
 database, origin and DPAPI secret; startup refuses a changed production build
 or occupied ports rather than exposing an unrelated service.
+
+**Current exception:** Funnel was deliberately disabled after failed verification.
+Starting the local app does not authorize automatically restoring public exposure;
+resolve the blocker and review the next attempt with the user first.
 
 No automatic startup task or unattended-mode change has been installed. Windows
 Tailscale normally depends on a signed-in user; running before Windows login
@@ -215,3 +263,13 @@ each new tunnel and require the `cloudflared` executable. This would need separa
 software/public-exposure approval and an exact-host configuration adjustment;
 it has not been installed, enabled or tested here. It is a fallback demonstration
 route, not an equally stable substitute. [Official Quick Tunnel documentation](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).
+
+For review only, the official portable Windows amd64 executable **2026.10.6**
+(published 29 October 2026) was downloaded to
+`%LOCALAPPDATA%/LabLoop/installers/cloudflared-2026.10.6-windows-amd64.exe`.
+Its SHA-256 matches the official GitHub release asset digest:
+`d521b3bf68982165f0d06d76732f22d9a105ef057ff3ae4c0986f3a23190950f`.
+Authenticode status is **Valid**, signer **Cloudflare, Inc.** The executable has
+not been run, installed as a service or connected to a tunnel. Software/local
+preparation approval has been requested separately; public exposure is excluded
+from that request. [Official release](https://github.com/cloudflare/cloudflared/releases/tag/2026.10.6).

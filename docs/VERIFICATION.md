@@ -5,6 +5,38 @@ This records independently executed work, distinct from the prior agent's
 reported results. Read-only file inspections are grouped by file set; private
 attachment/home paths are abbreviated. No secret values are recorded.
 
+## Subsequent approved Funnel attempt - failed public acceptance
+
+Local deployment-preparation evidence is detailed in `docs/TAILSCALE_FUNNEL.md`:
+48 Vitest tests, 5 browser tests, typecheck/lint, retained production build,
+configured-origin lifecycle, session/record restart persistence and backup restore.
+Those are local checks, not a verified public deployment.
+
+After the user's explicit route approval and manual HTTPS/Funnel enablement,
+`tailscale funnel --bg --https=443 http://127.0.0.1:3211` completed successfully
+and issued `https://dhaksith.tail3cd298.ts.net/`. The status showed only HTTPS
+443 forwarding to that filtered loopback ingress with `AllowFunnel` true.
+Pinned public curl timed out after about 10 seconds; the public Playwright
+verifier timed out at `/resources` after 20 seconds, before login/mutation.
+External web fetch failed too, without proving independent-device behavior.
+
+Executed `tailscale funnel --https=443 off`; independently confirmed final
+Funnel status `{}`. Read-only diagnostics at 2026-10-30 11:59:18 UTC found
+Google and Cloudflare public DNS agreeing on `103.84.155.153`/`103.84.155.217`,
+successful TCP 443 connections to both, and local ingress HTTP 200. Direct TLS
+with `--noproxy '*'` after disabling failed the handshake. That later result
+does not diagnose an active route. Root cause remains unresolved.
+
+No public lifecycle, certificate validation, external-device access, public
+restart or URL stability passed. Original DB SHA-256 remains
+`6bb86410d65288e6620f552ce4340271a6483e351d27baf00befdde1d828666a`.
+Local app/ingress, isolated DB, private DPAPI secret and backups are preserved.
+No fallback executable was run, tunnel enabled, paid resource created or power
+setting changed. Official portable cloudflared 2026.10.6 was subsequently
+downloaded for review only; its release digest and valid Cloudflare Authenticode
+signature were verified. Software/local preparation approval is pending separately
+and excludes public exposure. Details are in `docs/TAILSCALE_FUNNEL.md`.
+
 ## Recovery and initial Git evidence
 
 - Existing repository confirmed: LabLoop, original `main`, existing origin

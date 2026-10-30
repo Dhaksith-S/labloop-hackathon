@@ -153,7 +153,7 @@ failures/fixes: [`docs/VERIFICATION.md`](docs/VERIFICATION.md). Coverage mapping
 
 ## Deployment status
 
-**Not deployed. No public URL exists. Do not treat this repository as a live
+**Not deployed. No verified working public URL. Do not treat this repository as a live
 service.**
 
 Confirmed blockers:
@@ -181,10 +181,14 @@ this route. [Deployment comparison and runbook](docs/DEPLOYMENT.md).
 **Zero-cost Funnel preparation:** The existing production build has passed a
 local proxy custody/restart/backup check with an isolated fictional database
 outside OneDrive. Current checks pass 48 unit/integration tests and 5 browser
-tests. **There is still no live public URL.** Tailscale installation and user
-sign-in are independently confirmed. The assigned hostname is configured and
-tested locally; HTTPS/Funnel permission and public exposure await explicit
-approval. [Setup, evidence and restart guide](docs/TAILSCALE_FUNNEL.md).
+tests. **There is still no verified working public URL.** Tailscale 1.104.4,
+sign-in and HTTPS/Funnel permissions are confirmed. After explicit approval,
+the CLI issued `https://dhaksith.tail3cd298.ts.net/`, but public HTTPS/catalog
+verification timed out. Funnel was disabled; its final status is `{}`. The cause
+is unresolved; public workflow, external-device access and URL stability are
+unverified. Local production remains intact. A Cloudflare Quick Tunnel is an
+unapplied no-cost fallback requiring separate software/exposure approval.
+[Setup, failed-attempt evidence and restart guide](docs/TAILSCALE_FUNNEL.md).
 The earlier verification table/report record the `17fa246` baseline.
 
 The authoritative organiser brief and 100-point rubric are transcribed in

@@ -4,14 +4,18 @@
 using the existing production build, loopback-only backend/ingress and a private
 judge database outside OneDrive. It is not publicly enabled. Tailscale 1.104.4
 and user sign-in are verified; configured-origin production workflow/restart and
-backup restoration pass locally. HTTPS/Funnel prerequisites and public exposure
-await approval. See [Funnel guide](TAILSCALE_FUNNEL.md)
+backup restoration pass locally. The user enabled HTTPS/Funnel and approved the
+exact route. CLI setup issued `https://dhaksith.tail3cd298.ts.net/`, but public
+verification timed out; Funnel was disabled and its final status is `{}`. No
+working public URL, external-device access or public lifecycle is verified.
+The timeout's cause remains unresolved. See [Funnel guide](TAILSCALE_FUNNEL.md)
 for exact evidence, restart/stop commands and the accountless fallback. The paid
 Render template below remains unapplied and unauthorized.
 
 **Status: prepared locally, not deployed.** The user authorized preparation and
 explicitly prohibited paid resources. No cloud service, disk, subscription or
-production URL was created. Render is available as an optional integration but
+cloud production URL was created. The attempted Funnel address is disabled and
+unverified. Render is available as an optional integration but
 was not connected during this work. GitHub authentication is working.
 
 ## Strategy decision
@@ -105,16 +109,16 @@ Local automated coverage proves committed WAL backup, fresh-file restore and
 refusal to overwrite. Hosted scheduling, off-host restoration and host restart
 durability must still be verified.
 
-## Authorization needed for a real deployment
+## Other persistent-host options (not the current zero-cost route)
 
-The exact next action is approval of an identified provider account, service plan,
-monthly spending cap and persistent volume. For the prepared Render path, the
+For a separate hosted route, identify a provider account, service plan,
+spending cap and persistent volume before creating resources. For the prepared Render path, the
 user must install/connect Render and authorize the chosen paid compute plus disk.
 With the current **no paid resources** instruction, do not apply the template.
 An already-owned compatible persistent host can also be named without purchasing
 anything. Do not request secrets in chat; use provider settings or a secret manager.
 
-## Public acceptance checklist - not yet executed
+## Hosted-provider acceptance checklist - not executed
 
 - [ ] Validate configuration with the provider and install native dependencies on Linux.
 - [ ] Confirm disk mounted; set HTTPS URL, unique secret, secure cookies and demo isolation.

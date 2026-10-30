@@ -23,10 +23,11 @@ real, what is prepared, and which invariants must not be broken.
 - Subsequent Funnel preparation: 48 Vitest tests and 5 E2E tests pass; existing
   production artifact retained. Isolated judge data is outside OneDrive. Tailscale
   1.104.4 installation and user sign-in are verified. The actual assigned origin
-  is configured and tested locally; HTTPS/Funnel setup and public exposure still
-  require approval. No forwarding command has been run.
-  No public URL. See `docs/TAILSCALE_FUNNEL.md` before attempting exposure.
-- **Not deployed.** No public URL. See `README.md` and
+  is configured and tested locally. The user approved the exact Funnel route and
+  enabled HTTPS/Funnel. CLI setup succeeded, but public verification timed out;
+  the route was disabled and final status is `{}`. Do not automatically re-enable.
+  No verified working public URL. See `docs/TAILSCALE_FUNNEL.md`.
+- **Not deployed.** No verified working public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.
 - **Source is public** at
   <https://github.com/Dhaksith-S/labloop-hackathon>, branch `main`. A public

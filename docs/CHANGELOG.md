@@ -6,14 +6,28 @@ versioning for the application.
 
 ## [Unreleased] - 2026-10-30 Codex takeover
 
-### Subsequent zero-cost Funnel preparation (not publicly enabled)
+### Approved Funnel attempt (disabled after failed public verification)
+
+- User approved the exact HTTPS hostname/443 -> loopback 3211 -> production
+  3210 configuration and enabled HTTPS/Funnel in Tailscale's website.
+- Official CLI accepted the background route and issued
+  `https://dhaksith.tail3cd298.ts.net/`. Initial public curl and browser catalog
+  probes timed out. No public lifecycle completed and no working URL is claimed.
+- Disabled Funnel as requested; final status `{}`. Local catalog still HTTP 200,
+  original DB hash unchanged; isolated judge records and secret preserved.
+- Later read-only diagnostics resolved both public relay addresses and connected
+  to TCP 443. Root cause remains unconfirmed; no ISP/provider/app blame inferred.
+- Updated deployment docs and provisional report with this failed attempt.
+  Cloudflare Quick Tunnels remains an unapplied, separately approved fallback.
+
+### Subsequent zero-cost Funnel preparation (before public attempt)
 
 - User completed Tailscale installation and GitHub SSO; CLI version 1.104.4,
   online device and empty Serve/Funnel configurations independently confirmed.
 - Added configured-hostname loopback verification (`--loopback`); actual
   production custody, restart/session persistence and backup restoration pass.
-- Reran 48 tests, typecheck and lint. HTTPS/Funnel permission and public exposure
-  remain pending explicit approval; no live URL or public verification is claimed.
+- Reran 48 tests, typecheck and lint. Public verification remained pending at
+  that stage; the later approved attempt and shutdown are recorded above.
 
 - Retained the verified production build; added selectable loopback binding,
   exact-origin filtered ingress and private Windows judge-demo operations.
@@ -23,8 +37,8 @@ versioning for the application.
   and lint pass. Actual local proxy custody journey and restart persistence pass.
 - Verified official Tailscale MSI signature/hash; initial automatic installation
   was rejected by approval review; subsequent manual installation/sign-in are verified.
-- No Funnel exposure, live public URL, paid resource, system power change or
-  startup task. Public verification and subsequent report update remain pending.
+- No exposure occurred during that preparation stage. No paid resource,
+  system power change or startup task was created.
 
 ### Fixed and verified
 
