@@ -8,6 +8,12 @@ versioning for the application.
 
 ### Cloudflare fallback - approved software/local preparation only
 
+- Subsequent URL-allocation-only approval received. Automatic approval review
+  rejected the automated launch (blocked by policy, no additional reason).
+  App/ingress were stopped separately; ports 3210/3211/3212 are closed, no
+  cloudflared process runs, Funnel remains off. Manual allocation is next;
+  connecting LabLoop remains separately unapproved.
+
 - Reverified official portable cloudflared 2026.10.6 checksum/signature; version
   and CLI help executed after approval. No tunnel/account/service was started.
 - Added explicit Cloudflare exact-Host ingress mode, provider-specific origin
@@ -18,7 +24,7 @@ versioning for the application.
 - Fixed verifier route-cleanup race and raw header error output; revoked the one
   affected fictional session. Acceptance now records only after clean teardown.
 - Original DB, saved profile, DPAPI secret and production build preserved.
-  Funnel remains off; no Cloudflare URL allocated. Public approvals remain.
+  Funnel remains off; no Cloudflare URL allocated. App-exposure approval remains.
 
 ### Approved Funnel attempt (disabled after failed public verification)
 

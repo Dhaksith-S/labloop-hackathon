@@ -1,7 +1,7 @@
 # Cloudflare Quick Tunnel: local preparation and approval gates
 
-**30 October 2026: software/local preparation approved and verified. No public
-Cloudflare tunnel has been started. No generated Cloudflare URL exists yet.**
+**30 October 2026: software/local preparation verified; URL allocation approved
+but automated launch blocked. No tunnel started or Cloudflare URL generated.**
 Tailscale Funnel remains disabled after its failed public acceptance test. This
 fallback keeps the same production build, fictional judge SQLite database and
 persistent DPAPI-protected session secret. No account, service installation,
@@ -20,7 +20,7 @@ subscription, power change or database migration is needed for this preparation.
 | Restart | Existing browser session, completed booking and both condition reports passed `--revisit` after a real process stop/start |
 | Backup | Fresh online SQLite backup restored to a new private file; `integrity_check=ok`, completed booking and two condition reports verified |
 | Preservation | Original app DB, encrypted session-secret file, configured profile and production build unchanged against pre-preparation hashes/identity |
-| Current listeners | App `127.0.0.1:3210`, filtered ingress `127.0.0.1:3211`, local-preflight mode only |
+| Tested listeners / current state | Local preflight used app `127.0.0.1:3210` and filtered ingress `127.0.0.1:3211`; both are now stopped for allocation and ports 3210/3211/3212 are closed |
 | Public state | No cloudflared process running; Funnel status `{}`; no public Cloudflare acceptance or URL stability evidence |
 
 The five standard Playwright E2E tests passed during the earlier Funnel work;
@@ -85,7 +85,17 @@ journey and restart revisit completed successfully. A restore check initially
 compared a newer transaction with an older backup; a new backup taken after the
 final journey restored and verified successfully.
 
-## Public configuration for review - not authorized or executed
+## Public configuration - allocation approved, app connection unapproved
+
+The user approved gate 1 below. Automatic approval review rejected the automated
+allocation command with **blocked by policy**, without additional rationale.
+The rejected command did not run. The recorded local app/ingress were then
+stopped separately and all three ports verified closed. No cloudflared process
+or process record exists; Funnel remains `{}`. No default config file or
+`TUNNEL_*`/`CF_TUNNEL*` process-environment override was present at the final check.
+The next action is for the user to run the already-approved allocation command
+manually and report only the generated HTTPS URL or concise error. Do not retry
+the rejected launch using a different tool, shell wrapper or obfuscated command.
 
 Cloudflare assigns its random public hostname only when a Quick Tunnel starts.
 An exact generated URL cannot be shown beforehand. Use two approval gates to
@@ -104,9 +114,9 @@ honor the user's requirement to review the actual app URL before exposure:
    configure the exact printed URL using the helper below, then start the app.
    Retest the full workflow through the real URL before describing it as working.
 
-The command prepared for gate 1 is below. **Do not run it under the current
-software/local-only approval.** These flags were checked in the installed CLI's
-help; the network command itself has not been executed:
+The command approved for gate 1 is below. It may now be run **manually by the
+user**, with app/ingress left stopped. These flags were checked in the installed
+CLI's help; the network command has not yet executed:
 
 ```powershell
 & "$env:LOCALAPPDATA\LabLoop\installers\cloudflared-2026.10.6-windows-amd64.exe" tunnel --no-autoupdate --metrics 127.0.0.1:3212 --management-diagnostics=false --url http://127.0.0.1:3211

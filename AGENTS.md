@@ -31,7 +31,10 @@ real, what is prepared, and which invariants must not be broken.
   cloudflared 2026.10.6 signature/checksum/version verified; no tunnel started.
   Latest 51 Vitest tests, typecheck/lint, Cloudflare-mode production journey,
   restart/session persistence and backup restore pass locally. No public
-  allocation or app exposure is approved. See `docs/CLOUDFLARE_QUICK_TUNNEL.md`.
+  URL exists. Allocation-only approval was subsequently given, but automatic
+  launch review rejected the command (blocked by policy). App/ingress are now
+  stopped; no tunnel runs. App exposure remains unapproved. See
+  `docs/CLOUDFLARE_QUICK_TUNNEL.md` for the manual allocation continuation.
 - **Not deployed.** No verified working public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.
 - **Source is public** at

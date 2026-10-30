@@ -15,7 +15,9 @@ Render template below remains unapplied and unauthorized.
 Cloudflare Quick Tunnel software/local preparation is now approved and locally
 verified: 51 tests, exact-host ingress, production workflow, restart/session
 persistence and backup restoration pass. No tunnel was started; public URL
-allocation and connecting the app remain separately unapproved. See the
+allocation was approved, but automatic launch review rejected the command;
+no tunnel runs and app/ingress are stopped. Connecting the app remains
+unapproved. See the
 [Cloudflare fallback runbook](CLOUDFLARE_QUICK_TUNNEL.md). A temporary Quick Tunnel
 cannot promise an unchanged URL after tunnel recreation.
 

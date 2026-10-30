@@ -83,7 +83,13 @@ their evidence explicitly has `publicUrl: null`. No Cloudflare URL, public TLS,
 live cloudflared transport, off-tailnet access or public URL stability is verified.
 Current app/ingress bind loopback only; Funnel status `{}` and no cloudflared
 process. The public allocation/app-connection approval gates are documented in
-`docs/CLOUDFLARE_QUICK_TUNNEL.md`; neither public step is authorized yet.
+`docs/CLOUDFLARE_QUICK_TUNNEL.md`. Allocation-only approval was subsequently
+given, but automated launch review rejected the command with `blocked by policy`
+and no additional rationale. The rejected command did not run. Local app/ingress
+were stopped separately, no cloudflared process/record exists, ports
+3210/3211/3212 are closed and Funnel remains `{}`. No default Cloudflare config
+files or tunnel environment overrides were present at the final check. Manual
+user allocation is now pending; app connection remains separately unapproved.
 
 ## Recovery and initial Git evidence
 

@@ -453,14 +453,19 @@ are suppressed, route callbacks drain before disposal, and acceptance is saved
 only after clean shutdown. A stale-backup comparison was corrected by taking a
 fresh backup after the final journey; no records were reset or rewritten.
 
-Current local services run Cloudflare local-preflight on loopback 3210/3211;
-the saved profile still contains the old Tailscale origin, which is not a live
-public route. `Status` distinguishes running origin/provider from saved origin.
-Funnel remains `{}` and no cloudflared process is running.
+Local services passed in Cloudflare local-preflight on loopback 3210/3211, then
+were stopped for URL allocation. The saved profile still contains the old
+Tailscale origin, which is not a live public route. Funnel remains `{}`;
+no cloudflared process/record exists and ports 3210/3211/3212 are closed.
 
-Next: obtain **allocation-only public approval** before starting any Quick
-Tunnel. Stop local app/ingress and verify ports are unused, allocate the URL to
-closed ingress 3211, record PID/start time privately, then show the actual URL
-for a separate app-connection approval. Only after that approval configure the
+The user subsequently approved **URL allocation only**. Automatic approval
+review rejected the automated launch with `blocked by policy`, supplying no
+additional reason. Do not retry the rejected action through another tool/wrapper.
+The next step is manual user execution of the approved command in the runbook,
+with the app left stopped, then confirmation of the actual URL or concise error.
+No default config file or tunnel environment override was present at inspection.
+Once manually started, identify/record only that process's PID/start time, keep
+the app stopped and show the actual hostname for separate app-connection approval.
+Only after that approval configure the
 exact URL with `Configure -Provider Cloudflare`, start production, run public
 workflow/restart/backup and off-tailnet-device checks. No fake public evidence.

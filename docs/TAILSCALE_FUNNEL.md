@@ -274,6 +274,8 @@ Authenticode status is **Valid**, signer **Cloudflare, Inc.** Following separate
 software/local preparation approval, `--version` and `tunnel --help` were run.
 No service or tunnel was started. Exact-host Cloudflare ingress and local
 production lifecycle/restart/backup checks passed with 51 tests/typecheck/lint.
-Public allocation and app exposure remain unapproved. See the
+Allocation-only approval was subsequently obtained, but automatic review blocked
+the launch. App/ingress are stopped; no tunnel runs or URL exists. App exposure
+remains unapproved. See the
 [Cloudflare runbook](CLOUDFLARE_QUICK_TUNNEL.md) for current evidence and gates.
 [Official release](https://github.com/cloudflare/cloudflared/releases/tag/2026.10.6).

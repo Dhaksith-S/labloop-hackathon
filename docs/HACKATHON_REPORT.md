@@ -288,8 +288,9 @@ has been verified. Do not submit that disabled address as a working application.
 Cloudflare Quick Tunnels is a no-cost, accountless fallback. Approved local
 preparation verified portable cloudflared 2026.10.6 signature/checksum/version
 and its ingress mode's production lifecycle, restart/session and backup restore.
-No tunnel was started or URL allocated; public allocation and app exposure
-remain unapproved. Hostnames change on recreation and uptime is not guaranteed.
+No tunnel was started or URL allocated. Allocation-only approval was obtained,
+but automated launch was blocked; app exposure remains unapproved.
+Hostnames change on recreation and uptime is not guaranteed.
 The laptop and network must stay online. No power settings were changed.
 The paid Render template remains unapplied;
 Supabase remains an unapplied port. See `docs/TAILSCALE_FUNNEL.md` for commands,

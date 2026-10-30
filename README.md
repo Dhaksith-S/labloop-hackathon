@@ -197,7 +197,9 @@ separately approved. The verified portable cloudflared 2026.10.6 reports its
 version; no tunnel has been started. Exact-host Cloudflare ingress, 51 tests,
 typecheck/lint, the production custody journey, restart/session persistence and
 backup restoration pass locally. No real Cloudflare URL exists yet; public
-allocation and application exposure still require approval.
+allocation was subsequently approved, but automatic review blocked its launch.
+App/ingress are stopped for manual allocation; application exposure still
+requires approval.
 [Evidence and approval gates](docs/CLOUDFLARE_QUICK_TUNNEL.md).
 
 The authoritative organiser brief and 100-point rubric are transcribed in
