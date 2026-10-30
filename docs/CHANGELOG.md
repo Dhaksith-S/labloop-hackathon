@@ -6,7 +6,26 @@ versioning for the application.
 
 ## [Unreleased] - 2026-10-30 Codex takeover
 
-### Recovered public Cloudflare demo - final acceptance in progress
+### Verified public judge demo - required acceptance passed
+
+- User approved and manually connected the exact current HTTPS origin
+  `https://headline-anticipated-trips-salaries.trycloudflare.com`. Public owner
+  listing/discovery and complete custody on that same new listing passed.
+- Public transport/security/privileged-login tests passed. Saved owner session,
+  completed booking, both reports and all pre-restart history survived an app-only
+  restart with the same tunnel/hostname. Final fresh-file backup restore passed.
+- User confirmed independent phone/mobile-data catalog and authenticated student
+  dashboard access with Wi-Fi disabled. Evidence identifies this as user-confirmed.
+- Added app-only `RestartApp` and an exact-resource verifier option; 55 tests,
+  typecheck/lint and PowerShell syntax passed. Original production build, private
+  judge DB, persistent secret and development DB preserved.
+- Published sanitized verification JSON/fictional screenshot; aligned README,
+  official seven-criterion traceability, handoff and provisional report/PDF.
+  Official template and actual participant details remain pending; no form sent.
+- Laptop/network/current tunnel must stay online; recreation changes the URL.
+  No paid hosting, service/startup task, power change or uptime guarantee.
+
+### Historical recovery checkpoints - superseded by verified demo above
 
 - User recreated the tunnel while reporting restart; previous `complexity-...`
   URL is obsolete. Verified new `headline-anticipated-trips-salaries` connector,

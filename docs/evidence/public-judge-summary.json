@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "origin": "https://headline-anticipated-trips-salaries.trycloudflare.com",
+  "status": "Required public demo acceptance checks passed",
+  "productionBuildId": "itApzfwuOZ96pav7ZpWPX",
+  "sourceChecks": {
+    "vitestTests": 55,
+    "vitestFiles": 6,
+    "typecheck": "passed",
+    "lint": "passed"
+  },
+  "listing": {
+    "verifiedAt": "2026-10-30T14:55:30.517Z",
+    "name": "Judge Demo Assembly Workspace 1793372121124",
+    "path": "/resources/23e2c684-50c8-447f-9155-8a9b91b82af7",
+    "ownerPublished": true,
+    "studentDiscovered": true
+  },
+  "booking": {
+    "verifiedAt": "2026-10-30T14:57:05.472Z",
+    "path": "/bookings/8a26a163-dd85-4b9b-bd8c-c55b67230017",
+    "completed": true,
+    "samePublishedResource": true,
+    "conditionReports": 2,
+    "borrowerCompletedHistoryVerifiedAfterRestart": true,
+    "borrowerRevisitVerifiedAt": "2026-10-30T15:39:18.005Z"
+  },
+  "network": {
+    "browserInterception": false,
+    "resolverOverride": false,
+    "normalTlsValidation": true
+  },
+  "cookieFlags": {
+    "secure": true,
+    "httpOnly": true,
+    "sameSite": "Lax"
+  },
+  "security": {
+    "verifiedAt": "2026-10-30T14:49:57.567Z",
+    "checks": [
+      {
+        "check": "HTTP login upgrade",
+        "status": 308,
+        "location": "https://headline-anticipated-trips-salaries.trycloudflare.com/login"
+      },
+      {
+        "check": "Plaintext POST with spoofed protocol",
+        "status": 403
+      },
+      {
+        "check": "Cloudflare overwrites visitor protocol header",
+        "status": 200
+      },
+      {
+        "path": "/admin",
+        "status": 404
+      },
+      {
+        "path": "/.env.local",
+        "status": 404
+      },
+      {
+        "path": "/.git/config",
+        "status": 404
+      },
+      {
+        "path": "/api/debug",
+        "status": 404
+      },
+      {
+        "path": "/__nextjs_original-stack-frame",
+        "status": 404
+      },
+      {
+        "path": "/_next/webpack-hmr",
+        "status": 404
+      },
+      {
+        "path": "/metrics",
+        "status": 404
+      },
+      {
+        "check": "Foreign Origin",
+        "status": 403
+      },
+      {
+        "check": "Absent Origin",
+        "status": 403
+      }
+    ],
+    "headers": {
+      "hsts": "max-age=86400",
+      "csp": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+      "nosniff": "nosniff",
+      "frame": "DENY"
+    },
+    "sharedPrivilegedCredentialRejected": true
+  },
+  "restart": {
+    "verifiedAt": "2026-10-30T15:08:03.5636954Z",
+    "appIdentityChanged": true,
+    "ingressIdentityChanged": true,
+    "tunnelIdentityUnchanged": true,
+    "samePublicUrl": true,
+    "savedBrowserSessionRetained": true,
+    "completedRecordAndReportsRetained": true,
+    "allPreRestartAuditHistoryRowsUnchanged": true
+  },
+  "backupRestore": {
+    "verifiedAt": "2026-10-30T15:23:25.699Z",
+    "integrity": "ok",
+    "conditionReports": 2,
+    "bookingEvents": 6,
+    "managerSharedCredentialRejected": true
+  },
+  "preservation": {
+    "originalDevelopmentDatabaseUnchanged": true,
+    "encryptedSessionSecretUnchanged": true,
+    "productionBuildRetained": true
+  },
+  "independentDevice": {
+    "status": "passed",
+    "source": "User-confirmed independent mobile-data phone test",
+    "confirmationReceivedAt": "2026-10-30T15:21:19.8796379Z",
+    "reportedNetwork": "Phone Wi-Fi disabled; mobile data enabled",
+    "catalogLoaded": true,
+    "authenticatedStudentDashboardLoaded": true,
+    "automatedPhoneInspection": false
+  },
+  "uptime": "Laptop, network and current cloudflared process must stay online; hostname changes on tunnel recreation",
+  "screenshot": "public-completed-booking.png",
+  "fictionalDemoData": true,
+  "verificationCompletedAt": "2026-10-30T15:23:27.479Z"
+}

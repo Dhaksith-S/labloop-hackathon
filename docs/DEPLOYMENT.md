@@ -1,18 +1,17 @@
 # Persistent SQLite deployment preparation
 
-**Current public demo acceptance:**
-<https://headline-anticipated-trips-salaries.trycloudflare.com> is configured with
-the app stopped, pending reconnection approval. Real HTTPS custody,
-security/cookie checks and a fresh backup restore passed on the previous hostname
-on 30 October 2026; that hostname is obsolete after user recreation.
-55 tests/typecheck/lint pass. App-only restart and independent mobile-data
-acceptance remain pending. See [executed evidence](PUBLIC_DEMO_VERIFICATION.md)
+**Current public demo verified:**
+<https://headline-anticipated-trips-salaries.trycloudflare.com>. Current-host
+public listing/discovery, full same-resource custody, HTTPS/security/cookies,
+same-URL app restart/session/history and fresh restore passed. User confirmed
+external phone/mobile-data catalog and authenticated dashboard access.
+55 tests/typecheck/lint pass. See [executed evidence](PUBLIC_DEMO_VERIFICATION.md)
 and the [Cloudflare runbook](CLOUDFLARE_QUICK_TUNNEL.md). The public store locks
 shared privileged demo credentials; student/owner workflows remain available.
 The current laptop/tunnel process must stay online; recreation changes the URL.
-The new connector/readiness/TLS are verified, while expected 502 confirms app
-disconnection. Sessions/history/secret were preserved. After approval, load the
-validated HTTPS-upgrade fix and repeat real public workflow/transport/persistence.
+The approved app and registered tunnel are running; all three local listeners
+bind loopback only. Persistent DB/secret/build are preserved. Keep the laptop,
+network and tunnel window online. No guaranteed uptime is claimed.
 
 The following preparation/failed-attempt notes are historical. The first
 Cloudflare hostname below expired; it is not the current judge URL.

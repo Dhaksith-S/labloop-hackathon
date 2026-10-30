@@ -23,6 +23,7 @@ if (processes.origin !== baseURL || (processes.provider ?? "tailscale") !== prov
 }
 const evidencePath = path.join(runtime, `${mode}-evidence.json`);
 const sessionPath = path.join(runtime, `${mode}-session.json`);
+const resourceName = process.env.LABLOOP_JUDGE_RESOURCE_NAME ?? "Open Maker Bench 04";
 let verificationStage = "initialization";
 
 async function main() {
@@ -100,7 +101,7 @@ async function main() {
     await login("priya@labloop.demo");
     verificationStage = "request-form";
     await page.goto("/resources");
-    await page.getByRole("link", { name: /Open Maker Bench 04/ }).first().click();
+    await page.getByRole("link", { name: resourceName }).first().click();
     await page.getByRole("link", { name: "Request a slot" }).click();
     const localTime = (minutes: number) => new Date(Date.now() + (minutes + 330) * 60_000).toISOString().slice(0, 16);
     await page.locator("#startsAt").fill(localTime(15));
@@ -149,7 +150,7 @@ async function main() {
     const cookie = (await context.cookies()).find(c => c.name === "labloop_session");
     expect(cookie?.secure).toBe(true); expect(cookie?.httpOnly).toBe(true); expect(cookie?.sameSite).toBe("Lax");
     await context.storageState({ path: sessionPath });
-    const evidence = { mode, provider, configuredOrigin: baseURL,
+    const evidence = { mode, provider, resourceName, configuredOrigin: baseURL,
       publicUrl: intercepted ? null : baseURL,
       bookingPath, buildId: profile.buildId, verifiedAt: new Date().toISOString(),
       publicRelayIPv4: publicIP ?? null, cookieFlags: { secure: true, httpOnly: true, sameSite: "Lax" } };

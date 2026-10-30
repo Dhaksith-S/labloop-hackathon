@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory=$true)]
-    [ValidateSet('Prepare','Configure','Start','Stop','Status','Backup')]
+    [ValidateSet('Prepare','Configure','Start','RestartApp','Stop','Status','Backup')]
     [string]$Action,
     [string]$PublicUrl,
     [ValidateSet('Tailscale','Cloudflare')]
@@ -83,6 +83,11 @@ if ($Action -eq 'Prepare') {
     return
 }
 
+if ($Action -eq 'RestartApp') {
+    Stop-OwnedProcesses
+    Write-Output 'Restarting only the recorded judge app and ingress. Cloudflared and the saved hostname are not changed.'
+    $Action = 'Start'
+}
 $profile = Read-Profile
 if ($Action -eq 'Configure') {
     $uri = [Uri]$PublicUrl

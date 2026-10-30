@@ -7,15 +7,17 @@ Northstar Institute of Applied Technology. Verified owners publish equipment;
 students discover it, see exactly which rules they meet, request a slot, and
 track a human-reviewed custody record from approval to return.
 
-**Source repository:** <https://github.com/Dhaksith-S/labloop-hackathon> (public
-code; the application itself is not hosted).
+**Public judge demo:** <https://headline-anticipated-trips-salaries.trycloudflare.com>
 
-> **Status, stated plainly:** the application is fully runnable locally with a
-> persistent SQLite database. It has **not** been deployed publicly. No Vercel
-> credentials or authorization existed in the build environment, and SQLite on a
-> serverless filesystem would not persist. Supabase schema and RLS files are
-> prepared but have **never been applied or verified**. See
-> [Deployment status](#deployment-status).
+**Source repository:** <https://github.com/Dhaksith-S/labloop-hackathon>
+
+> Required public acceptance passed: owner listing through full custody,
+> security, same-URL session/history after app restart, fresh backup restore and
+> user-confirmed external phone access. The existing production build and SQLite
+> run on the owner's laptop through Cloudflare Quick Tunnel. Keep the laptop,
+> network and current tunnel window online; no guaranteed uptime. See
+> [verified deployment evidence](docs/PUBLIC_DEMO_VERIFICATION.md).
+> Supabase schema/RLS remain prepared, unapplied and unverified.
 
 ---
 
@@ -97,7 +99,7 @@ npm run db:reset
    condition reports and audit record are complete.
 5. As **Maya**, open **Listings → New listing** to publish a resource with rules,
    hours and a required credential.
-6. As **Riya** (manager), open **Organization** to see database-backed counts and
+6. **Local development only:** as **Riya** (manager), open **Organization** to see database-backed counts and
    verify a pending qualification.
 
 The full script, including the seeded pending request and waitlist behaviour, is
@@ -155,47 +157,44 @@ demo data was backed up and preserved during this takeover. Command log and
 failures/fixes: [`docs/VERIFICATION.md`](docs/VERIFICATION.md). Coverage mapping:
 [`docs/TESTING.md`](docs/TESTING.md).
 
-## Deployment status
+## Verified public judge demo
 
-**New hostname configured; reconnection approval is pending:**
 <https://headline-anticipated-trips-salaries.trycloudflare.com>
 
-The real HTTPS browser custody journey, restricted-path/Origin checks, secure
-cookies and a fresh backup restore passed on the previous hostname, which the
-user subsequently recreated. **App-only restart and independent
-mobile-data acceptance are still pending; do not claim all checks are complete.**
-The app is stopped with the new exact hostname pinned. Its connector/readiness
-and TLS pass; current 502 is expected until approved reconnection. Sessions and
-booking history were preserved. The validated HTTPS-upgrade fix awaits public retest.
-[Executed evidence and judge walkthrough](docs/PUBLIC_DEMO_VERIFICATION.md).
+**Required public acceptance checks passed on 30 October 2026:** owner listing
+and student discovery, complete request-to-return lifecycle on that same new
+resource, HTTPS/security/credential checks, saved session/history after an
+app-only restart at the same URL, fresh backup restore, and user-confirmed
+external phone/mobile-data access.
 
-The existing production build runs on loopback behind filtered ingress and an
-accountless Cloudflare Quick Tunnel. Its fictional SQLite DB and DPAPI session
-secret are outside OneDrive. Keep the tunnel PowerShell window, laptop and
-network running. The URL changes if the tunnel is recreated; no uptime guarantee,
-automatic startup or power-policy change is provided.
+Use `priya@labloop.demo` and `owner@labloop.demo`, password `LabLoop!2026`.
+Manager shared credentials are locked in the public judge store.
+[Executed evidence, screenshot and judge walkthrough](docs/PUBLIC_DEMO_VERIFICATION.md).
 
-Tailscale Funnel was disabled after failed public verification. The first
-Cloudflare hostname expired after its process exited; the later `complexity-...`
-hostname is now obsolete too. Use only the new URL after approved reconnection
-and successful tests. [Operations/recovery guide](docs/CLOUDFLARE_QUICK_TUNNEL.md).
-No paid resources were created. Render's paid template remains unapplied;
-Supabase/Postgres remains a prepared, unverified port, not the running backend.
+The original production build runs on loopback behind filtered ingress and an
+accountless Cloudflare Quick Tunnel; fictional SQLite and the DPAPI session
+secret persist outside OneDrive. **Keep the laptop, network and cloudflared
+window/process online. No guaranteed uptime is claimed.** The URL changes if
+cloudflared is recreated or Windows restarts. App-only `RestartApp` preserves the
+running tunnel/URL and was verified. [Restart/recovery guide](docs/CLOUDFLARE_QUICK_TUNNEL.md).
+
+Old `underlying-...` and `complexity-...` URLs are obsolete. Tailscale Funnel is
+off. No paid hosting, Windows app service, automatic startup task or power change
+was created. Render's paid template and Supabase/Postgres port remain unapplied.
 
 ## Submission readiness
 
 Latest source checks: **55 tests across 6 Vitest files, typecheck and lint pass**.
-Public production custody/security and fresh restore checks passed; final restart
-and off-tailnet-device checks remain. The earlier table records the `17fa246`
-baseline, including five standard browser tests. Those standard tests were not
-rerun for the operations-only changes; the real public production browser test was.
+The real public production tests and restart/restore evidence are recorded above.
+The earlier table records the initial `17fa246` baseline, including five standard
+browser tests; those were not rerun for the operations-only changes.
 
 The authoritative organiser brief and 100-point rubric are transcribed in
 [`docs/OFFICIAL_PROBLEM_STATEMENT.md`](docs/OFFICIAL_PROBLEM_STATEMENT.md).
 [`docs/JUDGING_TRACEABILITY.md`](docs/JUDGING_TRACEABILITY.md) maps all seven
 criteria to implementation, tests and gaps. The report and PDF are provisional:
 the official template and verified participant/contribution details are pending.
-Final public acceptance is pending. No form has been submitted.
+Public demo acceptance is verified. No form has been submitted.
 Deadline: **1 November 2026, 10:00 AM IST**.
 
 [Download the provisional report PDF](output/pdf/LabLoop-Provisional-Report.pdf).

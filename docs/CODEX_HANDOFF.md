@@ -1,7 +1,8 @@
 # Codex handoff
 
-You are receiving a complete, locally verified hackathon application — not a
-deployed service. Read this before changing code.
+You are receiving the existing hackathon application with a verified public
+fictional judge demo. Read this before changing code. **Section 19 supersedes
+the historical deployment checkpoints in sections 17-18.**
 
 ## 1. Mission and current state
 
@@ -15,18 +16,19 @@ fictional Northstar Institute of Applied Technology.
 | App | Next.js 16.4.3 App Router, React 19.3, strict TypeScript, Tailwind v4 |
 | Backend | Persistent SQLite via `better-sqlite3`; self-hosted auth |
 | Demo data | Idempotent fictional seed; five accounts; seven resources |
-| Unit/integration tests | 44 passed across 4 files (Vitest), independently rerun by Codex |
+| Unit/integration tests | Latest 55 passed across 6 files; original baseline 44 across 4 |
 | Browser tests | 5 passed (Playwright, Chromium), including listing/discovery and phone viewport |
 | Typecheck/lint/build | Passed |
-| Public deployment | **None. No URL. No Vercel project/token.** |
+| Public deployment | Required checks passed at `https://headline-anticipated-trips-salaries.trycloudflare.com`; laptop/network/current cloudflared window must remain online; no uptime guarantee |
 | Supabase | Schema + RLS prepared in `supabase/`; **never applied or verified** |
 | Git | Public `main` at <https://github.com/Dhaksith-S/labloop-hackathon>; inspect `git log` for milestone history |
 | Local production | Guarded startup; browser custody and Secure cookie verified; session/completed booking/conditions survive process restart; backup integrity passed |
 | Hosting preparation | `deploy/render.yaml` + startup/backup/runbook, unapplied; no paid resources authorized |
 | Submission | Official brief/rubric transcribed; report/PDF provisional; official template and real participant/contribution details pending; no submission made |
 
-If a task depends on a live deployment, Supabase verification, email, uploads or
-real institution data, it is **not** already done. Do not imply otherwise.
+Supabase verification, email, uploads and real institution identity integration
+are **not** done. Public demo acceptance is verified only as documented in
+`docs/PUBLIC_DEMO_VERIFICATION.md`; preserve the running tunnel and private DB.
 
 ## 2. First 15 minutes
 
@@ -43,7 +45,7 @@ npm run verify:production       # private temp fixture, local production restart
 npm run dev                     # http://localhost:3000
 ```
 
-Demo accounts (password `LabLoop!2026`):
+Local demo accounts (password `LabLoop!2026`; public manager login is locked):
 
 - `student@labloop.demo` — Arjun, student
 - `owner@labloop.demo` — Maya, resource owner
@@ -173,23 +175,18 @@ Production without `LABLOOP_SESSION_SECRET` throws. Do not add a fallback.
 
 ## 8. Highest-priority work
 
-### A. Authorized persistent hosting (selected route)
+### A. Verified zero-cost laptop demo (current route)
 
-The user explicitly selected persistent SQLite preparation and **no paid
-resources**. Read `docs/DEPLOYMENT.md`. Do not apply `deploy/render.yaml` without
-new authorization: its compute/disk are paid. No provider account is connected.
-Do not replace the working backend with an unverified port under deadline pressure.
+Preserve the current production app, isolated fictional SQLite store and exact
+approved Cloudflare hostname. Public lifecycle, security, app-only restart,
+backup restore and user-confirmed external phone access passed; see section19.
+Keep the current foreground cloudflared window/laptop/network online. A new
+tunnel URL requires exact-host review, configuration and public retesting.
 
-Prepared: one native Node instance, `/var/data/labloop.db`, generated secret,
-explicit fictional seed, HTTPS URL requirement, manual deployment, WAL-safe
-backup/restore, local production restart verifier. Not yet verified: provider
-configuration/API validation, Linux native-module installation, actual volume,
-public judge flow, hosted restart and off-host backup schedule.
-
-Next action: the user must authorize a compatible existing persistent host or
-a specific provider account/plan/spending cap and connect it through the provider.
-No credentials should be pasted in chat or committed. Continue local tasks while
-that decision is pending; do not create resources or incur charges.
+No paid resources are authorized. `deploy/render.yaml` remains an unapplied
+paid compute/disk template. Managed-provider configuration, Linux native-module
+installation, persistent host volume and off-host backup scheduling are not
+verified. Do not migrate the working backend unnecessarily or paste credentials.
 
 ### B. Supabase/Postgres port (alternative, deferred)
 
@@ -368,7 +365,7 @@ review links and submit individually. Codex must not submit the Google form.
 The local product is verified. Submission remains incomplete because public
 deployment, official-format PDF and participant details are outstanding.
 
-## 15. Subsequent Funnel preparation - current continuation point
+## 15. Historical Funnel preparation checkpoint
 
 The user authorized zero-cost laptop Funnel preparation/testing, retaining the
 existing production build. An initial automatic installer command was rejected;
@@ -490,7 +487,7 @@ review/pin a different hostname before reconnecting the app. Automated launch
 rejections remain; do not bypass them through another tool/wrapper. Public
 workflow/restart/backup/off-tailnet-device acceptance is still pending.
 
-## 17. Current continuation: real public journey passed, final checks pending
+## 17. Historical continuation: prior public journey and pending checks
 
 Current exact URL: `https://complexity-headphones-normal-nut.trycloudflare.com`.
 The user supplied this recovered hostname, said the tunnel window stays open,
@@ -569,7 +566,7 @@ Then perform the saved public-session/record revisit and remaining phone check.
 Update pending markers only after actual results. Original DB/secret/build and
 the completed public history/backup are preserved.
 
-## 18. Current approval gate: newly recreated hostname
+## 18. Historical approval gate: newly recreated hostname
 
 User answered "restarted" but also supplied a recreated tunnel URL and explicitly
 required approval before exposure. Therefore same-URL restart and mobile-data
@@ -603,3 +600,56 @@ restart/session persistence and a phone/mobile-data check. Prior public proofs
 belong to the old host and do not satisfy this new-host acceptance. All 55 source
 tests/typecheck/lint pass; original Next build remains unchanged. Current docs
 and provisional report clearly mark reconnection/retests pending.
+
+## 19. Verified current public demo - final acceptance passed
+
+This section supersedes prior pending checkpoints. The user approved the exact
+headline hostname and manually started production. All required current-host
+checks passed on 30 October 2026. No further current-host exposure approval is
+pending. Automatic review had blocked automated starts; user manual actions
+resolved those steps. Do not retry blocked launches via another tool.
+
+Public HTTPS443 -> the existing registered cloudflared 2026.10.6 process ->
+filtered 127.0.0.1:3211 -> retained Next production build 127.0.0.1:3210 ->
+`%LOCALAPPDATA%/LabLoop/judge-demo/fictional-judge.db`. Metrics3212 is loopback
+only. Funnel remains off. The original development DB, DPAPI-encrypted unique
+session secret and BUILD_ID `itApzfwuOZ96pav7ZpWPX` are unchanged.
+
+- Public owner publication and student discovery of a new fictional workspace
+  passed. The **same listing** completed request, human approval, check-in,
+  initial/final condition reports, return confirmation and history at
+  14:57:05 UTC / 20:27:05 IST. Actual network, normal TLS, no interception or DNS override.
+- Security: HTTP reads308 to exact HTTPS, plaintext POST403 even with spoofed
+  protocol, foreign/absent Origin403, admin/private/dev/metrics404, Secure,
+  HttpOnly/Lax cookie, HSTS/limited CSP/nosniff/frame denial. Manager shared
+  credential rejected; student/owner remain usable. No Next origin exception.
+- Added `RestartApp` to the operations helper. The user manually ran it; both
+  app/ingress identities changed while the **same tunnel identity and URL**
+  remained. The saved owner session reopened completed custody and both reports.
+  All pre-restart booking/event/condition/audit rows matched unchanged.
+- Latest backup `judge-20261030T152120690Z.db` restored into a new private file:
+  integrity ok, same completed booking, two reports, six events, manager lock.
+- User confirmed real phone/mobile-data catalog and signed-in Priya dashboard
+  with Wi-Fi off; confirmation received 15:21:19 UTC. This is user-confirmed
+  external access, not automated phone inspection. No OS/browser claims.
+- Final transport checkpoint15:23:25 UTC: HTTPS200/HTTP308/plaintextPOST403.
+  Latest source55 tests across6 files, typecheck/lint and PowerShell syntax pass.
+  Standard five E2Es passed earlier, not rerun for operations-only edits.
+
+Authoritative current evidence: `docs/PUBLIC_DEMO_VERIFICATION.md`, sanitized
+`docs/evidence/public-judge-summary.json` and fictional completed-record PNG.
+Private details are `headline-public-security.json`, `headline-public-listing.json`,
+`public-cloudflare-evidence.json`, `public-restart-evidence.json`,
+`headline-history-after-restart.json`, `headline-final-restore-evidence.json`,
+`external-device-confirmation.json` under the private runtime; never commit
+session storage, DB/backups, secret files or raw logs. The completed resource
+path is `/resources/23e2c684-50c8-447f-9155-8a9b91b82af7`; booking path
+`/bookings/8a26a163-dd85-4b9b-bd8c-c55b67230017` (authorized login required).
+
+Keep laptop/network/current cloudflared window online. An **app-only** restart
+uses `-Action RestartApp`; it never starts/stops cloudflared or changes hostname.
+Do not recreate the tunnel for an app restart. Windows/tunnel restart allocates
+a new URL: stop app, allocate/review/approve/pin that exact host, reconnect and
+retest. No unattended startup, paid resource, power change or uptime guarantee.
+Official PDF format, actual participant IDs/roles/contributions and individual
+submissions remain pending. The report/PDF is provisional; no form was submitted.

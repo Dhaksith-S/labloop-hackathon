@@ -2,9 +2,9 @@
 
 **30 October 2026 - approved Funnel setup attempted; public verification failed;
 Funnel disabled. No verified working public URL.**
-This describes the failed Tailscale route. The recovered Cloudflare route has
-passed real public workflow/security checks; final restart/device acceptance is
-pending. See [current evidence](PUBLIC_DEMO_VERIFICATION.md).
+This describes the failed Tailscale route. The current Cloudflare route passed
+public workflow/security, same-URL restart/restore and user-confirmed external
+mobile-data access. See [current evidence](PUBLIC_DEMO_VERIFICATION.md).
 The user selected a zero-cost laptop-hosted demonstration and requires separate
 approval for installing software, signing into an account and public exposure.
 No paid resources, router forwarding, power-policy changes, startup tasks or

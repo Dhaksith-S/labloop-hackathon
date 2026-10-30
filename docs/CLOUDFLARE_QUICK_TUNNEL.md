@@ -1,8 +1,7 @@
-# Cloudflare Quick Tunnel: local preparation and approval gates
+# Cloudflare Quick Tunnel: verified judge demo and recovery
 
-**30 October 2026: previous-host public workflow/restore passed; user recreated
-the tunnel. New-host reconnection approval and public retests are pending.**
-Prepared URL: <https://headline-anticipated-trips-salaries.trycloudflare.com>.
+**30 October 2026: required current-host public acceptance checks passed.**
+Verified URL: <https://headline-anticipated-trips-salaries.trycloudflare.com>.
 See [current executed evidence and judge instructions](PUBLIC_DEMO_VERIFICATION.md).
 The expired hostname and stopped-state observations below document a prior attempt.
 Tailscale Funnel remains disabled after its failed public acceptance test. This
@@ -23,10 +22,10 @@ subscription, power change or database migration is needed for this preparation.
 | Restart | Existing browser session, completed booking and both condition reports passed `--revisit` after a real process stop/start |
 | Backup | Fresh online SQLite backup restored to a new private file; `integrity_check=ok`, completed booking and two condition reports verified |
 | Preservation | Original app DB, encrypted session-secret file, configured profile and production build unchanged against pre-preparation hashes/identity |
-| Current listeners | App/ingress 3210/3211 paused for the validated HTTPS-upgrade reload; tunnel metrics remain `127.0.0.1:3212`. Prior public run used loopback-only listeners |
-| Current exact origin | `https://headline-anticipated-trips-salaries.trycloudflare.com`; pinned with app stopped pending approval; previous hostname obsolete |
+| Current listeners | App `127.0.0.1:3210`, filtered ingress `127.0.0.1:3211`, tunnel metrics `127.0.0.1:3212`; no LAN binding |
+| Current exact origin | `https://headline-anticipated-trips-salaries.trycloudflare.com`; explicitly approved and running; previous hostnames obsolete |
 | Tunnel verification | Registered connection logged, `/ready` 200, connection metric 1; normal public TLS; user kept the recovered manual tunnel open |
-| Public app checks | Previous-host full HTTPS custody/security and restore passed. New connector/readiness/TLS verified; app stopped with expected 502; new-host approval/retests pending. Funnel remains off |
+| Public app checks | Current-host owner listing through full custody, HTTPS/security, same-URL session/history after restart, final fresh restore and user-confirmed external mobile-data access passed. Funnel remains off |
 
 The five standard Playwright E2E tests passed during the earlier Funnel work;
 they were not rerun for these ingress-only changes. The production browser
@@ -41,15 +40,15 @@ the ACL-restricted runtime directory outside OneDrive/Git.
 
 ## Exact-host ingress and Next.js
 
-An additional plain-HTTP public probe returned 200, so the app/ingress were
-paused while preserving the registered tunnel/hostname. Validated source now
+An earlier plain-HTTP probe returned 200, prompting a safe pause/fix. Ingress now
 requires Cloudflare protocol metadata, redirects HTTP GET/HEAD to the one exact
 HTTPS origin, rejects plaintext POSTs and invalid redirect targets, and permits
 metadata-free requests only for the explicit reserved local simulation.
 Cloudflare sets the visitor protocol in X-Forwarded-Proto and overwrites a
 client-provided value; see [official header documentation](https://developers.cloudflare.com/fundamentals/reference/http-headers/#x-forwarded-proto).
-The requested manual restart will load this fix; public redirect/session retest
-is pending. Secure cookies were HTTPS-only before this fix as well.
+Public retests passed: HTTP reads 308 to exact HTTPS, plaintext POSTs 403,
+HTTPS normal/spoofed-protocol requests 200. App-only restart/session persistence
+also passed. Secure cookies were HTTPS-only before this fix as well.
 
 Public startup now runs `scripts/harden-judge-demo.ts`: the shared seeded
 manager/admin credential is replaced with an undisclosed random password and
@@ -223,6 +222,15 @@ URL. Record genuine results and timing. If public verification fails, stop the
 recorded cloudflared process promptly and leave Funnel off.
 
 ## Restart, shutdown and judging limits
+
+From the repository root, use the single app-only action:
+
+```powershell
+powershell.exe -NoProfile -File scripts/funnel/judge-demo.ps1 -Action RestartApp
+```
+
+It never invokes cloudflared or changes the hostname. This exact operation was
+verified through the public URL with the saved session and completed record.
 
 Stopping app/ingress with `-Action Stop` does not stop cloudflared. Stop only its
 recorded process after checking its creation time; do not kill all instances.

@@ -15,6 +15,8 @@ behavior from prepared work.
 | [Official brief](OFFICIAL_PROBLEM_STATEMENT.md) | Organiser specification and exact seven-criterion rubric transcribed from user input |
 | [Judging traceability](JUDGING_TRACEABILITY.md) | Weighted criteria, actual features/code/tests and explicit gaps |
 | [Verification log](VERIFICATION.md) | Independent baseline/final commands, failures, fixes, data preservation and Git evidence |
+| [Public deployment evidence](PUBLIC_DEMO_VERIFICATION.md) | Verified live URL, full lifecycle, security, restart/restore, user-confirmed phone access and sanitized evidence |
+| [Cloudflare runbook](CLOUDFLARE_QUICK_TUNNEL.md) | Exact public configuration, app-only restart, Windows recovery and uptime limits |
 | [Deployment preparation](DEPLOYMENT.md) | Persistent SQLite strategy, unapplied paid template, startup, backup and recovery |
 | [Third-party disclosures](THIRD_PARTY_DISCLOSURES.md) | Dependencies, licenses, assets, services not used |
 | [Changelog](CHANGELOG.md) | Original release and Codex takeover changes |
@@ -23,5 +25,7 @@ behavior from prepared work.
 Also see [`../supabase/README.md`](../supabase/README.md) for the prepared,
 unapplied PostgreSQL/RLS path.
 
-**Status reminder:** local SQLite build only. No public deployment. Supabase
-migrations have never been executed against PostgreSQL.
+**Status:** required current-host public judge-demo checks passed. Laptop,
+network and current cloudflared window must remain online; no uptime guarantee.
+Supabase migrations have never been executed against PostgreSQL. Official PDF
+format and actual participant/contribution details remain pending.

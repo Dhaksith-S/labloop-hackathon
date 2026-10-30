@@ -5,6 +5,70 @@ This records independently executed work, distinct from the prior agent's
 reported results. Read-only file inspections are grouped by file set; private
 attachment/home paths are abbreviated. No secret values are recorded.
 
+## Final current-host public acceptance - passed
+
+**This checkpoint supersedes earlier pending/failure states below.** The user
+approved `https://headline-anticipated-trips-salaries.trycloudflare.com` and
+manually started production, then manually ran app-only `RestartApp` without
+recreating the tunnel. Required public demo checks passed on 30 October 2026.
+The evidence guide, sanitized JSON and actual fictional screenshot are
+`docs/PUBLIC_DEMO_VERIFICATION.md`, `docs/evidence/public-judge-summary.json`
+and `docs/evidence/public-completed-booking.png`.
+
+Executed current-host checks (UTC; add05:30 for IST):
+
+- 14:49:57: exact HTTPS upgrade308; plaintext POST403 even with spoofed protocol;
+  edge protocol overwrite verified; admin/private/dev/API-debug/metrics404;
+  foreign/absent Origin403; HSTS/limited CSP/nosniff/frame denial present.
+- 14:55:30: actual public owner form published a fictional workspace; Priya
+  discovered it. Public manager shared-password login rejected without session.
+- 14:57:05: on that **same new resource**, real public request, owner approval,
+  check-in, initial/final reports, return confirmation and completed history
+  passed; Secure/HttpOnly/SameSite=Lax. No interception/resolver override/TLS bypass.
+- After the user's app-only restart, app/ingress identities changed; tunnel
+  identity/hostname remained. `node --import tsx scripts/verify-funnel-demo.ts
+  --revisit` reused saved owner session through the same public URL successfully.
+  At15:08:03, all pre-restart booking/timeline/condition/audit rows matched the
+  pre-restart backup unchanged; live integrity ok.
+- 15:21:19: received the user's independent phone result: Wi-Fi disabled,
+  mobile data enabled, catalog and authenticated Priya dashboard loaded.
+  Recorded as **user-confirmed external access**, not automated phone inspection.
+- Fresh online backup `judge-20261030T152120690Z.db` restored to a new private
+  file. At15:23:25, integrity ok, exact completed booking/two reports/six events
+  and manager credential lock retained; HTTPS resources200/HTTP308/POST403.
+- Original development DB SHA256, encrypted session-secret file and existing
+  production BUILD_ID `itApzfwuOZ96pav7ZpWPX` unchanged. All judge app/ingress/
+  metrics listeners loopback only. Tailscale Funnel status remains `{}`.
+- 15:39:18: a fresh Priya login reopened the same completed transaction, both
+  condition reports and return-confirmed timeline after restart, then signed out.
+  An additional console-driven attempt had failed without retained assertion
+  detail; the rerun with escaped Unicode condition labels passed. No application
+  change was made and no root cause is asserted for the earlier attempt.
+
+Two operations changes accompany final evidence: `RestartApp` restarts only
+recorded app/ingress; `LABLOOP_JUDGE_RESOURCE_NAME` lets the browser verifier
+exercise the exact freshly published listing. Latest checks after these edits:
+55 Vitest tests across6 files, typecheck, lint and PowerShell AST syntax passed.
+The original production build was retained; no application source/UI change or
+DB reset. Five standard browser E2Es passed earlier, not rerun for these edits;
+the actual current public production flows above were executed instead.
+
+`python scripts/build-report.py` regenerated the provisional PDF (10 pages).
+Text checks and visual review of all page thumbnails, deployment page and final
+team/disclosure page passed; no orphan reference page. The committed PNG was
+visually reviewed: fictional participants, synthetic notes, no browser/session
+credentials or personal device information.
+
+No paid resource, cloud account, migration, power/startup task or form submission occurred.
+Runtime/secrets/sessions/raw logs/backups remain outside OneDrive/Git. This is a
+temporary zero-cost laptop demo: keeping laptop, internet and current foreground
+cloudflared process online is required. Recreating the tunnel changes the URL.
+No guaranteed uptime, HA, load capacity, WCAG or security certification is claimed.
+Official PDF template and verified participant/contribution details remain pending.
+
+The following sections retain historical failures and pending checkpoints for
+auditability. They do not describe the current acceptance state.
+
 ## Subsequent approved Funnel attempt - failed public acceptance
 
 Local deployment-preparation evidence is detailed in `docs/TAILSCALE_FUNNEL.md`:

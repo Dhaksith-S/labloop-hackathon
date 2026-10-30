@@ -4,13 +4,14 @@
 and PowerShell syntax pass. `tests/judge-accounts.test.ts` verifies shared
 privileged-credential locking, selective session revocation, preserved custody
 history, idempotence and refusal of non-fictional privileged accounts. The real
-public production custody/security tests and a fresh backup restore passed;
-app-only restart and independent-device acceptance are pending. See
+public owner listing/full same-resource custody/security, same-URL saved-session
+restart and fresh restore passed. User confirmed external phone/mobile-data
+catalog/dashboard access. See
 [current executed evidence](PUBLIC_DEMO_VERIFICATION.md). No build or ordinary
 E2E reset was run for these operations-only changes.
 Two additional ingress tests cover exact HTTPS redirects, plaintext POST/missing
-protocol rejection and the reserved local-simulation exception. Their source
-passes; actual public transport retest awaits the requested manual restart.
+protocol rejection and the reserved local-simulation exception. Actual public
+transport retests passed (308 upgrade, 403 plaintext POST, HTTPS 200).
 
 **Latest Funnel preparation:** 48 tests across 5 Vitest files, 5 Playwright tests,
 typecheck and lint passed. The production build from the baseline below was
@@ -231,8 +232,10 @@ Be explicit with judges and reviewers:
 
 - **Supabase/PostgreSQL migrations have never run.** There is no database or
   credential. The RLS matrix in `docs/SECURITY.md` is a plan, not a result.
-- **No deployment test.** No public URL or hosting project exists.
-- **Chromium only.** Desktop and phone viewport checks; no Firefox/WebKit, mobile browser/device or screen-reader matrix.
+- **No managed-host/HA/load acceptance.** Current laptop public workflow, security,
+  restart and fresh restore passed; uptime depends on laptop/network/tunnel.
+- **Browser coverage limited.** Chromium desktop/phone viewport checks plus
+  user-confirmed real phone catalog/dashboard; no Firefox/WebKit or screen-reader matrix.
 - **No automated accessibility audit.** Semantics, labels and focus styles were
   implemented and manually reviewed; axe/Lighthouse was not run. Do not claim a
   WCAG conformance level.

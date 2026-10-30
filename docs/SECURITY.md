@@ -10,7 +10,7 @@ how to review it. It is written for a hackathon review, not as a certification.
 ## Public judge demo boundary (30 October 2026)
 
 The exact Cloudflare origin, loopback ingress, real public security checks and
-remaining acceptance gaps are recorded in `docs/PUBLIC_DEMO_VERIFICATION.md`.
+verification evidence/limits are recorded in `docs/PUBLIC_DEMO_VERIFICATION.md`.
 The isolated public DB locks shared manager/admin seed credentials and revokes
 privileged sessions before startup (`scripts/harden-judge-demo.ts`, regression
 tests in `tests/judge-accounts.test.ts`). Student/owner credentials and all
@@ -19,7 +19,7 @@ real identities, or certify the app. Manager/admin interfaces remain outside
 public scope; startup refuses hardening a non-fictional privileged profile.
 An observed plaintext-page response prompted an HTTPS-upgrade ingress fix:
 exact-origin redirect for HTTP reads, rejection for HTTP mutations and missing
-trusted proxy protocol. Its source tests pass; public reload/retest is pending.
+trusted proxy protocol. Source and actual public transport retests pass.
 
 ## 1. Threat model
 

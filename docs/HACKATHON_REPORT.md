@@ -15,9 +15,9 @@ use case is the selected scope. The deadline is **1 November 2026, 10:00 AM IST*
 
 **Build date:** 30 October 2026
 
-**Status:** Public demo under final acceptance. Real HTTPS custody/security and
-fresh backup restore passed; app-only restart and independent mobile-data checks
-are pending. Supabase schema/RLS remains unapplied. No invented adoption or usage.
+**Status:** Required public demo acceptance passed: real HTTPS listing/custody,
+security, same-URL session/history after app restart, fresh backup restore and
+user-confirmed external phone access. Supabase remains unapplied. No invented metrics.
 
 **Source:** <https://github.com/Dhaksith-S/labloop-hackathon> (public repository;
 public-demo acceptance described in section 7).
@@ -47,8 +47,8 @@ institution, role-aware UI, audit trail, incidents and credential verification.
 The original verification passed 44 unit/integration tests and 5 Chromium browser
 tests. Latest checks pass 55 tests across six files, including nine ingress and
 two public-account isolation tests. The existing production build's real public
-HTTPS booking journey and security checks passed. Final public restart and
-independent-device acceptance remain pending.
+HTTPS booking journey, security, restart and restore checks passed. The user
+confirmed catalog and authenticated dashboard access on a mobile-data phone.
 
 ## 2. The problem, concretely
 
@@ -168,9 +168,10 @@ The following were executed on 30 October 2026 in this workspace:
 | Existing demo database | Preserved; recovery backup made before testing; no reset run in this takeover |
 
 The table is the original baseline. Latest checks passed 55 tests, typecheck/lint,
-the real public HTTPS custody/security journey and a fresh backup restore. The
-five standard E2E tests were not rerun for operations-only changes. Final public
-restart/device checks and the unclassified repeat-run failure are documented in
+the real public HTTPS listing/custody/security journey, same-URL session/history
+after restart and fresh backup restore. The user confirmed external phone access.
+The five standard E2E tests were not rerun for operations-only changes. Evidence
+and the earlier unclassified repeat-run failure are documented in
 `docs/PUBLIC_DEMO_VERIFICATION.md`.
 
 The E2E test completes request → approve → check-in → return → confirm across
@@ -202,8 +203,8 @@ unverified cloud claim, the runnable product uses persistent SQLite. The
 PostgreSQL/RLS path is included as a prepared migration with its status stated
 plainly.
 
-This is a deliberate trade-off: excellent local reproducibility, but not
-serverless-persistent. It is the main deployment blocker.
+The verified demo persists SQLite outside OneDrive on the laptop. This supports
+the focused prototype; serverless deployment would require a persistent host or port.
 
 ### Architecture and technology stack
 
@@ -262,18 +263,15 @@ from mobile to wide desktop, in both themes.
 
 ## 7. Deployment reality
 
-New URL configured with app disconnected, awaiting reconnection approval:
+Verified public judge demo, 30 October 2026:
 <https://headline-anticipated-trips-salaries.trycloudflare.com>
 
-At 19:27:09 IST on 30 October 2026, the prior hostname's real HTTPS journey
-passed: discovery, student request, owner approval, check-in, both condition
-reports, return confirmation and history. No interception or resolver override
-was used. Restricted-path/Origin, secure-cookie and manager-login checks passed.
-
-The user then recreated the tunnel; old URLs are obsolete. The new connector/TLS
-and unchanged session/history/secret are verified, with the app stopped pending
-reconnection approval. The HTTPS-upgrade source passes tests; new-host public
-transport, lifecycle, restart and mobile-data checks remain pending.
+On this approved hostname, the owner published a new fictional workspace and
+Priya discovered it. At 20:27:05 IST, the same resource passed request, owner
+approval, check-in, both condition reports, return confirmation and history.
+No browser interception, DNS override or TLS bypass was used. HTTP reads upgrade
+to exact HTTPS (308); plaintext/foreign-Origin POSTs are denied (403), restricted
+paths return 404, and Secure/HttpOnly/SameSite=Lax session cookies are verified.
 
 Verified portable cloudflared 2026.10.6 forwards only to filtered ingress
 127.0.0.1:3211, then the existing Next.js production build on 127.0.0.1:3210.
@@ -284,17 +282,19 @@ Administrative/development/private paths are blocked. Only student/owner shared
 demo credentials are enabled publicly; manager credentials/sessions are locked
 idempotently in this isolated store without changing roles or custody history.
 
-A fresh online backup restored to a new private file passed integrity checking,
-with the completed public booking, two condition reports and six timeline events.
-Local restart persistence already passed; the actual public app-only restart
-check remains pending. A repeat verification run after completed custody did not
-finish successfully; its cause is unclassified. Visual public inspection and a
-subsequent fresh full journey passed. Detailed evidence and limits are recorded
-in `docs/PUBLIC_DEMO_VERIFICATION.md`.
+The user ran the app-only RestartApp command without touching cloudflared.
+App/ingress identities changed; tunnel identity and URL stayed the same. The
+saved owner session reopened completed custody and both reports; every prior
+booking, condition, timeline and audit row was retained unchanged. A final fresh
+backup restored to a new private file passed integrity, with two reports and six
+timeline events. The user confirmed phone/mobile-data catalog and signed-in
+dashboard access with Wi-Fi off (confirmation received 20:51:19 IST). Final
+transport checks passed at 20:53:25 IST. The evidence guide and sanitized summary
+are `docs/PUBLIC_DEMO_VERIFICATION.md` and `docs/evidence/public-judge-summary.json`.
 
-Earlier Tailscale public verification failed and Funnel remains disabled. The
-first Cloudflare tunnel exited; the recovered current tunnel was registered and
-ready before public tests. Automatic launch review required manual user starts.
+Earlier Funnel reachability failed; it remains off. Old Cloudflare URLs are
+obsolete. One prior-host repeat verifier run failed without a retained cause;
+later complete runs passed. Launch review required manual user starts.
 The laptop, network and cloudflared window must remain online. Quick Tunnel URLs
 change on recreation and have no uptime guarantee; no power, startup-service or
 paid-resource change was made. Windows restart recovery requires a new exact
@@ -303,9 +303,9 @@ remain unapplied. See `docs/CLOUDFLARE_QUICK_TUNNEL.md` for recovery commands.
 
 ## 8. Limitations
 
-- Final public restart/device acceptance pending; no Vercel/Supabase verification.
+- Laptop/tunnel/network uptime dependency; no SLA or Vercel/Supabase verification.
 - Supabase SQL and RLS are unexecuted and untested.
-- Chromium-only E2E; desktop and 390 px viewport, no real mobile device or Firefox/WebKit matrix.
+- Chromium E2E; real phone catalog/dashboard user-confirmed, no Firefox/WebKit matrix.
 - No automated accessibility audit; no WCAG conformance claim.
 - No load or concurrency stress test.
 - No email verification, password reset, MFA or OAuth.
@@ -347,8 +347,8 @@ Priority order:
 | --- | --- | --- |
 | Understanding of the Problem | 15 | Access/trust/accountability scenario and target users; no invented research |
 | Strength of the Core Solution | 20 | Focused listing-to-custody services, eligibility and human decisions |
-| Working End-to-End Product | 20 | Local browser listing and complete custody loop; public access still missing |
-| Technical Depth and Reliability | 15 | Domain services, atomic lifecycle, database guards, 44 tests and production build |
+| Working End-to-End Product | 20 | Public listing through same-resource custody closure; session/history after restart; user-confirmed external phone access |
+| Technical Depth and Reliability | 15 | Atomic lifecycle, SQL guards, 55 tests, retained production build, public restart and fresh backup restore |
 | Trust, Safety and Accountability | 10 | Roles, verified credentials, immutable conditions and human incident review; formal disputes absent |
 | Fair Allocation and Accessibility | 10 | FIFO, fair-use caps, published reasons, mobile/semantic checks; no WCAG certification |
 | Originality and Real-World Potential | 10 | Eligibility plus custody/evidence differentiates the workflow; adoption unvalidated |
@@ -362,12 +362,13 @@ True:
 
 - The app runs locally with persistent SQLite.
 - The listed tests, typecheck, lint and build passed.
+- Required public workflow, security, restart/restore and external access checks passed.
 - Schema and RLS SQL for Supabase exist and are documented as unverified.
 - The demo institution and people are fictional.
 
 Not true / not claimed:
 
-- Completed final public acceptance or guaranteed uptime.
+- Guaranteed uptime, high availability or a stable URL after tunnel recreation.
 - Supabase applied, RLS verified or storage configured.
 - Real institutional adoption, user counts or utilization metrics.
 - WCAG compliance, penetration-test clearance or load capacity.
@@ -419,8 +420,8 @@ Never reset a store containing judge-created records.
 6. For incident handling, use the booking's incident form and the owner's Incident desk. A different authorised reviewer handles the outcome.
 7. For local review only, the manager can inspect the organisation overview and verify a qualification; this administrative workflow is excluded from public access.
 
-Final public restart/device acceptance is **pending**. Source is accessible at the
-existing public GitHub repository. The report PDF is provisional. Official
+Required public acceptance is **verified**. Source is accessible at the existing
+public GitHub repository. The report PDF is provisional. Official
 template conversion, verified team/participant details and each member's own
 submission are pending. The form is `https://forms.gle/QTD1ZRuPX37Yef37A`; it has
 not been submitted by Codex.
@@ -441,24 +442,21 @@ review this table, confirm provenance and prepare individual submissions.
 
 ## 15. Libraries, pre-existing material and AI assistance
 
-The original framework scaffold and third-party packages are allowed external
-building blocks, not original project inventions. Next.js/React/TypeScript,
-Tailwind, better-sqlite3, Zod, Lucide, Radix Slot, Fontsource, Vitest, Playwright
-and supporting libraries are listed with versions/licenses in
-`docs/THIRD_PARTY_DISCLOSURES.md`. No stock imagery, tutorial theme, paid asset,
-runtime AI integration, Supabase service or Vercel deployment is claimed.
+The framework scaffold and dependencies are external building blocks, not project
+inventions. Versions/licenses for Next.js, React, TypeScript, Tailwind,
+better-sqlite3, Zod, UI/fonts and test tools are in `docs/THIRD_PARTY_DISCLOSURES.md`.
+No stock imagery, paid asset, runtime AI, Supabase or Vercel service is claimed.
 
 **DeepSeek assistance:** The project owner reports that DeepSeek V4.1 Flash
 assisted the existing application and documentation before its quota expired.
 The precise model label and per-file authorship are user-reported, not verified
 by Codex. Baseline commits, code and tests were inherited and preserved.
 
-**Codex assistance:** Codex inspected and backed up interrupted work, verified
-the baseline independently, audited services, implemented the documented
-security/test-safety fixes, expanded tests, prepared persistent-volume startup
-and backup tooling, and prepared evidence-based documentation and this
-provisional PDF. Report generation uses Python ReportLab; PyMuPDF renders pages
-for visual review. These are development tools, not application integrations.
+**Codex assistance:** Codex preserved and independently verified the inherited
+baseline, audited/fixed security and test safety, expanded tests, prepared
+startup/backup tooling and the approved Cloudflare demo, executed public checks,
+and recorded the user's phone result. This provisional PDF uses ReportLab and
+PyMuPDF visual review; these are development tools, not runtime integrations.
 
 **Provenance and development window:** The organiser specifies a 48-hour window
 from 30 October 2026, 10:00 AM IST to 1 November 2026, 10:00 AM IST. The first
@@ -470,5 +468,5 @@ LICENCES BEFORE SUBMISSION.] No invented human contribution is assigned.
 ## 16. Evidence and references
 
 - Authority: `docs/OFFICIAL_PROBLEM_STATEMENT.md`; source repository linked on the cover.
-- Features/tests/evidence: `docs/JUDGING_TRACEABILITY.md`, `docs/TESTING.md`, `docs/VERIFICATION.md`.
+- Features/evidence: `docs/JUDGING_TRACEABILITY.md`, `docs/TESTING.md`, `docs/PUBLIC_DEMO_VERIFICATION.md`.
 - Design/controls/hosting: `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/FAIRNESS.md`, `docs/DEPLOYMENT.md`.

@@ -28,16 +28,15 @@ real, what is prepared, and which invariants must not be broken.
   the route was disabled and final status is `{}`. Do not automatically re-enable.
   That Funnel route is not working. See `docs/TAILSCALE_FUNNEL.md`.
 - Configured Cloudflare origin: `https://headline-anticipated-trips-salaries.trycloudflare.com`.
-  Its connector/TLS are verified, but app reconnection approval is pending.
-  The previous `complexity-...` hostname is obsolete. On that previous route, real public
-  custody/security checks and fresh backup restore pass. Latest 55 Vitest tests,
-  typecheck/lint pass; original production artifact retained. App-only restart and
-  independent mobile-data checks are pending. Do not claim all acceptance passed.
+  Its exact app connection is approved and running. Current-host owner listing,
+  discovery, full custody/security, same-URL saved-session restart and fresh backup
+  restore passed. User confirmed external phone/mobile-data catalog/dashboard.
+  Latest 55 Vitest tests/typecheck/lint pass; original production build retained.
+  Earlier `underlying-...`/`complexity-...` hostnames are obsolete.
   See `docs/PUBLIC_DEMO_VERIFICATION.md` and `docs/CODEX_HANDOFF.md`.
 - A subsequent HTTP probe found plaintext pages were served. Validated ingress
-  source now upgrades HTTP reads and rejects plaintext POSTs; app/ingress are
-  paused pending the requested manual restart and real transport/session retest.
-  Keep cloudflared alive; its exact hostname has not changed.
+  now upgrades HTTP reads and rejects plaintext POSTs; real public transport
+  retests passed. Keep cloudflared alive; recreating it changes the URL.
 - Public manager seed credentials are locked only in the isolated judge DB;
   student/owner accounts and history are preserved. Startup runs
   `scripts/harden-judge-demo.ts` idempotently. Do not restore shared privileged
@@ -148,7 +147,8 @@ Production fails closed without a session secret. Do not add a fallback secret.
 ## Deployment reality
 
 Only claim checks recorded in `docs/PUBLIC_DEMO_VERIFICATION.md`. The current
-public demo is under acceptance; Supabase/RLS and storage uploads are unverified.
+temporary public demo passed required acceptance; no uptime/security certification
+is claimed. Supabase/RLS and storage uploads remain unverified.
 For deployment changes:
 
 1. Get explicit authorization and credentials.
@@ -160,10 +160,10 @@ For deployment changes:
 
 Detailed continuation plan: `docs/CODEX_HANDOFF.md`.
 
-The user authorized the previous Cloudflare app route and tests, **no paid resources**.
-They explicitly requested approval before connecting the new `headline-...` URL;
-a combined approval/conditional manual-start question is pending. Do not connect
-the app without that reply. Automated tunnel
+The user approved and manually started this exact `headline-...` Cloudflare route,
+and approved public tests/restart; **no paid resources**. Do not ask the same
+authorization again. A different hostname remains a new review/approval gate.
+Automated tunnel
 and app starts were rejected by automatic review; user manual starts resolved
 those actions. Do not retry rejected launches through another tool/wrapper.
 `deploy/render.yaml` is a paid template, unapplied. See `docs/DEPLOYMENT.md`.

@@ -3,13 +3,12 @@
 Source: [organiser brief transcribed from project-owner input](OFFICIAL_PROBLEM_STATEMENT.md).
 These are the seven official criteria and weights, not a predicted score.
 Verification evidence is recorded in [VERIFICATION.md](VERIFICATION.md).
-The two 20-point criteria receive priority. Real public custody/security checks
-passed on the recovered Cloudflare route; final restart and off-tailnet device
-acceptance remain. See [current evidence](PUBLIC_DEMO_VERIFICATION.md).
-That hostname was subsequently recreated by the user. The new exact hostname
-is configured with app stopped pending explicit reconnection approval/retests;
-the prior-host checks are preserved evidence, not passes at the new hostname.
-The subsequent approved Tailscale Funnel attempt failed public reachability and
+The two 20-point criteria receive priority. Required current-host public
+acceptance passed: owner listing through full same-resource custody, HTTPS and
+security, same-URL saved-session restart, fresh restore, and user-confirmed
+external phone/mobile-data catalog/dashboard access. See
+[executed evidence and screenshot](PUBLIC_DEMO_VERIFICATION.md).
+The earlier approved Tailscale Funnel attempt failed public reachability and
 was disabled; locally intercepted production tests do not satisfy public judge
 access. See [attempt evidence](TAILSCALE_FUNNEL.md).
 Current source checks pass 55 tests/typecheck/lint. Manager/admin shared demo
@@ -20,12 +19,12 @@ interfaces remain outside public scope. See the [operations runbook](CLOUDFLARE_
 | --- | --- | --- | --- | --- |
 | Understanding of the Problem | 15 | Campus use case, eligibility plus accountability, owner control; report sections 1-2 and target-user section; `src/lib/eligibility.ts` | Explainable membership, credentials, availability, conflict and fair-use cases in `tests/eligibility.test.ts` | No interviews, measured utilisation, external research or adoption evidence; scenario reasoning is not empirical research |
 | Strength of the Core Solution | 20 | `src/lib/resources.ts`, `src/lib/bookings.ts`, `src/lib/incidents.ts`; listing through custody closure, written decisions, notifications | Lifecycle integration tests; browser listing publication/discovery and request-to-return checks | Text condition evidence only; no photo storage; scheduled overdue reminders absent |
-| Working End-to-End Product | 20 | `/resources`, `/resources/[id]/request`, `/bookings/[id]`, `/owner/requests`, `/owner/custody`, `/owner/incidents`; both parties see timeline and condition records | `e2e/labloop.spec.ts` local browser listing/custody; `tests/lifecycle.test.ts` incidents/integrity; `scripts/verify-funnel-demo.ts` real public HTTPS custody passed | Independent off-tailnet device and public app-restart acceptance pending; laptop/tunnel uptime dependency |
-| Technical Depth and Reliability | 15 | Next.js Server Actions + Zod, domain services, SQLite immediate transactions, overlap and append-only triggers; `src/db/sqlite-schema.sql`, `src/lib/database.ts` | Typecheck, lint, production build; database-bypass regression tests; `tests/operations.test.ts` verifies WAL backup and restore | No hosted reliability/load claim; prepared Supabase SQL/RLS not applied or verified; one Node instance |
-| Trust, Safety and Accountability | 10 | `src/lib/auth.ts`, `src/lib/password.ts`, service authorization, independent credential/incident review, initial/final immutable condition evidence | `tests/security.test.ts` checks private staff data, owner/org scope, suspension, tokens and redirect handling; lifecycle checks self-dealing and illegal transitions | Roles are institution-assigned demo records, not external identity verification; no formal dispute/appeal flow, password recovery or MFA |
-| Fair Allocation and Accessibility | 10 | FIFO waitlist, eligibility recheck, per-resource cap, human final decision; `src/lib/eligibility.ts`, `src/lib/bookings.ts`; labelled forms, text status and mobile navigation | Eligibility and waitlist tests; phone viewport browser check; auth form heading corrected for mobile | No WCAG certification, screen-reader study or automated accessibility scan; no cross-resource cap or review SLA |
-| Originality and Real-World Potential | 10 | Integrated eligibility, human decision, custody evidence, incident review and transparent waitlist; architecture/deployment documentation | Working local product and auditable Git history; explicit operational limitations | No market validation, customer claims, cost savings or quantified impact; adoption and institutional review remain future work |
-| **Total** | **100** | **No self-awarded marks** | **Only recorded checks count as verified** | **Submission is incomplete until the public app, official PDF format and participant details exist** |
+| Working End-to-End Product | 20 | `/resources`, `/resources/[id]/request`, `/bookings/[id]`, `/owner/requests`, `/owner/custody`, `/owner/incidents`; both parties see timeline and condition records | Local `e2e/labloop.spec.ts`; public owner publication/discovery plus `scripts/verify-funnel-demo.ts` custody on that exact new listing; same-URL session/records after restart; user-confirmed external phone access; `docs/evidence/public-judge-summary.json` | Laptop/tunnel must remain online; hostname changes on tunnel recreation; public incident UI not separately exercised, service/integrity tests cover incidents |
+| Technical Depth and Reliability | 15 | Next.js Server Actions + Zod, domain services, SQLite immediate transactions, overlap/append-only triggers; strict exact-host HTTPS ingress; `src/db/sqlite-schema.sql`, `src/lib/database.ts`, `scripts/lib/funnel-proxy.ts` | 55 tests/typecheck/lint; original production build retained; real public restart preserved session/history and tunnel URL; fresh-file restore integrity ok; `tests/operations.test.ts` | No HA/SLA/load/concurrency-stress claim; laptop/network dependency; Supabase SQL/RLS unapplied/unverified |
+| Trust, Safety and Accountability | 10 | Auth/service authorization, independent reviews, immutable condition evidence; exact Host/Origin/HTTPS; `scripts/harden-judge-demo.ts` locks public privileged seed credentials | `tests/security.test.ts`, `tests/judge-accounts.test.ts`, `tests/funnel-proxy.test.ts`; public admin/private-path denial, plaintext/foreign-Origin POST denial, manager-login rejection and secure-cookie checks | Fictional roles, not real institutional verification; manager interfaces local only; no formal appeal, recovery/MFA or security certification |
+| Fair Allocation and Accessibility | 10 | FIFO waitlist, eligibility recheck, per-resource cap, human final decision; `src/lib/eligibility.ts`, `src/lib/bookings.ts`; labelled forms, text status and mobile navigation | Eligibility/waitlist tests; earlier phone-viewport browser check; user-confirmed real phone/mobile-data catalog and authenticated dashboard | No WCAG certification, screen-reader study or automated accessibility scan; no cross-resource cap or review SLA |
+| Originality and Real-World Potential | 10 | Integrated eligibility, human decision, custody evidence, incident review and transparent waitlist; architecture/deployment documentation | Working public fictional campus demo, source and auditable Git history; actual restart/restore and explicit operational limits | No market validation, customer claims, cost savings or quantified impact; real adoption/institutional review remain future work |
+| **Total** | **100** | **No self-awarded marks** | **Only recorded checks count as verified** | **Public demo requirement verified; official PDF format, participant/contribution details and individual submissions remain pending** |
 
 ## Mandatory workflow coverage
 
