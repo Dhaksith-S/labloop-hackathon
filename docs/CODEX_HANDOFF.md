@@ -371,12 +371,12 @@ deployment, official-format PDF and participant details are outstanding.
 ## 15. Subsequent Funnel preparation - current continuation point
 
 The user authorized zero-cost laptop Funnel preparation/testing, retaining the
-existing production build. Software installation, account sign-in and public
-exposure require separate approvals. Installation **only** was approved; the
-automated signed-MSI command was rejected by automatic approval review as
-`blocked by policy`. Do not retry installation through a policy workaround.
-The user was asked to manually run the verified MSI and confirm completion.
-Neither sign-in nor public exposure has been performed or approved.
+existing production build. An initial automatic installer command was rejected;
+the user later completed installation and GitHub SSO independently. Tailscale
+1.104.4 is now Running/online and the Windows service is Running/Automatic.
+No further installation or sign-in is needed. Public exposure has neither been
+performed nor approved. MagicDNS is enabled; HTTPS domains/Funnel capability
+are not yet advertised, so those prerequisites are part of the pending setup.
 
 Read `docs/TAILSCALE_FUNNEL.md`. Private runtime:
 `%LOCALAPPDATA%/LabLoop/judge-demo` (ACL restricted; encrypted DPAPI secret;
@@ -390,10 +390,18 @@ session persistence after restart and actual backup/restore integrity passed.
 48 Vitest tests, 5 E2E tests, typecheck and lint pass. Build ID remains
 `itApzfwuOZ96pav7ZpWPX`; no production rebuild was performed.
 
-Next: confirm manual installation, inspect current CLI/auth state, obtain sign-in
-approval, let the user complete free-account SSO, read the actual device DNS name,
-configure it exactly and review existing Serve/Funnel mappings. Ask for approval
-of the exact public URL/fictional surface/background persistence before enabling
-Funnel. Then test actual public workflow/restart/off-tailnet reachability and URL
+The actual authenticated device DNS name has been read from CLI status and
+stored only in the private profile; that exact origin is configured. Both Serve
+and Funnel status return `{}`. `scripts/verify-funnel-demo.ts --loopback` passed
+the configured-origin production journey; after a real app/ingress restart,
+`--loopback --revisit` retained the session, completed transaction and both reports.
+Backup restoration and direct restricted-path/foreign-origin checks also passed.
+48 tests, typecheck and lint were rerun successfully. The local services remain
+ready on loopback; there is still no public forwarding.
+
+Next: show the exact proposed URL and 443 -> 127.0.0.1:3211 -> 127.0.0.1:3210
+configuration to the user. Ask approval covering HTTPS/Funnel permission,
+fictional demo access by internet visitors and background persistence. Only after
+approval enable Funnel. Then test actual public workflow/restart/off-tailnet reachability and URL
 stability. Only then publish deployment evidence or update the provisional report
 with a real URL. No paid resources, power changes or automatic submission.

@@ -2,9 +2,10 @@
 
 **Subsequent zero-cost route:** Tailscale Funnel preparation is locally tested
 using the existing production build, loopback-only backend/ingress and a private
-judge database outside OneDrive. It is not publicly enabled. Installation was
-approved but blocked by automatic review; manual completion, separate sign-in
-and public-exposure approvals are pending. See [Funnel guide](TAILSCALE_FUNNEL.md)
+judge database outside OneDrive. It is not publicly enabled. Tailscale 1.104.4
+and user sign-in are verified; configured-origin production workflow/restart and
+backup restoration pass locally. HTTPS/Funnel prerequisites and public exposure
+await approval. See [Funnel guide](TAILSCALE_FUNNEL.md)
 for exact evidence, restart/stop commands and the accountless fallback. The paid
 Render template below remains unapplied and unauthorized.
 

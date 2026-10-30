@@ -8,10 +8,13 @@ interface JudgeProfile { publicUrl: string | null; dbPath: string; appPort: numb
 const runtime = path.join(process.env.LOCALAPPDATA ?? path.join(os.homedir(), "AppData/Local"), "LabLoop/judge-demo");
 const profile = JSON.parse(fs.readFileSync(path.join(runtime, "profile.json"), "utf8").replace(/^\uFEFF/, "")) as JudgeProfile;
 const local = process.argv.includes("--local");
+const loopback = process.argv.includes("--loopback");
+if (local && loopback) throw new Error("Choose --local or --loopback, not both.");
+const intercepted = local || loopback;
 const revisit = process.argv.includes("--revisit");
 const baseURL = local ? "https://labloop-preflight.invalid" : profile.publicUrl;
 if (!baseURL) throw new Error("No authenticated, configured public URL. Only --local preflight is currently available.");
-const mode = local ? "local-preflight" : "public-funnel";
+const mode = local ? "local-preflight" : loopback ? "configured-loopback" : "public-funnel";
 const evidencePath = path.join(runtime, `${mode}-evidence.json`);
 const sessionPath = path.join(runtime, `${mode}-session.json`);
 
@@ -21,7 +24,7 @@ async function main() {
   if (publicIP && !/^\d{1,3}(\.\d{1,3}){3}$/.test(publicIP)) throw new Error("Expected a verified public relay IPv4 address.");
   const browser = await chromium.launch({ args: publicIP ? [`--host-resolver-rules=MAP ${hostname} ${publicIP}`] : [] });
   const context = await browser.newContext({ baseURL: baseURL!, storageState: revisit ? sessionPath : undefined });
-  if (local) {
+  if (intercepted) {
     // Only a local simulation: browser sees HTTPS and sends same-origin Secure
     // cookies, but this route fulfills requests from our loopback ingress.
     await context.route(`${baseURL}/**`, async route => {
@@ -64,9 +67,9 @@ async function main() {
     }
     await page.goto("/resources");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    if (local) {
+    if (intercepted) {
       // Browser routing cannot intercept subsequent network redirects. Verify
-      // the real ingress response directly without resolving this reserved name.
+      // the real ingress response directly without taking a network route.
       const guarded = await context.request.get(`http://127.0.0.1:${profile.ingressPort}/bookings`, {
         headers: { "x-forwarded-host": hostname }, maxRedirects: 0,
       });
@@ -121,11 +124,12 @@ async function main() {
     const cookie = (await context.cookies()).find(c => c.name === "labloop_session");
     expect(cookie?.secure).toBe(true); expect(cookie?.httpOnly).toBe(true); expect(cookie?.sameSite).toBe("Lax");
     await context.storageState({ path: sessionPath });
-    fs.writeFileSync(evidencePath, JSON.stringify({ mode, publicUrl: local ? null : baseURL,
+    fs.writeFileSync(evidencePath, JSON.stringify({ mode, configuredOrigin: baseURL,
+      publicUrl: intercepted ? null : baseURL,
       bookingPath, buildId: profile.buildId, verifiedAt: new Date().toISOString(),
       publicRelayIPv4: publicIP ?? null, cookieFlags: { secure: true, httpOnly: true, sameSite: "Lax" } }, null, 2), { mode: 0o600 });
     console.log(`${mode}: catalog, private-route guard, admin-path block, student request, owner approval, check-in, both conditions, return confirmation, history and cookie flags passed.`);
-    console.log(local ? "This is a local reverse-proxy simulation, not a public deployment." : "Public URL journey passed; independent off-tailnet device verification must be recorded separately.");
+    console.log(intercepted ? "This is a local reverse-proxy simulation, not a public deployment." : "Public URL journey passed; independent off-tailnet device verification must be recorded separately.");
   } finally { await context.close(); await browser.close(); }
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });

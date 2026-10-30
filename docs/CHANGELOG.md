@@ -8,15 +8,22 @@ versioning for the application.
 
 ### Subsequent zero-cost Funnel preparation (not publicly enabled)
 
+- User completed Tailscale installation and GitHub SSO; CLI version 1.104.4,
+  online device and empty Serve/Funnel configurations independently confirmed.
+- Added configured-hostname loopback verification (`--loopback`); actual
+  production custody, restart/session persistence and backup restoration pass.
+- Reran 48 tests, typecheck and lint. HTTPS/Funnel permission and public exposure
+  remain pending explicit approval; no live URL or public verification is claimed.
+
 - Retained the verified production build; added selectable loopback binding,
   exact-origin filtered ingress and private Windows judge-demo operations.
 - Created a fictional judge DB outside OneDrive, persistent DPAPI session secret,
   restricted runtime ACL, restart helper and tested online backup/restore.
 - Four ingress tests added: 48 Vitest tests and 5 browser tests pass; typecheck
   and lint pass. Actual local proxy custody journey and restart persistence pass.
-- Verified official Tailscale MSI signature/hash; user approved installation only.
-  Automatic installation rejected by approval review; manual confirmation pending.
-- No sign-in, Funnel exposure, public URL, paid resource, system power change or
+- Verified official Tailscale MSI signature/hash; initial automatic installation
+  was rejected by approval review; subsequent manual installation/sign-in are verified.
+- No Funnel exposure, live public URL, paid resource, system power change or
   startup task. Public verification and subsequent report update remain pending.
 
 ### Fixed and verified

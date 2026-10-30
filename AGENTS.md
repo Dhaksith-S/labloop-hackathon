@@ -22,8 +22,9 @@ real, what is prepared, and which invariants must not be broken.
   backup checks also passed; see `docs/VERIFICATION.md`.
 - Subsequent Funnel preparation: 48 Vitest tests and 5 E2E tests pass; existing
   production artifact retained. Isolated judge data is outside OneDrive. Tailscale
-  installation is approved but automatic installation was blocked; manual install
-  confirmation, separate sign-in approval and separate public approval are pending.
+  1.104.4 installation and user sign-in are verified. The actual assigned origin
+  is configured and tested locally; HTTPS/Funnel setup and public exposure still
+  require approval. No forwarding command has been run.
   No public URL. See `docs/TAILSCALE_FUNNEL.md` before attempting exposure.
 - **Not deployed.** No public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.

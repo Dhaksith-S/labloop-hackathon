@@ -181,9 +181,10 @@ this route. [Deployment comparison and runbook](docs/DEPLOYMENT.md).
 **Zero-cost Funnel preparation:** The existing production build has passed a
 local proxy custody/restart/backup check with an isolated fictional database
 outside OneDrive. Current checks pass 48 unit/integration tests and 5 browser
-tests. **There is still no public URL.** Manual Tailscale installation is pending
-after automated installation was blocked; sign-in and public exposure each need
-separate approval. [Setup, evidence and restart guide](docs/TAILSCALE_FUNNEL.md).
+tests. **There is still no live public URL.** Tailscale installation and user
+sign-in are independently confirmed. The assigned hostname is configured and
+tested locally; HTTPS/Funnel permission and public exposure await explicit
+approval. [Setup, evidence and restart guide](docs/TAILSCALE_FUNNEL.md).
 The earlier verification table/report record the `17fa246` baseline.
 
 The authoritative organiser brief and 100-point rubric are transcribed in

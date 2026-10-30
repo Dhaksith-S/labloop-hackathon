@@ -1,6 +1,7 @@
 # Windows judge demo: Tailscale Funnel preparation and evidence
 
-**30 October 2026 - preparation verified locally; no public URL yet.**
+**30 October 2026 - authenticated device and production preparation verified;
+public exposure awaiting approval. No live public URL yet.**
 The user selected a zero-cost laptop-hosted demonstration and requires separate
 approval for installing software, signing into an account and public exposure.
 No paid resources, router forwarding, power-policy changes, startup tasks or
@@ -14,18 +15,36 @@ Supabase migration were created. Existing app records and Git history remain.
 | Existing production artifact | `.next/BUILD_ID` = `itApzfwuOZ96pav7ZpWPX`; retained, not rebuilt or replaced by a dev server |
 | Initial Tailscale state | No installed CLI/package/service found; authentication unavailable |
 | Installer prepared | Official `tailscale-setup-1.104.4-amd64.msi`, valid Tailscale Inc. Authenticode signature; SHA-256 `1d12cd8b1d6dbb447da8579b1a5268ae2fc050967bebfaa02e32d2bb645ef6ee` matched manifest |
-| Installation approval | User approved installation only; automated installer command rejected by automatic approval review as `blocked by policy`; manual installation confirmation pending |
-| Sign-in / exposure approval | Neither requested step has been performed; public access remains off |
+| Installation | Initial automated installer command was rejected; subsequent manual installation succeeded. Installed CLI version 1.104.4 independently verified |
+| Authentication / connectivity | User completed GitHub SSO; CLI reports Running, online, no pending authentication URL; Windows service Running/Automatic |
+| Public prerequisites | MagicDNS enabled; no HTTPS certificate domains or Funnel capability currently advertised. HTTPS/Funnel enablement remains part of the pending public setup |
+| Serve / Funnel | Both configuration status commands return empty objects; no existing mappings to overwrite |
+| Exposure approval | Required and still pending; no public exposure command has been run |
 | Isolated judge store | `%LOCALAPPDATA%/LabLoop/judge-demo/fictional-judge.db`, fresh fictional seed, outside OneDrive/repository |
 | Secret | Unique random 32-byte session secret, persisted encrypted with Windows DPAPI; directory ACL restricted to current Windows user and SYSTEM; never printed |
 | Listeners | Backend `127.0.0.1:3210`; filtered ingress `127.0.0.1:3211`; no LAN binding |
-| State after preflight | Recorded app/ingress process trees stopped while manual installation is pending; private data, secret and restart commands retained |
+| Current local state | App and ingress running on loopback only, using the exact authenticated device origin stored in the private profile; Funnel remains off |
 | Local proxy journey | Catalog, unauthenticated route guard, admin-path denial, student request, owner approval, check-in, initial/final conditions, return confirmation, completed history, Secure/HttpOnly/SameSite=Lax cookie passed |
 | Current checks | 48 tests across 5 Vitest files, 5 Playwright tests, typecheck and lint passed; production artifact retained as requested |
 | Restart | Reused existing browser session after stopping/starting app and ingress; completed booking and both reports remained; repeated Prepare preserved records and encrypted secret |
 | Backup | Online backup and fresh-file restore passed SQLite `integrity_check`; original application database SHA-256 unchanged |
 | Original app DB | `data/labloop.db` hash remained `6bb86410d65288e6620f552ce4340271a6483e351d27baf00befdde1d828666a` |
 | Public URL / external device | Not available or verified; `labloop-preflight.invalid` is a reserved local simulation hostname, never a deployment claim |
+
+After authenticated device discovery, `--loopback` exercised the actual production
+app under the exact assigned device hostname while intercepting requests locally.
+That mode records `publicUrl: null` in its private evidence file so it cannot be
+mistaken for public verification. The actual hostname is shown to the owner for
+approval and retained in the private profile; it is not published here before
+public exposure is approved.
+
+This continuation reran 48 Vitest tests, typecheck and lint. The configured-origin
+production browser journey passed, then the existing authenticated session,
+completed transaction and both condition reports survived a real process restart.
+The new online backup was restored into a fresh private file and passed integrity
+checking. Direct requests confirmed admin/developer/hidden-file/API denial and
+foreign Host/Origin rejection. Public certificate, off-tailnet access and actual
+Funnel URL stability remain unverified until public setup is approved.
 
 ## Official requirements verified
 
@@ -105,26 +124,34 @@ again after testing and remain unchanged.
 
 ## Installation, sign-in and public exposure gates
 
-1. **Installation approved, manual completion pending:** run the verified MSI
-   locally. If Windows asks for administrator approval, the user handles that
-   prompt. Do not bypass the automatic installation rejection with another
-   hidden installer command.
-2. **Separate sign-in approval required:** after installation, inspect the CLI
-   version, `status --json` and supported help. Only after approval initiate
-   sign-in; the user completes SSO and selects their free Personal account.
-   Never invent a token or commit authentication URLs/credentials.
+1. **Installation complete:** the user manually installed the verified package;
+   installed version was independently checked. The earlier automatic rejection
+   was not bypassed with another installer command.
+2. **Sign-in complete:** the user completed GitHub SSO independently. No agent
+   sign-in or credential entry is needed. Do not dump account/peer inventories or
+   commit authentication URLs/credentials.
 3. Read only `BackendState` and the current device `Self.DNSName`; avoid dumping
    the peer/account inventory. Stop local preflight before configuration.
 4. Configure the actual `https://<Self.DNSName>` using `-Action Configure -PublicUrl
    <actual-url>`. The helper verifies that it matches the authenticated device.
    Restart with `-Action Start` (without `-LocalPreflight`). Secure cookies remain
    enabled; seeding is disabled after the initial fictional setup.
+   This configuration/start step is complete; `--loopback` and its `--revisit`
+   check have passed without enabling Tailscale forwarding.
 5. Inspect existing `funnel status --json` and `serve status --json`; do not
    overwrite unrelated mappings or reset an existing configuration.
-6. **Separate public approval required:** review the exact URL, only ingress
+6. **Separate public approval required, currently pending:** review the exact URL, only ingress
    port 3211, fictional accounts, public visitor access and persistent background
    behavior with the user. Funnel may require explicit HTTPS/node-policy approval
    in Tailscale's web UI. No public command has been run during preparation.
+
+To repeat the configured-origin test without exposing the app:
+
+```powershell
+node --import tsx scripts/verify-funnel-demo.ts --loopback
+# After stopping/starting the recorded app and ingress:
+node --import tsx scripts/verify-funnel-demo.ts --loopback --revisit
+```
 
 Only after gate 6 is approved, the supported command prepared for this service is:
 
