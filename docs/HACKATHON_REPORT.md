@@ -288,9 +288,11 @@ has been verified. Do not submit that disabled address as a working application.
 Cloudflare Quick Tunnels is a no-cost, accountless fallback. Approved local
 preparation verified portable cloudflared 2026.10.6 signature/checksum/version
 and its ingress mode's production lifecycle, restart/session and backup restore.
-No tunnel was started or URL allocated. Allocation-only approval was obtained,
-but automated launch was blocked; app exposure remains unapproved.
-Hostnames change on recreation and uptime is not guaranteed.
+The user manually allocated a URL and started the approved app after automated
+launches were blocked. Local catalog returned 200, but public access returned
+530/error 1033 because no cloudflared process remained. The process exit cause
+is unknown. App/ingress were stopped safely for recovery; no public lifecycle
+passed. Hostnames change on recreation and uptime is not guaranteed.
 The laptop and network must stay online. No power settings were changed.
 The paid Render template remains unapplied;
 Supabase remains an unapplied port. See `docs/TAILSCALE_FUNNEL.md` for commands,

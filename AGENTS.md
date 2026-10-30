@@ -31,10 +31,11 @@ real, what is prepared, and which invariants must not be broken.
   cloudflared 2026.10.6 signature/checksum/version verified; no tunnel started.
   Latest 51 Vitest tests, typecheck/lint, Cloudflare-mode production journey,
   restart/session persistence and backup restore pass locally. No public
-  URL exists. Allocation-only approval was subsequently given, but automatic
-  launch review rejected the command (blocked by policy). App/ingress are now
-  stopped; no tunnel runs. App exposure remains unapproved. See
-  `docs/CLOUDFLARE_QUICK_TUNNEL.md` for the manual allocation continuation.
+  app acceptance exists. The user manually allocated a Cloudflare URL and
+  started the approved app after automated launches were rejected. Local catalog
+  passed, but the tunnel process exited and public URL returned 530/error 1033.
+  All judge processes are now stopped; recovery allocation is pending. See
+  `docs/CLOUDFLARE_QUICK_TUNNEL.md`. Do not submit the expired URL as working.
 - **Not deployed.** No verified working public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.
 - **Source is public** at

@@ -453,19 +453,39 @@ are suppressed, route callbacks drain before disposal, and acceptance is saved
 only after clean shutdown. A stale-backup comparison was corrected by taking a
 fresh backup after the final journey; no records were reset or rewritten.
 
-Local services passed in Cloudflare local-preflight on loopback 3210/3211, then
-were stopped for URL allocation. The saved profile still contains the old
-Tailscale origin, which is not a live public route. Funnel remains `{}`;
-no cloudflared process/record exists and ports 3210/3211/3212 are closed.
+Local services passed Cloudflare local-preflight and were stopped for allocation.
+After automated allocation was rejected (`blocked by policy`, no other rationale),
+the user manually ran the approved cloudflared command and provided
+`https://underlying-living-milton-estimated.trycloudflare.com`. Verified one exact
+executable/argument process, fixed upstream 3211, loopback-only metrics 3212 and
+`/ready` 200. Public catalog returned expected 502 while app was stopped; normal
+curl TLS validation passed. External web-tool fetch was unavailable. The tunnel
+PID/start time are in private `cloudflare-process.json`; keep its user PowerShell
+window open. Funnel remains `{}`. The profile was backed up and configured to
+that exact Cloudflare origin; original DB hash remains unchanged.
 
-The user subsequently approved **URL allocation only**. Automatic approval
-review rejected the automated launch with `blocked by policy`, supplying no
-additional reason. Do not retry the rejected action through another tool/wrapper.
-The next step is manual user execution of the approved command in the runbook,
-with the app left stopped, then confirmation of the actual URL or concise error.
-No default config file or tunnel environment override was present at inspection.
-Once manually started, identify/record only that process's PID/start time, keep
-the app stopped and show the actual hostname for separate app-connection approval.
-Only after that approval configure the
-exact URL with `Configure -Provider Cloudflare`, start production, run public
-workflow/restart/backup and off-tailnet-device checks. No fake public evidence.
+The user then **approved this exact app configuration and public tests**. An
+automated app-connection/start command was separately rejected with `blocked by
+policy` and no further reason. It did not run; app/ingress ports 3210/3211 and
+process record remained absent. Authorization is stored privately with
+`appConnectionState=manual-start-pending`; do not mark connected prematurely.
+Do not retry the rejected action through another tool/wrapper.
+
+The user manually ran the helper and confirmed configured-mode startup. Actual
+read-only checks at 2026-10-30 12:32:39 UTC found local ingress catalog 200, but
+public catalog 530/Cloudflare error 1033. No cloudflared process or metrics
+listener remained; `/ready` refused connections and the original recorded PID
+was absent. Why the process exited is unknown. Do not blame user action or a
+network/crash cause without evidence. No public lifecycle was attempted against
+the known-disconnected route.
+
+App/ingress were stopped; all 3210/3211/3212 ports are now closed, Funnel remains
+off, original DB hash and BUILD_ID unchanged. Private record mode is `exited`,
+with `exitObservedAt`, not an invented process exit time. Next: user manually
+reruns the existing allocation command with an added private info logfile and
+keeps that terminal open. A text request asks for the new URL and any concise
+exit error. This is recovery within allocation authorization, not a fresh request
+for software or allocation permission. The old exact app approval is recorded;
+review/pin a different hostname before reconnecting the app. Automated launch
+rejections remain; do not bypass them through another tool/wrapper. Public
+workflow/restart/backup/off-tailnet-device acceptance is still pending.

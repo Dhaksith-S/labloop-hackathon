@@ -1,7 +1,7 @@
 # Cloudflare Quick Tunnel: local preparation and approval gates
 
-**30 October 2026: software/local preparation verified; URL allocation approved
-but automated launch blocked. No tunnel started or Cloudflare URL generated.**
+**30 October 2026: manual app start passed locally, but the allocated tunnel
+exited. Public HTTP 530/error 1033; app stopped safely for URL reallocation.**
 Tailscale Funnel remains disabled after its failed public acceptance test. This
 fallback keeps the same production build, fictional judge SQLite database and
 persistent DPAPI-protected session secret. No account, service installation,
@@ -20,8 +20,10 @@ subscription, power change or database migration is needed for this preparation.
 | Restart | Existing browser session, completed booking and both condition reports passed `--revisit` after a real process stop/start |
 | Backup | Fresh online SQLite backup restored to a new private file; `integrity_check=ok`, completed booking and two condition reports verified |
 | Preservation | Original app DB, encrypted session-secret file, configured profile and production build unchanged against pre-preparation hashes/identity |
-| Tested listeners / current state | Local preflight used app `127.0.0.1:3210` and filtered ingress `127.0.0.1:3211`; both are now stopped for allocation and ports 3210/3211/3212 are closed |
-| Public state | No cloudflared process running; Funnel status `{}`; no public Cloudflare acceptance or URL stability evidence |
+| Tested listeners / current state | Manual app start created loopback 3210/3211 and local catalog HTTP 200; after the tunnel exited, app/ingress were stopped and ports 3210/3211/3212 confirmed closed |
+| Allocated origin | `https://underlying-living-milton-estimated.trycloudflare.com`; exactly pinned in the saved Cloudflare profile |
+| Allocation verification | Public `/resources` returned expected HTTP 502 with normal curl TLS validation passing while app was stopped; local tunnel `/ready` HTTP 200 |
+| Public app state | User manually started the approved app, but public `/resources` returned HTTP 530/error 1033; no cloudflared process or metrics listener remained. No public lifecycle/stability acceptance; Funnel remains `{}` |
 
 The five standard Playwright E2E tests passed during the earlier Funnel work;
 they were not rerun for these ingress-only changes. The production browser
@@ -85,17 +87,67 @@ journey and restart revisit completed successfully. A restore check initially
 compared a newer transaction with an older backup; a new backup taken after the
 final journey restored and verified successfully.
 
-## Public configuration - allocation approved, app connection unapproved
+## Public configuration - approved attempt failed after tunnel exit
 
 The user approved gate 1 below. Automatic approval review rejected the automated
 allocation command with **blocked by policy**, without additional rationale.
-The rejected command did not run. The recorded local app/ingress were then
-stopped separately and all three ports verified closed. No cloudflared process
-or process record exists; Funnel remains `{}`. No default config file or
+The rejected command did not run. At that stage, recorded local app/ingress were
+stopped and all three ports verified closed; no cloudflared process or process
+record existed. Funnel remained `{}`. No default config file or
 `TUNNEL_*`/`CF_TUNNEL*` process-environment override was present at the final check.
-The next action is for the user to run the already-approved allocation command
-manually and report only the generated HTTPS URL or concise error. Do not retry
+The user then ran the allocation command manually and supplied
+`https://underlying-living-milton-estimated.trycloudflare.com`. Process inspection
+confirmed the exact verified executable/arguments, only the fixed 3211 upstream,
+and loopback metrics. Its PID and creation time were recorded privately. Normal
+curl TLS validation passed and `/resources` returned expected 502 with no app
+listening; local `/ready` returned 200. The saved profile was backed up, then
+configured for the exact hostname and Cloudflare provider while the app stayed
+stopped. The original app DB hash remained unchanged.
+
+After reviewing this exact mapping, the user **approved app connection**:
+
+```text
+https://underlying-living-milton-estimated.trycloudflare.com :443
+  -> existing manual Cloudflare Quick Tunnel
+  -> filtered ingress 127.0.0.1:3211
+  -> existing Next.js production build 127.0.0.1:3210
+  -> isolated fictional judge SQLite database
+```
+
+Automatic review separately rejected the automated app-connection/start command
+with **blocked by policy**, again with no additional reason. The rejected command
+did not run; no app process record or listener existed on 3210/3211 afterward.
+The process record initially recorded authorization and `manual-start-pending`,
+not a successful app connection. The user then manually ran the approved start
+command below and confirmed configured-mode startup. Do not retry
 the rejected launch using a different tool, shell wrapper or obfuscated command.
+
+```powershell
+powershell.exe -NoProfile -File "C:\Users\Dhaksith.S\OneDrive\Hackathon-Codeverse\scripts\funnel\judge-demo.ps1" -Action Start
+```
+
+At **2026-10-30 12:32:39 UTC (18:02:39 IST)**, actual checks found:
+
+- Local filtered catalog HTTP 200 under the exact configured hostname.
+- Public catalog HTTP 530 with Cloudflare error 1033.
+- No cloudflared process, no loopback metrics listener, and `/ready` connection
+  refused. The recorded tunnel PID no longer existed.
+
+This identifies a missing tunnel connector, not an app failure. Why the process
+exited is unknown; no user action, crash or network cause is assumed. Cloudflare
+documents [error 1033 as no healthy connector](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/common-errors/#i-see-an-error-1033-when-attempting-to-run-a-tunnel).
+No public lifecycle was run against this known-disconnected route. Public TLS to
+the earlier allocation gateway was not evidence that LabLoop worked.
+
+The app/ingress were stopped safely; all three ports are now closed, Funnel is
+off, and no public connector remains. Original DB hash and BUILD_ID are unchanged.
+The private tunnel record is `exited`, with an observed-exit timestamp rather
+than an invented actual exit time. Recovery has been requested: manually rerun
+the allocation command with the app stopped, keep that terminal open, and report
+the new hostname plus any concise exit error. A private info logfile was added
+to the recovery command to help diagnose another exit; no debug/header logging.
+After reallocation, pin/review the new exact hostname before connecting the app.
+Do not submit the expired address as a working application.
 
 Cloudflare assigns its random public hostname only when a Quick Tunnel starts.
 An exact generated URL cannot be shown beforehand. Use two approval gates to
@@ -114,12 +166,11 @@ honor the user's requirement to review the actual app URL before exposure:
    configure the exact printed URL using the helper below, then start the app.
    Retest the full workflow through the real URL before describing it as working.
 
-The command approved for gate 1 is below. It may now be run **manually by the
-user**, with app/ingress left stopped. These flags were checked in the installed
-CLI's help; the network command has not yet executed:
+The command approved for gate 1 is below. Its first manual process exited;
+recovery uses the same fixed target with an added private diagnostic logfile:
 
 ```powershell
-& "$env:LOCALAPPDATA\LabLoop\installers\cloudflared-2026.10.6-windows-amd64.exe" tunnel --no-autoupdate --metrics 127.0.0.1:3212 --management-diagnostics=false --url http://127.0.0.1:3211
+& "$env:LOCALAPPDATA\LabLoop\installers\cloudflared-2026.10.6-windows-amd64.exe" tunnel --no-autoupdate --metrics 127.0.0.1:3212 --management-diagnostics=false --logfile "$env:LOCALAPPDATA\LabLoop\judge-demo\logs\cloudflare-manual.log" --url http://127.0.0.1:3211
 ```
 
 Metrics bind only to loopback 3212, never the tunnel target. Reject occupied

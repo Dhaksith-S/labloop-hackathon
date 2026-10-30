@@ -8,6 +8,18 @@ versioning for the application.
 
 ### Cloudflare fallback - approved software/local preparation only
 
+- Manual app startup subsequently succeeded and local filtered catalog returned
+  200. Public catalog failed with 530/error 1033: no cloudflared process or
+  readiness listener remained. Process exit cause unknown. Stopped app/ingress;
+  all judge ports closed, original DB/build preserved, recovery allocation pending.
+
+- User manually allocated `https://underlying-living-milton-estimated.trycloudflare.com`.
+  Verified exact process/target, loopback metrics/readiness and normal public TLS
+  with expected 502 while disconnected. Backed up and pinned the exact profile.
+- Exact app connection/public tests approved; automated app start separately
+  rejected by review (`blocked by policy`, no additional reason). App/ingress
+  remain stopped; manual app start is pending. No public app success claimed.
+
 - Subsequent URL-allocation-only approval received. Automatic approval review
   rejected the automated launch (blocked by policy, no additional reason).
   App/ingress were stopped separately; ports 3210/3211/3212 are closed, no

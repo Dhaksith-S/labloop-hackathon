@@ -196,10 +196,14 @@ report adds subsequent deployment-preparation evidence.
 separately approved. The verified portable cloudflared 2026.10.6 reports its
 version; no tunnel has been started. Exact-host Cloudflare ingress, 51 tests,
 typecheck/lint, the production custody journey, restart/session persistence and
-backup restoration pass locally. No real Cloudflare URL exists yet; public
-allocation was subsequently approved, but automatic review blocked its launch.
-App/ingress are stopped for manual allocation; application exposure still
-requires approval.
+backup restoration pass locally. The user manually allocated
+`https://underlying-living-milton-estimated.trycloudflare.com` and approved its
+exact app connection. TLS to the allocation gateway passed; expected HTTP 502
+confirmed the app was disconnected. The user then manually started the approved
+app after automatic review blocked its launch. Local catalog returned HTTP 200,
+but the tunnel process had exited: public HTTP 530/error 1033, no connector or
+metrics listener. App/ingress were stopped safely for recovery allocation.
+No public lifecycle passed; the expired address is not a working demo URL.
 [Evidence and approval gates](docs/CLOUDFLARE_QUICK_TUNNEL.md).
 
 The authoritative organiser brief and 100-point rubric are transcribed in

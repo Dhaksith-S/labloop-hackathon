@@ -91,6 +91,37 @@ were stopped separately, no cloudflared process/record exists, ports
 files or tunnel environment overrides were present at the final check. Manual
 user allocation is now pending; app connection remains separately unapproved.
 
+## Manual Cloudflare allocation and app-connection checkpoint
+
+The user subsequently ran the approved allocation command and supplied
+`https://underlying-living-milton-estimated.trycloudflare.com`. Inspected one
+matching official executable/process with exact upstream 3211 and loopback
+metrics 3212; recorded PID/start time privately. Normal `curl --noproxy '*'`
+TLS validation passed, public `/resources` returned expected 502 with no app
+listener, and local tunnel `/ready` returned 200. External web-tool fetch was
+unavailable, so there is no independent-device app evidence. Backed up the
+profile and pinned the exact Cloudflare origin while app remained stopped.
+
+The user approved this exact app route and public tests. Automated app start
+was separately rejected before execution (`blocked by policy`, no additional
+rationale). Verified afterward: no app process record/listener on 3210/3211,
+the same recorded cloudflared process still running, Funnel `{}`, original DB
+SHA-256 unchanged. The private process record indicates authorization plus
+manual-start-pending, not an actual connection. User manual helper start is the
+next step; no renewed permission is required and no automated bypass is planned.
+
+The user manually started the app and confirmed configured mode. At
+2026-10-30 12:32:39 UTC, local ingress catalog returned 200 under the exact Host;
+public catalog returned 530 with error 1033. The cloudflared process no longer
+existed, metrics port had no listener and `/ready` refused connections. The
+process exit cause is unknown. No public booking lifecycle was run against a
+known-disconnected route. Safely stopped the recorded app/ingress; confirmed
+zero listeners on 3210/3211/3212, no cloudflared process, Funnel `{}`, unchanged
+original DB hash and BUILD_ID. Private record now indicates `exited` and the
+time exit was observed. Manual recovery allocation was requested with a private
+info logfile and the same closed target; a new exact hostname needs review/pinning
+before app connection. Public application acceptance remains incomplete.
+
 ## Recovery and initial Git evidence
 
 - Existing repository confirmed: LabLoop, original `main`, existing origin
