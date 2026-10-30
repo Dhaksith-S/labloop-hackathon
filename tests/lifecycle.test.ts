@@ -220,6 +220,12 @@ describe("seeded domain lifecycle", () => {
     expectDomainError(() => checkInBooking(db, arjun, pending.id, {
       condition: "good", accessoriesOk: true, rulesAcknowledged: false,
     }), "RULES_REQUIRED");
+    // The service consults current DB membership, even if a caller holds an older session snapshot.
+    db.prepare("UPDATE organization_members SET status = 'suspended' WHERE user_id = ?").run(arjun.id);
+    expectDomainError(() => checkInBooking(db, arjun, pending.id, {
+      condition: "good", accessoriesOk: true, rulesAcknowledged: true,
+    }), "MEMBERSHIP_REQUIRED");
+    db.prepare("UPDATE organization_members SET status = 'active' WHERE user_id = ?").run(arjun.id);
     checkInBooking(db, arjun, pending.id, { condition: "good", accessoriesOk: true, rulesAcknowledged: true });
     expectDomainError(() => submitReturn(db, priya, pending.id, { condition: "good", accessoriesOk: true }), "FORBIDDEN");
     submitReturn(db, arjun, pending.id, { condition: "good", accessoriesOk: true });

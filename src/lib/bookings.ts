@@ -695,6 +695,9 @@ export function checkInBooking(
   }
   const resource = getResourceById(db, booking.resource_id);
   if (!resource) throw new DomainError("NOT_FOUND", "Resource not found.");
+  if (getBorrowerEligibilityContext(db, user.id, resource.organization_id).membershipStatus !== "active") {
+    throw new DomainError("MEMBERSHIP_REQUIRED", "Active institution membership is required to take custody. Contact your lab manager.");
+  }
 
   db.transaction(() => {
     db.prepare(
