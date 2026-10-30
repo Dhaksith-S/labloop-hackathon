@@ -6,6 +6,32 @@ versioning for the application.
 
 ## [Unreleased] - 2026-10-30 Codex takeover
 
+### Recovered public Cloudflare demo - final acceptance in progress
+
+- User recreated the tunnel while reporting restart; previous `complexity-...`
+  URL is obsolete. Verified new `headline-anticipated-trips-salaries` connector,
+  readiness, fixed target and TLS. Stopped app, backed up/pinned exact profile,
+  and verified sessions/history/secret unchanged. New-host approval/conditional
+  manual-start question is pending; public retests are not yet claimed.
+
+- Subsequent HTTP probe found pages served without redirect. Added exact HTTPS
+  read upgrades and plaintext/missing-protocol rejection, with two regression
+  tests (55 total). Paused app/ingress for the requested manual reload/retest;
+  registered tunnel/hostname preserved.
+
+- Recovered exact origin `https://complexity-headphones-normal-nut.trycloudflare.com`;
+  user manually started the approved production app. Real public HTTPS custody,
+  secure-cookie, restricted-path/Origin checks and fresh backup restore passed.
+- Locked the public manager's shared seed credential and revoked privileged
+  sessions only in the isolated judge DB; startup enforces this idempotently.
+  Student/owner credentials, roles, records and the development DB are preserved.
+- Added two account-isolation tests: 53 tests across 6 files, typecheck/lint and
+  PowerShell syntax pass. Existing production build retained; no rebuild/reset.
+- Added sanitized verifier failure-stage diagnostics. One repeat run after
+  completed custody failed without retained cause; public visual inspection and
+  a subsequent fresh full journey passed. Do not claim its cause was resolved.
+- App-only restart and independent mobile-data acceptance remain pending.
+
 ### Cloudflare fallback - approved software/local preparation only
 
 - Manual app startup subsequently succeeded and local filtered catalog returned

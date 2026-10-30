@@ -58,7 +58,7 @@ styles.add(ParagraphStyle(name="Cell", parent=styles["ReportBody"], fontSize=8, 
 styles.add(ParagraphStyle(name="CellHead", parent=styles["Cell"], fontName=BOLD,
                           textColor=colors.white))
 styles.add(ParagraphStyle(name="ListItemReport", parent=styles["ReportBody"], leftIndent=13,
-                          firstLineIndent=-10, spaceAfter=5))
+                          firstLineIndent=-10, spaceAfter=4))
 styles.add(ParagraphStyle(name="Kicker", fontName=BOLD, fontSize=9, leading=13,
                           textColor=GREEN, spaceAfter=12))
 styles.add(ParagraphStyle(name="CoverTitle", fontName=BOLD, fontSize=44, leading=49,
@@ -164,7 +164,7 @@ def page_chrome(canvas, doc):
     canvas.line(LEFT, 38, WIDTH - RIGHT, 38)
     canvas.setFillColor(MUTED)
     canvas.setFont(BODY, 7)
-    canvas.drawString(LEFT, 25, "30 OCT 2026  |  Fictional demonstration data  |  No public deployment")
+    canvas.drawString(LEFT, 25, "30 OCT 2026  |  Fictional demonstration data  |  Public demo under acceptance")
     canvas.drawRightString(WIDTH - RIGHT, 25, f"{doc.page}")
     canvas.restoreState()
 
@@ -175,7 +175,7 @@ story = [Spacer(1, 42), para("HACKATHON / 48-HOUR BUILD", "Kicker"),
          para("Trusted campus sharing, from eligibility and human approval to condition evidence and return.", "CoverBody"),
          Spacer(1, 18)]
 status = Table([[para("**PROVISIONAL - NOT SUBMISSION READY**", "CoverBody")],
-                [para("Local product independently verified. Public hosting, the official PDF template and verified team details remain pending.")]], colWidths=[CONTENT])
+                [para("Local product and public custody workflow verified. Final restart/device acceptance, official PDF template and verified team details remain pending.")]], colWidths=[CONTENT])
 status.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#fff4dd")),
                            ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor("#d9b879")),
                            ("LEFTPADDING", (0, 0), (-1, -1), 16),

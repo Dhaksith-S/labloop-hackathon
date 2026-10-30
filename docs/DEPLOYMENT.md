@@ -1,5 +1,22 @@
 # Persistent SQLite deployment preparation
 
+**Current public demo acceptance:**
+<https://headline-anticipated-trips-salaries.trycloudflare.com> is configured with
+the app stopped, pending reconnection approval. Real HTTPS custody,
+security/cookie checks and a fresh backup restore passed on the previous hostname
+on 30 October 2026; that hostname is obsolete after user recreation.
+55 tests/typecheck/lint pass. App-only restart and independent mobile-data
+acceptance remain pending. See [executed evidence](PUBLIC_DEMO_VERIFICATION.md)
+and the [Cloudflare runbook](CLOUDFLARE_QUICK_TUNNEL.md). The public store locks
+shared privileged demo credentials; student/owner workflows remain available.
+The current laptop/tunnel process must stay online; recreation changes the URL.
+The new connector/readiness/TLS are verified, while expected 502 confirms app
+disconnection. Sessions/history/secret were preserved. After approval, load the
+validated HTTPS-upgrade fix and repeat real public workflow/transport/persistence.
+
+The following preparation/failed-attempt notes are historical. The first
+Cloudflare hostname below expired; it is not the current judge URL.
+
 **Subsequent zero-cost route:** Tailscale Funnel preparation is locally tested
 using the existing production build, loopback-only backend/ingress and a private
 judge database outside OneDrive. It is not publicly enabled. Tailscale 1.104.4
@@ -24,7 +41,7 @@ reallocation; no public lifecycle passed. See the
 [Cloudflare fallback runbook](CLOUDFLARE_QUICK_TUNNEL.md). A temporary Quick Tunnel
 cannot promise an unchanged URL after tunnel recreation.
 
-**Status: prepared locally, not deployed.** The user authorized preparation and
+**Earlier cloud-provider preparation status:** The user authorized preparation and
 explicitly prohibited paid resources. No cloud service, disk, subscription or
 cloud production URL was created. The attempted Funnel address is disabled and
 unverified. Render is available as an optional integration but

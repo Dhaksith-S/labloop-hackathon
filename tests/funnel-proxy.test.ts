@@ -59,15 +59,16 @@ describe("Funnel ingress boundary", () => {
       res.end("ok");
     }));
     const port = await listen(createJudgeIngress({ publicUrl: origin, provider: "cloudflare", upstreamPort: upstream }));
+    const trustedHeaders = { host, "x-forwarded-proto": "https" };
     expect((await rawRequest(port, "/login", { host: "other.trycloudflare.com", "x-forwarded-host": host })).status).toBe(421);
-    expect((await rawRequest(port, "/login", { host, origin: "https://other.trycloudflare.com" }, "POST")).status).toBe(403);
-    expect((await rawRequest(port, "/login", { host }, "POST")).status).toBe(403);
+    expect((await rawRequest(port, "/login", { ...trustedHeaders, origin: "https://other.trycloudflare.com" }, "POST")).status).toBe(403);
+    expect((await rawRequest(port, "/login", trustedHeaders, "POST")).status).toBe(403);
     for (const pathname of ["/admin", "/%61dmin", "/api/debug", "/metrics", "/.env.local", "/__nextjs_original-stack-frame"]) {
-      expect((await rawRequest(port, pathname, { host })).status).toBe(404);
+      expect((await rawRequest(port, pathname, trustedHeaders)).status).toBe(404);
     }
     expect(received).toBeUndefined();
     const response = await rawRequest(port, "/login", { host, origin, "x-forwarded-host": "evil.invalid",
-      "x-forwarded-proto": "http", "cf-access-authenticated-user-email": "spoof@example.invalid",
+      "x-forwarded-proto": "https", "cf-access-authenticated-user-email": "spoof@example.invalid",
       "next-action": "fixture-action", "content-type": "text/plain;charset=UTF-8" }, "POST", '["fixture"]');
     expect(response.status).toBe(200);
     expect(received?.body).toBe('["fixture"]');
@@ -76,6 +77,34 @@ describe("Funnel ingress boundary", () => {
     expect(received?.headers["x-forwarded-proto"]).toBe("https");
     expect(received?.headers["next-action"]).toBe("fixture-action");
     expect(received?.headers["cf-access-authenticated-user-email"]).toBeUndefined();
+  });
+
+  it("upgrades Cloudflare HTTP reads to the one trusted HTTPS origin and rejects plaintext mutations", async () => {
+    const host = "fictional-judge-demo.trycloudflare.com";
+    const origin = `https://${host}`;
+    let reached = 0;
+    const upstream = await listen(http.createServer((_req, res) => { reached++; res.end("unexpected"); }));
+    const port = await listen(createJudgeIngress({ publicUrl: origin, provider: "cloudflare", upstreamPort: upstream }));
+    const headers = { host, "x-forwarded-proto": "http" };
+    const result = await rawRequest(port, "/login?next=%2Fbookings", headers);
+    expect(result.status).toBe(308);
+    expect(result.headers.location).toBe(`${origin}/login?next=%2Fbookings`);
+    expect(result.body).toBe("");
+    expect((await rawRequest(port, "/login", { ...headers, origin }, "POST", "fixture")).status).toBe(403);
+    expect((await rawRequest(port, "//evil.invalid/login", headers)).status).toBe(400);
+    expect((await rawRequest(port, "//[", headers)).status).toBe(400);
+    expect((await rawRequest(port, "/login", { host })).status).toBe(400);
+    expect(reached).toBe(0);
+  });
+
+  it("allows missing proxy metadata only for the explicitly reserved local simulation", async () => {
+    const upstream = await listen(http.createServer((_req, res) => res.end("fixture")));
+    const local = await listen(createJudgeIngress({ publicUrl: "https://labloop-preflight.invalid",
+      provider: "cloudflare", localPreflight: true, upstreamPort: upstream }));
+    expect((await rawRequest(local, "/login", { host: "labloop-preflight.invalid" })).status).toBe(200);
+    const real = await listen(createJudgeIngress({ publicUrl: "https://fictional-judge-demo.trycloudflare.com",
+      provider: "cloudflare", localPreflight: true, upstreamPort: upstream }));
+    expect((await rawRequest(real, "/login", { host: "fictional-judge-demo.trycloudflare.com" })).status).toBe(400);
   });
 
   it("accepts only exact device HTTPS origins and a separate explicit local preflight", () => {

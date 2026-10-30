@@ -15,12 +15,12 @@ use case is the selected scope. The deadline is **1 November 2026, 10:00 AM IST*
 
 **Build date:** 30 October 2026
 
-**Status:** Locally runnable and tested. **Not publicly deployed.** Supabase
-schema/RLS prepared but unapplied. No invented adoption, usage or deployment
-claims.
+**Status:** Public demo under final acceptance. Real HTTPS custody/security and
+fresh backup restore passed; app-only restart and independent mobile-data checks
+are pending. Supabase schema/RLS remains unapplied. No invented adoption or usage.
 
 **Source:** <https://github.com/Dhaksith-S/labloop-hackathon> (public repository;
-no hosted application).
+public-demo acceptance described in section 7).
 
 ---
 
@@ -45,11 +45,10 @@ approval.
 The product is a complete Next.js monolith with a persistent database, demo
 institution, role-aware UI, audit trail, incidents and credential verification.
 The original verification passed 44 unit/integration tests and 5 Chromium browser
-tests. Subsequent Funnel preparation added four ingress tests (48 at that stage),
-and Cloudflare preparation added three more (51 total). The production build was
-retained and the isolated demo lifecycle verified locally.
-An approved Funnel attempt failed public reachability and was disabled. The
-mandatory working public application requirement remains unsatisfied.
+tests. Latest checks pass 55 tests across six files, including nine ingress and
+two public-account isolation tests. The existing production build's real public
+HTTPS booking journey and security checks passed. Final public restart and
+independent-device acceptance remain pending.
 
 ## 2. The problem, concretely
 
@@ -168,9 +167,11 @@ The following were executed on 30 October 2026 in this workspace:
 | `npm run verify:production` | home/login/catalog HTTP 200; headers and Secure cookie; browser custody; session/completed booking/condition records survive local process restart; verified backup |
 | Existing demo database | Preserved; recovery backup made before testing; no reset run in this takeover |
 
-The table is the original baseline. Latest checks passed 51 tests, typecheck/lint
-and the Cloudflare-mode production lifecycle, restart/session and backup restore.
-The five standard E2E tests were not rerun; public transport remains unverified.
+The table is the original baseline. Latest checks passed 55 tests, typecheck/lint,
+the real public HTTPS custody/security journey and a fresh backup restore. The
+five standard E2E tests were not rerun for operations-only changes. Final public
+restart/device checks and the unclassified repeat-run failure are documented in
+`docs/PUBLIC_DEMO_VERIFICATION.md`.
 
 The E2E test completes request → approve → check-in → return → confirm across
 student and owner accounts in a browser. It is not a mocked component test.
@@ -261,47 +262,48 @@ from mobile to wide desktop, in both themes.
 
 ## 7. Deployment reality
 
-**No verified working public URL.** Paid resources are prohibited. The selected
-zero-cost route preserves the Next.js production build and persistent SQLite on
-the owner's Windows laptop, with a fictional judge database outside OneDrive.
-The original application database is unchanged. A persistent unique session
-secret is Windows-DPAPI encrypted; Secure, HttpOnly, SameSite=Lax cookies are
-verified locally. Backend and filtered ingress bind only to loopback. Exact
-Host/Origin validation is enforced; administrative and development paths are
-blocked. No unrestricted Server Actions origin wildcard was introduced.
+New URL configured with app disconnected, awaiting reconnection approval:
+<https://headline-anticipated-trips-salaries.trycloudflare.com>
 
-The configured-origin browser journey passed locally: request, approval,
-check-in, initial/final reports, owner return confirmation and persisted history.
-Session and records survived application restart; online backup restoration
-passed SQLite integrity checking. Local interception is explicitly not public
-deployment evidence.
+At 19:27:09 IST on 30 October 2026, the prior hostname's real HTTPS journey
+passed: discovery, student request, owner approval, check-in, both condition
+reports, return confirmation and history. No interception or resolver override
+was used. Restricted-path/Origin, secure-cookie and manager-login checks passed.
 
-After separate user approval and HTTPS/Funnel enablement, Tailscale 1.104.4
-accepted HTTPS 443 -> filtered ingress 127.0.0.1:3211 -> production app
-127.0.0.1:3210, issuing `https://dhaksith.tail3cd298.ts.net/`. Public HTTPS and
-browser catalog probes timed out before login. Funnel was disabled as required;
-final status is `{}`. Later DNS/TCP diagnostics succeeded and the local catalog
-returned HTTP 200, but the original timeout cause remains unresolved. No public
-lifecycle, certificate validation, independent-device access or URL stability
-has been verified. Do not submit that disabled address as a working application.
+The user then recreated the tunnel; old URLs are obsolete. The new connector/TLS
+and unchanged session/history/secret are verified, with the app stopped pending
+reconnection approval. The HTTPS-upgrade source passes tests; new-host public
+transport, lifecycle, restart and mobile-data checks remain pending.
 
-Cloudflare Quick Tunnels is a no-cost, accountless fallback. Approved local
-preparation verified portable cloudflared 2026.10.6 signature/checksum/version
-and its ingress mode's production lifecycle, restart/session and backup restore.
-The user manually allocated a URL and started the approved app after automated
-launches were blocked. Local catalog returned 200, but public access returned
-530/error 1033 because no cloudflared process remained. The process exit cause
-is unknown. App/ingress were stopped safely for recovery; no public lifecycle
-passed. Hostnames change on recreation and uptime is not guaranteed.
-The laptop and network must stay online. No power settings were changed.
-The paid Render template remains unapplied;
-Supabase remains an unapplied port. See `docs/TAILSCALE_FUNNEL.md` for commands,
-failed-attempt evidence; `docs/CLOUDFLARE_QUICK_TUNNEL.md` records the local
-fallback evidence, two approval gates and remaining public acceptance tests.
+Verified portable cloudflared 2026.10.6 forwards only to filtered ingress
+127.0.0.1:3211, then the existing Next.js production build on 127.0.0.1:3210.
+The fictional SQLite store and unique DPAPI-encrypted session secret are outside
+OneDrive. Original development data and BUILD_ID are preserved. Exact Host/Origin
+validation is enforced; no Server Actions origin wildcard was introduced.
+Administrative/development/private paths are blocked. Only student/owner shared
+demo credentials are enabled publicly; manager credentials/sessions are locked
+idempotently in this isolated store without changing roles or custody history.
+
+A fresh online backup restored to a new private file passed integrity checking,
+with the completed public booking, two condition reports and six timeline events.
+Local restart persistence already passed; the actual public app-only restart
+check remains pending. A repeat verification run after completed custody did not
+finish successfully; its cause is unclassified. Visual public inspection and a
+subsequent fresh full journey passed. Detailed evidence and limits are recorded
+in `docs/PUBLIC_DEMO_VERIFICATION.md`.
+
+Earlier Tailscale public verification failed and Funnel remains disabled. The
+first Cloudflare tunnel exited; the recovered current tunnel was registered and
+ready before public tests. Automatic launch review required manual user starts.
+The laptop, network and cloudflared window must remain online. Quick Tunnel URLs
+change on recreation and have no uptime guarantee; no power, startup-service or
+paid-resource change was made. Windows restart recovery requires a new exact
+hostname configuration and retest. Render's paid template and the Supabase port
+remain unapplied. See `docs/CLOUDFLARE_QUICK_TUNNEL.md` for recovery commands.
 
 ## 8. Limitations
 
-- No public deployment; no Vercel/Supabase verification.
+- Final public restart/device acceptance pending; no Vercel/Supabase verification.
 - Supabase SQL and RLS are unexecuted and untested.
 - Chromium-only E2E; desktop and 390 px viewport, no real mobile device or Firefox/WebKit matrix.
 - No automated accessibility audit; no WCAG conformance claim.
@@ -314,7 +316,7 @@ fallback evidence, two approval gates and remaining public acceptance tests.
 - No incident-to-eligibility policy; incidents are recorded but do not
   automatically restrict future access.
 - Login throttling is in-process only.
-- No CSP or HSTS at the app layer.
+- Limited CSP/HSTS enforced at the demo ingress; no comprehensive application CSP rollout.
 - Single-capacity resources only; no seat/quantity inventory.
 - No multi-institution tenant switcher in the UI (roles and data are
   organization-scoped, but the demo has one institution).
@@ -365,7 +367,7 @@ True:
 
 Not true / not claimed:
 
-- A live URL or production deployment.
+- Completed final public acceptance or guaranteed uptime.
 - Supabase applied, RLS verified or storage configured.
 - Real institutional adoption, user counts or utilization metrics.
 - WCAG compliance, penetration-test clearance or load capacity.
@@ -403,10 +405,11 @@ appeals, review SLAs, accommodations and cross-resource caps remain future work.
 
 ## 13. Judge instructions and submission readiness
 
-For local review, use Node 24+, run `npm install`, `npm run db:setup`, then
-`npm run dev`. Setup preserves existing profiles; do not reset a database with
-judge-created records. Open `http://localhost:3000` and the visible demo picker.
-All fictional demo accounts use `LabLoop!2026`.
+For public review, use the section 7 URL and fictional student `priya@labloop.demo`
+and owner `owner@labloop.demo`, password `LabLoop!2026`. The manager's shared login
+is unavailable publicly. Local developers can use Node 24+, `npm install`,
+`npm run db:setup`, then `npm run dev`; setup preserves existing profiles.
+Never reset a store containing judge-created records.
 
 1. As `owner@labloop.demo`, publish a listing with rules and hours; inspect it in Discover.
 2. As `priya@labloop.demo`, choose Open Maker Bench 04, request a slot starting in about 15 minutes and ending one hour later, enter a purpose and acknowledge rules.
@@ -414,9 +417,9 @@ All fictional demo accounts use `LabLoop!2026`.
 4. As Priya, check in with initial condition, then submit return with final condition.
 5. As the owner, confirm return; refresh and inspect completed status, both condition reports and timeline.
 6. For incident handling, use the booking's incident form and the owner's Incident desk. A different authorised reviewer handles the outcome.
-7. As `manager@labloop.demo`, inspect the organisation overview and verify a pending qualification.
+7. For local review only, the manager can inspect the organisation overview and verify a qualification; this administrative workflow is excluded from public access.
 
-The mandatory public application is **pending**. Source is accessible at the
+Final public restart/device acceptance is **pending**. Source is accessible at the
 existing public GitHub repository. The report PDF is provisional. Official
 template conversion, verified team/participant details and each member's own
 submission are pending. The form is `https://forms.gle/QTD1ZRuPX37Yef37A`; it has
@@ -466,9 +469,6 @@ LICENCES BEFORE SUBMISSION.] No invented human contribution is assigned.
 
 ## 16. Evidence and references
 
-- Organiser-provided problem statement/rubric, transcribed in `docs/OFFICIAL_PROBLEM_STATEMENT.md`.
-- Existing public source: `https://github.com/Dhaksith-S/labloop-hackathon`.
-- Code/test traceability: `docs/JUDGING_TRACEABILITY.md` and `docs/TESTING.md`.
-- Independently executed commands, failures/fixes and limits: `docs/VERIFICATION.md`.
-- Architecture, privacy/security and fairness: `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/FAIRNESS.md`.
-- Persistent-store comparison and provider documentation: `docs/DEPLOYMENT.md`.
+- Authority: `docs/OFFICIAL_PROBLEM_STATEMENT.md`; source repository linked on the cover.
+- Features/tests/evidence: `docs/JUDGING_TRACEABILITY.md`, `docs/TESTING.md`, `docs/VERIFICATION.md`.
+- Design/controls/hosting: `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/FAIRNESS.md`, `docs/DEPLOYMENT.md`.

@@ -26,18 +26,26 @@ real, what is prepared, and which invariants must not be broken.
   is configured and tested locally. The user approved the exact Funnel route and
   enabled HTTPS/Funnel. CLI setup succeeded, but public verification timed out;
   the route was disabled and final status is `{}`. Do not automatically re-enable.
-  No verified working public URL. See `docs/TAILSCALE_FUNNEL.md`.
-- Cloudflare software/local preparation is separately approved. Portable
-  cloudflared 2026.10.6 signature/checksum/version verified; no tunnel started.
-  Latest 51 Vitest tests, typecheck/lint, Cloudflare-mode production journey,
-  restart/session persistence and backup restore pass locally. No public
-  app acceptance exists. The user manually allocated a Cloudflare URL and
-  started the approved app after automated launches were rejected. Local catalog
-  passed, but the tunnel process exited and public URL returned 530/error 1033.
-  All judge processes are now stopped; recovery allocation is pending. See
-  `docs/CLOUDFLARE_QUICK_TUNNEL.md`. Do not submit the expired URL as working.
-- **Not deployed.** No verified working public URL. See `README.md` and
-  `docs/CODEX_HANDOFF.md` before touching deployment claims.
+  That Funnel route is not working. See `docs/TAILSCALE_FUNNEL.md`.
+- Configured Cloudflare origin: `https://headline-anticipated-trips-salaries.trycloudflare.com`.
+  Its connector/TLS are verified, but app reconnection approval is pending.
+  The previous `complexity-...` hostname is obsolete. On that previous route, real public
+  custody/security checks and fresh backup restore pass. Latest 55 Vitest tests,
+  typecheck/lint pass; original production artifact retained. App-only restart and
+  independent mobile-data checks are pending. Do not claim all acceptance passed.
+  See `docs/PUBLIC_DEMO_VERIFICATION.md` and `docs/CODEX_HANDOFF.md`.
+- A subsequent HTTP probe found plaintext pages were served. Validated ingress
+  source now upgrades HTTP reads and rejects plaintext POSTs; app/ingress are
+  paused pending the requested manual restart and real transport/session retest.
+  Keep cloudflared alive; its exact hostname has not changed.
+- Public manager seed credentials are locked only in the isolated judge DB;
+  student/owner accounts and history are preserved. Startup runs
+  `scripts/harden-judge-demo.ts` idempotently. Do not restore shared privileged
+  credentials or expose administrative workflows.
+- Sessions/bookings/events/reports/audit and the DPAPI secret were verified
+  unchanged while configuring the new hostname with the app stopped.
+- Keep the current manually started cloudflared process/window alive. Recreating
+  it changes the hostname. No power, service or unattended-startup change is approved.
 - **Source is public** at
   <https://github.com/Dhaksith-S/labloop-hackathon>, branch `main`. A public
   repository is not a deployed application.
@@ -52,7 +60,7 @@ npm run build
 npm start            # prestart runs setup-db
 npm run typecheck
 npm run lint
-npm test             # Vitest, 51 tests (44 baseline + 7 ingress tests)
+npm test             # Vitest, 55 tests (44 baseline + 9 ingress + 2 judge-account tests)
 npm run test:e2e     # prepare-e2e (data/e2e.db) then Playwright on :3100
 npm run db:setup     # idempotent; seeds only when profiles table is empty
 npm run db:reset     # deletes and reseeds data/labloop.db
@@ -139,8 +147,9 @@ Production fails closed without a session secret. Do not add a fallback secret.
 
 ## Deployment reality
 
-Do not claim deployment, a public URL, Supabase verification, RLS coverage, or
-storage uploads. Those do not exist. If asked to deploy:
+Only claim checks recorded in `docs/PUBLIC_DEMO_VERIFICATION.md`. The current
+public demo is under acceptance; Supabase/RLS and storage uploads are unverified.
+For deployment changes:
 
 1. Get explicit authorization and credentials.
 2. Choose a persistent store (Supabase/Postgres port or a persistent volume).
@@ -151,7 +160,12 @@ storage uploads. Those do not exist. If asked to deploy:
 
 Detailed continuation plan: `docs/CODEX_HANDOFF.md`.
 
-The user currently authorizes deployment preparation only, **no paid resources**.
+The user authorized the previous Cloudflare app route and tests, **no paid resources**.
+They explicitly requested approval before connecting the new `headline-...` URL;
+a combined approval/conditional manual-start question is pending. Do not connect
+the app without that reply. Automated tunnel
+and app starts were rejected by automatic review; user manual starts resolved
+those actions. Do not retry rejected launches through another tool/wrapper.
 `deploy/render.yaml` is a paid template, unapplied. See `docs/DEPLOYMENT.md`.
 Official brief/rubric: `docs/OFFICIAL_PROBLEM_STATEMENT.md`. Report/PDF remain
 provisional pending the official template and verified participant information.

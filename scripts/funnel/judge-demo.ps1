@@ -155,6 +155,9 @@ if ($Action -eq 'Start') {
     $record=@{ app=$null; ingress=$null; provider=$selectedProvider; mode=$(if ($LocalPreflight) {'local-preflight'} else {'configured'}); origin=$selectedUrl }
     try {
         foreach ($key in $settings.Keys) { [Environment]::SetEnvironmentVariable($key,[string]$settings[$key],'Process') }
+        Push-Location -LiteralPath $repoRoot
+        try { & $node --import tsx scripts/harden-judge-demo.ts; if ($LASTEXITCODE -ne 0) { throw 'Public judge privileged-account hardening failed.' } }
+        finally { Pop-Location }
         $app=Start-Process -FilePath $node -ArgumentList @('--import','tsx','scripts/start-production.ts') -WorkingDirectory $repoRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $runtime 'logs/app.out.log') -RedirectStandardError (Join-Path $runtime 'logs/app.err.log')
         $record.app=Start-Record $app
         $record | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $processFile -Encoding utf8

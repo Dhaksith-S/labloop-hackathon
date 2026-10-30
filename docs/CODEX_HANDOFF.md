@@ -489,3 +489,117 @@ for software or allocation permission. The old exact app approval is recorded;
 review/pin a different hostname before reconnecting the app. Automated launch
 rejections remain; do not bypass them through another tool/wrapper. Public
 workflow/restart/backup/off-tailnet-device acceptance is still pending.
+
+## 17. Current continuation: real public journey passed, final checks pending
+
+Current exact URL: `https://complexity-headphones-normal-nut.trycloudflare.com`.
+The user supplied this recovered hostname, said the tunnel window stays open,
+and instructed continuation of the approved workflow/public tests. That covers
+this hostname; do not ask exposure approval again. Verified one exact official
+cloudflared process/target, loopback metrics, registration event, readiness 200
+and connection metric 1. Profile was backed up/pinned and old exited process
+record archived privately. User manually started the app after prior automated
+launch rejections. Do not retry rejected launch actions through another tool.
+
+Real public production checks passed with no interception or resolver override:
+full student request -> owner approval -> check-in -> initial/final reports ->
+return confirmation -> completed history; Secure/HttpOnly/SameSite=Lax cookie.
+Restricted admin/private/dev/API/metrics paths returned 404; foreign-Origin and
+Origin-less POSTs returned 403; HSTS/CSP/nosniff/frame denial were present.
+Latest completed evidence at 2026-10-30 13:57:09 UTC has booking path
+`/bookings/b63ffce7-bedd-4432-9dbc-471b5f100dd2`.
+
+Security review found the seed manager shared the published demo password.
+Added `scripts/lib/judge-accounts.ts` and `scripts/harden-judge-demo.ts`: only the
+isolated fictional judge DB is eligible; shared manager/admin credentials are
+replaced by discarded random passwords, privileged sessions revoked and an
+audit event appended. Student/owner credentials/roles/history are preserved.
+Startup invokes it before opening listeners; it is idempotent and refuses a
+non-fictional privileged profile. One actual manager credential was locked,
+zero privileged sessions existed. Public negative login verified no session.
+No application source/build was changed; development DB remains untouched.
+
+Latest 53 Vitest tests across 6 files, typecheck/lint and PowerShell syntax pass.
+The five standard E2E tests were not rerun; actual public production browser tests
+were. One repeat run reached completed custody but did not finish successfully;
+its original stage/error was not retained. Visual public inspection showed both
+reports, and a subsequent full run passed. Do not invent a root cause/fix.
+Verifier now retains sanitized failure stage/summary privately and never prints
+raw request headers. Current evidence/limitations: `docs/PUBLIC_DEMO_VERIFICATION.md`.
+
+Fresh backup `judge-20261030T135826191Z.db` restored to a new private file:
+integrity ok, completed public booking, two reports, six events and manager lock.
+Original app DB, DPAPI secret and BUILD_ID still match preservation checks.
+
+**Outstanding:** a two-question text request asks the user to Stop/Start only
+the app (keeping cloudflared alive), and then verify catalog plus Priya dashboard
+on a mobile-data phone with Wi-Fi/Tailscale disabled. No renewed permission is
+needed. `public-before-restart.json` stores baseline app/tunnel identities,
+secret-file hash, DB hash, URL and booking path. Once app PID/start time changes,
+verify the same tunnel PID/start time/URL and run
+`node --import tsx scripts/verify-funnel-demo.ts --revisit` without local flags.
+Record session/completed reports retained and normal TLS; persist private
+`public-restart-evidence.json`. Record phone results strictly as user-confirmed
+evidence, not an automatic external-device check. External web-tool fetch was
+unavailable and cannot substitute. Then finalize README/runbooks/report/PDF,
+scan private data exclusions, commit/push and compare local/remote hashes.
+
+Keep the current tunnel alive; recreation changes URL. All data, session files,
+process records and raw logs stay outside Git. No paid resource, power/service
+change, database reset, migration or form submission is authorized.
+
+### Latest reload prerequisite
+
+A subsequent unauthenticated HTTP GET returned 200 without HTTPS redirect.
+Added Cloudflare-only protocol enforcement using edge-overwritten
+X-Forwarded-Proto: exact-origin HTTPS redirects for GET/HEAD, rejection for
+plaintext POST/missing metadata, and a narrowly reserved local simulation
+exception. Malformed/external redirect targets fail closed. Two regression tests
+bring the latest suite to **55 tests**, typecheck/lint passing. The public verifier
+sets HTTPS metadata only in explicitly intercepted modes; real public tests
+still use the actual network path and normal TLS.
+
+Stopped the old app/ingress so plaintext pages are no longer served; the same
+registered cloudflared process/hostname is alive. The existing pending manual
+Stop/Start request will load the fix (Stop with no process record is harmless).
+Do not automatically launch the app via another tool. After manual start,
+verify HTTP GET -> exact HTTPS 308, HTTP POST -> 403, HTTPS catalog/login -> 200,
+and that a client-supplied X-Forwarded-Proto is overwritten by Cloudflare.
+Then perform the saved public-session/record revisit and remaining phone check.
+Update pending markers only after actual results. Original DB/secret/build and
+the completed public history/backup are preserved.
+
+## 18. Current approval gate: newly recreated hostname
+
+User answered "restarted" but also supplied a recreated tunnel URL and explicitly
+required approval before exposure. Therefore same-URL restart and mobile-data
+checks are NOT confirmed. Previous `complexity-headphones-normal-nut` is obsolete.
+Current configured URL is `https://headline-anticipated-trips-salaries.trycloudflare.com`.
+
+Verified one exact cloudflared executable/arguments (37504 at inspection), fixed
+3211 target, loopback metrics owned by that same process, readiness 200,
+connection metric 1 and hostname in private log. Normal public TLS passed.
+While app still had the old origin, new URL returned 421; after stopping app and
+pinning the new origin, expected gateway 502 confirmed disconnection.
+
+Before/after configuration signatures prove unchanged session rows, bookings,
+booking events, condition reports, audit history and DPAPI secret. Snapshots,
+old profiles/process records and digests are private. Current process record has
+`appConnectionApproved=false`, `appConnectionState=approval-pending`. App/ingress
+are stopped; no automatic connection has been attempted. Do not request a new
+database, reset data or change the secret. Cookies are host-bound, so ordinary
+browsers need a new login even though server-side session records were preserved.
+
+A two-question request shows the exact new HTTPS443 -> filtered3211 -> prod3210
+-> preserved fictional DB mapping and asks explicit approval. Its conditional
+second step lets the user run the existing helper `-Action Start` manually and
+report "approved and started" in the same reply; automated starts remain blocked
+by prior review. Wait for that approval before public mutation tests. Keep this
+new cloudflared window/process alive; do not recreate it for an app-only restart.
+
+After approved manual start: verify actual HTTP308/HTTPS200 and plaintext POST403,
+public full custody and manager denial, then genuine same-host app-only
+restart/session persistence and a phone/mobile-data check. Prior public proofs
+belong to the old host and do not satisfy this new-host acceptance. All 55 source
+tests/typecheck/lint pass; original Next build remains unchanged. Current docs
+and provisional report clearly mark reconnection/retests pending.

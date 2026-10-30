@@ -49,7 +49,7 @@ human review**. It is never auto-approved.
 
 ## Demo accounts
 
-The seed creates a fictional institution and five accounts. All use the password
+The local development seed creates a fictional institution and five accounts. All use the password
 **`LabLoop!2026`**. These credentials are intentionally public demo data.
 
 | Email | Person | Role | Useful for |
@@ -61,6 +61,10 @@ The seed creates a fictional institution and five accounts. All use the password
 | `dev@labloop.demo` | Dev Patel | Student | An approved 3D-printer booking |
 
 The login page includes a demo-account picker that fills the form.
+For the public judge demo, use `priya@labloop.demo` and `owner@labloop.demo` with
+that password. The isolated public store locks the manager's shared credential;
+its demo-picker button will not authenticate there. Administrative workflows
+are not exposed publicly. The development database is unchanged.
 
 ## Quick start
 
@@ -153,65 +157,45 @@ failures/fixes: [`docs/VERIFICATION.md`](docs/VERIFICATION.md). Coverage mapping
 
 ## Deployment status
 
-**Not deployed. No verified working public URL. Do not treat this repository as a live
-service.**
+**New hostname configured; reconnection approval is pending:**
+<https://headline-anticipated-trips-salaries.trycloudflare.com>
 
-Confirmed blockers:
+The real HTTPS browser custody journey, restricted-path/Origin checks, secure
+cookies and a fresh backup restore passed on the previous hostname, which the
+user subsequently recreated. **App-only restart and independent
+mobile-data acceptance are still pending; do not claim all checks are complete.**
+The app is stopped with the new exact hostname pinned. Its connector/readiness
+and TLS pass; current 502 is expected until approved reconnection. Sessions and
+booking history were preserved. The validated HTTPS-upgrade fix awaits public retest.
+[Executed evidence and judge walkthrough](docs/PUBLIC_DEMO_VERIFICATION.md).
 
-1. **No Vercel authorization.** The Vercel CLI is absent and no token or project
-   is linked. Creating a Vercel project was not authorized in this environment.
-2. **SQLite is not serverless-persistent.** The runnable backend writes to a
-   local file. Vercel Functions have an ephemeral filesystem, so deploying this
-   build unchanged would lose bookings, sessions and audit history. A persistent
-   volume or the Supabase/PostgreSQL port is required.
-3. **Supabase is prepared, not applied.** `supabase/migrations/` contains a
-   PostgreSQL schema and RLS policies, but there is no Supabase project, CLI
-   login or database password. Those files have never run against PostgreSQL,
-   and the application still uses `better-sqlite3`. See
-   [`supabase/README.md`](supabase/README.md).
+The existing production build runs on loopback behind filtered ingress and an
+accountless Cloudflare Quick Tunnel. Its fictional SQLite DB and DPAPI session
+secret are outside OneDrive. Keep the tunnel PowerShell window, laptop and
+network running. The URL changes if the tunnel is recreated; no uptime guarantee,
+automatic startup or power-policy change is provided.
 
-The chosen preparation route is a single Node instance with a persistent SQLite
-volume. [`deploy/render.yaml`](deploy/render.yaml), guarded startup and backup
-tooling are prepared. **The template uses paid resources and has not been applied;
-the user currently prohibits paid resources.** A Postgres port is optional for
-this route. [Deployment comparison and runbook](docs/DEPLOYMENT.md).
+Tailscale Funnel was disabled after failed public verification. The first
+Cloudflare hostname expired after its process exited; the later `complexity-...`
+hostname is now obsolete too. Use only the new URL after approved reconnection
+and successful tests. [Operations/recovery guide](docs/CLOUDFLARE_QUICK_TUNNEL.md).
+No paid resources were created. Render's paid template remains unapplied;
+Supabase/Postgres remains a prepared, unverified port, not the running backend.
 
 ## Submission readiness
 
-**Zero-cost Funnel preparation:** The existing production build has passed a
-local proxy custody/restart/backup check with an isolated fictional database
-outside OneDrive. Current checks pass 48 unit/integration tests and 5 browser
-tests. **There is still no verified working public URL.** Tailscale 1.104.4,
-sign-in and HTTPS/Funnel permissions are confirmed. After explicit approval,
-the CLI issued `https://dhaksith.tail3cd298.ts.net/`, but public HTTPS/catalog
-verification timed out. Funnel was disabled; its final status is `{}`. The cause
-is unresolved; public workflow, external-device access and URL stability are
-unverified. Local production remains intact. A Cloudflare Quick Tunnel is an
-unapplied no-cost fallback requiring separate software/exposure approval.
-[Setup, failed-attempt evidence and restart guide](docs/TAILSCALE_FUNNEL.md).
-The earlier verification table records the `17fa246` baseline; the provisional
-report adds subsequent deployment-preparation evidence.
-
-**Cloudflare fallback prepared locally:** Software/local preparation was
-separately approved. The verified portable cloudflared 2026.10.6 reports its
-version; no tunnel has been started. Exact-host Cloudflare ingress, 51 tests,
-typecheck/lint, the production custody journey, restart/session persistence and
-backup restoration pass locally. The user manually allocated
-`https://underlying-living-milton-estimated.trycloudflare.com` and approved its
-exact app connection. TLS to the allocation gateway passed; expected HTTP 502
-confirmed the app was disconnected. The user then manually started the approved
-app after automatic review blocked its launch. Local catalog returned HTTP 200,
-but the tunnel process had exited: public HTTP 530/error 1033, no connector or
-metrics listener. App/ingress were stopped safely for recovery allocation.
-No public lifecycle passed; the expired address is not a working demo URL.
-[Evidence and approval gates](docs/CLOUDFLARE_QUICK_TUNNEL.md).
+Latest source checks: **55 tests across 6 Vitest files, typecheck and lint pass**.
+Public production custody/security and fresh restore checks passed; final restart
+and off-tailnet-device checks remain. The earlier table records the `17fa246`
+baseline, including five standard browser tests. Those standard tests were not
+rerun for the operations-only changes; the real public production browser test was.
 
 The authoritative organiser brief and 100-point rubric are transcribed in
 [`docs/OFFICIAL_PROBLEM_STATEMENT.md`](docs/OFFICIAL_PROBLEM_STATEMENT.md).
 [`docs/JUDGING_TRACEABILITY.md`](docs/JUDGING_TRACEABILITY.md) maps all seven
 criteria to implementation, tests and gaps. The report and PDF are provisional:
 the official template and verified participant/contribution details are pending.
-The public application requirement is unmet. No form has been submitted.
+Final public acceptance is pending. No form has been submitted.
 Deadline: **1 November 2026, 10:00 AM IST**.
 
 [Download the provisional report PDF](output/pdf/LabLoop-Provisional-Report.pdf).

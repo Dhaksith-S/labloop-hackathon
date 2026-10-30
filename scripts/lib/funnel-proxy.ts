@@ -58,6 +58,22 @@ export function createJudgeIngress(options: {
     const incomingHost = provider === "cloudflare" ? req.headers.host : forwardedHost ?? req.headers.host;
     if (incomingHost !== origin.host) return reject(421, "Unrecognized demo hostname.");
     if (!["GET", "HEAD", "POST"].includes(req.method ?? "")) return reject(405, "Method not allowed.");
+    // Cloudflare overwrites this header with the visitor's actual protocol.
+    // Quick Tunnels also accept HTTP; never serve a login form over plaintext.
+    const localSimulation = options.localPreflight && origin.hostname === "labloop-preflight.invalid";
+    if (provider === "cloudflare" && !localSimulation) {
+      const protocol = req.headers["x-forwarded-proto"];
+      if (protocol === "http") {
+        if (req.method === "POST") return reject(403, "HTTPS is required for submissions.");
+        let target: URL;
+        try { target = new URL(req.url ?? "/", origin.origin); }
+        catch { return reject(400, "Invalid redirect target."); }
+        if (target.origin !== origin.origin) return reject(400, "Invalid redirect target.");
+        res.writeHead(308, { Location: target.toString(), "Cache-Control": "no-store" });
+        res.end(); return;
+      }
+      if (protocol !== "https") return reject(400, "Trusted HTTPS proxy metadata is required.");
+    }
     if (req.headers.origin && req.headers.origin !== origin.origin) {
       return reject(403, "Untrusted request origin.");
     }

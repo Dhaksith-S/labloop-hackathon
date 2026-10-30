@@ -3,19 +3,24 @@
 Source: [organiser brief transcribed from project-owner input](OFFICIAL_PROBLEM_STATEMENT.md).
 These are the seven official criteria and weights, not a predicted score.
 Verification evidence is recorded in [VERIFICATION.md](VERIFICATION.md).
-The two 20-point criteria receive priority. Public deployment is still missing.
+The two 20-point criteria receive priority. Real public custody/security checks
+passed on the recovered Cloudflare route; final restart and off-tailnet device
+acceptance remain. See [current evidence](PUBLIC_DEMO_VERIFICATION.md).
+That hostname was subsequently recreated by the user. The new exact hostname
+is configured with app stopped pending explicit reconnection approval/retests;
+the prior-host checks are preserved evidence, not passes at the new hostname.
 The subsequent approved Tailscale Funnel attempt failed public reachability and
 was disabled; locally intercepted production tests do not satisfy public judge
 access. See [attempt evidence](TAILSCALE_FUNNEL.md).
-The Cloudflare fallback is now locally prepared (51 tests and production
-journey/restart/backup checks), with no tunnel started or public access verified.
-See [current fallback evidence](CLOUDFLARE_QUICK_TUNNEL.md).
+Current source checks pass 55 tests/typecheck/lint. Manager/admin shared demo
+credentials are locked only in the public judge store; their management
+interfaces remain outside public scope. See the [operations runbook](CLOUDFLARE_QUICK_TUNNEL.md).
 
 | Official criterion | Weight | Actual product evidence and code | Executed checks / evidence | Remaining gap |
 | --- | --- | --- | --- | --- |
 | Understanding of the Problem | 15 | Campus use case, eligibility plus accountability, owner control; report sections 1-2 and target-user section; `src/lib/eligibility.ts` | Explainable membership, credentials, availability, conflict and fair-use cases in `tests/eligibility.test.ts` | No interviews, measured utilisation, external research or adoption evidence; scenario reasoning is not empirical research |
 | Strength of the Core Solution | 20 | `src/lib/resources.ts`, `src/lib/bookings.ts`, `src/lib/incidents.ts`; listing through custody closure, written decisions, notifications | Lifecycle integration tests; browser listing publication/discovery and request-to-return checks | Text condition evidence only; no photo storage; scheduled overdue reminders absent |
-| Working End-to-End Product | 20 | `/resources`, `/resources/[id]/request`, `/bookings/[id]`, `/owner/requests`, `/owner/custody`, `/owner/incidents`; both parties see timeline and condition records | `e2e/labloop.spec.ts` completes a real browser custody loop and separately publishes a listing; `tests/lifecycle.test.ts` verifies incidents and records | Local verification only; independent public judge access and hosted restart verification pending |
+| Working End-to-End Product | 20 | `/resources`, `/resources/[id]/request`, `/bookings/[id]`, `/owner/requests`, `/owner/custody`, `/owner/incidents`; both parties see timeline and condition records | `e2e/labloop.spec.ts` local browser listing/custody; `tests/lifecycle.test.ts` incidents/integrity; `scripts/verify-funnel-demo.ts` real public HTTPS custody passed | Independent off-tailnet device and public app-restart acceptance pending; laptop/tunnel uptime dependency |
 | Technical Depth and Reliability | 15 | Next.js Server Actions + Zod, domain services, SQLite immediate transactions, overlap and append-only triggers; `src/db/sqlite-schema.sql`, `src/lib/database.ts` | Typecheck, lint, production build; database-bypass regression tests; `tests/operations.test.ts` verifies WAL backup and restore | No hosted reliability/load claim; prepared Supabase SQL/RLS not applied or verified; one Node instance |
 | Trust, Safety and Accountability | 10 | `src/lib/auth.ts`, `src/lib/password.ts`, service authorization, independent credential/incident review, initial/final immutable condition evidence | `tests/security.test.ts` checks private staff data, owner/org scope, suspension, tokens and redirect handling; lifecycle checks self-dealing and illegal transitions | Roles are institution-assigned demo records, not external identity verification; no formal dispute/appeal flow, password recovery or MFA |
 | Fair Allocation and Accessibility | 10 | FIFO waitlist, eligibility recheck, per-resource cap, human final decision; `src/lib/eligibility.ts`, `src/lib/bookings.ts`; labelled forms, text status and mobile navigation | Eligibility and waitlist tests; phone viewport browser check; auth form heading corrected for mobile | No WCAG certification, screen-reader study or automated accessibility scan; no cross-resource cap or review SLA |

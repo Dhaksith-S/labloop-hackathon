@@ -122,6 +122,64 @@ time exit was observed. Manual recovery allocation was requested with a private
 info logfile and the same closed target; a new exact hostname needs review/pinning
 before app connection. Public application acceptance remains incomplete.
 
+## Recovered current Cloudflare route - real public checks
+
+User provided `https://complexity-headphones-normal-nut.trycloudflare.com` and
+instructed continuation of the approved deployment/public tests. Inspected one
+matching manual process/target, loopback metrics, registration log, readiness
+200 and connection metric 1. Normal HTTPS initially returned expected 502 while
+app stopped. Backed up/pinned exact profile, archived prior exited process record.
+User manually started the approved app; no automated launch bypass was attempted.
+
+Ran `node --import tsx scripts/verify-funnel-demo.ts` in `public-cloudflare` mode,
+without interception or resolver override. Full catalog/auth/request/approval/
+check-in/initial+final condition/return-confirmation/history/cookie checks passed.
+Latest successful full run: 2026-10-30 13:57:09 UTC, booking
+`/bookings/b63ffce7-bedd-4432-9dbc-471b5f100dd2`.
+
+Public boundary probes returned 404 for admin, hidden config/Git, API debug,
+Next dev/HMR and metrics paths; foreign/absent Origin POSTs returned 403.
+HSTS/CSP/nosniff/frame-denial headers present. Shared manager seed credential was
+locked in the isolated judge store, with zero privileged sessions to revoke;
+actual public negative login rejected it and issued no session. Added two
+meaningful isolation/idempotence/non-fictional-account tests. Latest 53 tests
+across 6 files, typecheck/lint and PowerShell syntax passed. No app rebuild/reset.
+
+One repeat public verifier run reached completed custody but did not finish;
+the original error/stage was not retained. Read-only public screenshot inspection
+showed completed status and both reports; a subsequent fresh full journey passed.
+Cause remains unclassified. Sanitized private failure stage/summary recording
+was added; raw error/header output remains suppressed.
+
+Fresh backup `judge-20261030T135826191Z.db` restored into a new private file:
+integrity ok, completed booking, two reports, six events and manager lock present.
+Original DB, encrypted secret file and existing BUILD_ID unchanged. Saved
+before-restart app/tunnel identities and owner session remain private. User was
+asked to perform app-only restart and phone/mobile-data access checks; both
+remain pending at this checkpoint. Do not label all deployment acceptance done.
+
+An additional HTTP probe returned 200 with no redirect. Added Cloudflare
+transport enforcement, consulting official edge-header documentation: HTTP
+reads upgrade to the exact HTTPS origin; plaintext POST, missing metadata and
+invalid redirect targets are rejected. Two regression tests cover this and the
+reserved local-only exception. Latest suite: 55 tests across 6 files, typecheck
+and lint pass. Stopped old app/ingress; the same registered tunnel remains alive.
+Pending manual restart will load the validated fix, followed by real transport,
+saved-session/record and mobile-device tests. No public retest pass is inferred.
+
+User then reported app restart plus a recreated Cloudflare URL:
+`https://headline-anticipated-trips-salaries.trycloudflare.com`, explicitly asking
+approval before new-host exposure. Same-URL restart/phone acceptance is therefore
+unverified. Inspected exact current connector arguments, same-process loopback
+metrics, readiness 200, connection metric 1 and normal TLS. Public new-host 421
+was observed while app had the old origin. Safely stopped app/ingress, archived
+old profile/process state, pinned new origin, then observed expected gateway 502.
+Before/after signatures of sessions, bookings, booking events, condition reports,
+audit and encrypted secret were identical. No records reset/re-written.
+Explicit new-host approval plus conditional manual-start result is pending;
+current private process record marks connection unapproved. Prior-host public
+results are retained history, not new-host passes.
+
 ## Recovery and initial Git evidence
 
 - Existing repository confirmed: LabLoop, original `main`, existing origin

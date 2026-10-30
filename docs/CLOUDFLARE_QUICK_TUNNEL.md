@@ -1,7 +1,10 @@
 # Cloudflare Quick Tunnel: local preparation and approval gates
 
-**30 October 2026: manual app start passed locally, but the allocated tunnel
-exited. Public HTTP 530/error 1033; app stopped safely for URL reallocation.**
+**30 October 2026: previous-host public workflow/restore passed; user recreated
+the tunnel. New-host reconnection approval and public retests are pending.**
+Prepared URL: <https://headline-anticipated-trips-salaries.trycloudflare.com>.
+See [current executed evidence and judge instructions](PUBLIC_DEMO_VERIFICATION.md).
+The expired hostname and stopped-state observations below document a prior attempt.
 Tailscale Funnel remains disabled after its failed public acceptance test. This
 fallback keeps the same production build, fictional judge SQLite database and
 persistent DPAPI-protected session secret. No account, service installation,
@@ -14,22 +17,22 @@ subscription, power change or database migration is needed for this preparation.
 | Portable executable | `cloudflared` 2026.10.6, official Windows amd64 release; `--version` and `tunnel --help` executed after user approval |
 | Integrity | SHA-256 `d521b3bf68982165f0d06d76732f22d9a105ef057ff3ae4c0986f3a23190950f` matches official release asset digest; Authenticode Valid, Cloudflare, Inc. |
 | Executable location | `%LOCALAPPDATA%/LabLoop/installers/cloudflared-2026.10.6-windows-amd64.exe`; no Windows service installed |
-| Current automated checks | 51 Vitest tests, typecheck and lint passed; three new tests cover provider validation and Cloudflare host/origin/header boundaries |
+| Current automated checks | 55 Vitest tests across 6 files, typecheck and lint passed; includes HTTPS upgrades, exact-host ingress and public privileged-account isolation |
 | Production build | Existing `.next/BUILD_ID` `itApzfwuOZ96pav7ZpWPX` retained; no development server or rebuild used |
 | Local browser journey | Cloudflare Host mode: catalog, anonymous guard, admin denial, student request, owner approval, check-in, initial/final reports, return confirmation, history and Secure/HttpOnly/SameSite=Lax cookies passed |
 | Restart | Existing browser session, completed booking and both condition reports passed `--revisit` after a real process stop/start |
 | Backup | Fresh online SQLite backup restored to a new private file; `integrity_check=ok`, completed booking and two condition reports verified |
 | Preservation | Original app DB, encrypted session-secret file, configured profile and production build unchanged against pre-preparation hashes/identity |
-| Tested listeners / current state | Manual app start created loopback 3210/3211 and local catalog HTTP 200; after the tunnel exited, app/ingress were stopped and ports 3210/3211/3212 confirmed closed |
-| Allocated origin | `https://underlying-living-milton-estimated.trycloudflare.com`; exactly pinned in the saved Cloudflare profile |
-| Allocation verification | Public `/resources` returned expected HTTP 502 with normal curl TLS validation passing while app was stopped; local tunnel `/ready` HTTP 200 |
-| Public app state | User manually started the approved app, but public `/resources` returned HTTP 530/error 1033; no cloudflared process or metrics listener remained. No public lifecycle/stability acceptance; Funnel remains `{}` |
+| Current listeners | App/ingress 3210/3211 paused for the validated HTTPS-upgrade reload; tunnel metrics remain `127.0.0.1:3212`. Prior public run used loopback-only listeners |
+| Current exact origin | `https://headline-anticipated-trips-salaries.trycloudflare.com`; pinned with app stopped pending approval; previous hostname obsolete |
+| Tunnel verification | Registered connection logged, `/ready` 200, connection metric 1; normal public TLS; user kept the recovered manual tunnel open |
+| Public app checks | Previous-host full HTTPS custody/security and restore passed. New connector/readiness/TLS verified; app stopped with expected 502; new-host approval/retests pending. Funnel remains off |
 
 The five standard Playwright E2E tests passed during the earlier Funnel work;
 they were not rerun for these ingress-only changes. The production browser
 journey and its restart revisit above were executed for this change.
 
-The verifier uses `https://labloop-preflight.invalid`, explicitly intercepted to
+The earlier local verifier mode uses `https://labloop-preflight.invalid`, explicitly intercepted to
 loopback. Evidence has mode `cloudflare-local-preflight` and `publicUrl: null`.
 It verifies the actual production app and Cloudflare-mode ingress contract; it
 does **not** test Cloudflare's live transport, public TLS or an external device.
@@ -37,6 +40,25 @@ Private evidence, browser cookies, runtime logs and database backups remain in
 the ACL-restricted runtime directory outside OneDrive/Git.
 
 ## Exact-host ingress and Next.js
+
+An additional plain-HTTP public probe returned 200, so the app/ingress were
+paused while preserving the registered tunnel/hostname. Validated source now
+requires Cloudflare protocol metadata, redirects HTTP GET/HEAD to the one exact
+HTTPS origin, rejects plaintext POSTs and invalid redirect targets, and permits
+metadata-free requests only for the explicit reserved local simulation.
+Cloudflare sets the visitor protocol in X-Forwarded-Proto and overwrites a
+client-provided value; see [official header documentation](https://developers.cloudflare.com/fundamentals/reference/http-headers/#x-forwarded-proto).
+The requested manual restart will load this fix; public redirect/session retest
+is pending. Secure cookies were HTTPS-only before this fix as well.
+
+Public startup now runs `scripts/harden-judge-demo.ts`: the shared seeded
+manager/admin credential is replaced with an undisclosed random password and
+privileged sessions are revoked in this isolated fictional DB only. The random
+password is discarded, never printed/stored in plaintext. Student/owner
+credentials, roles and custody history remain. The operation is audited and
+idempotent; it refuses a non-fictional privileged account or a different DB path.
+The manager demo-picker button will not authenticate on the public store.
+Local development manager functionality remains unchanged.
 
 `scripts/lib/funnel-proxy.ts` supports explicit `tailscale` and `cloudflare`
 providers. The default remains Tailscale. Cloudflare configuration accepts one
@@ -87,7 +109,7 @@ journey and restart revisit completed successfully. A restore check initially
 compared a newer transaction with an older backup; a new backup taken after the
 final journey restored and verified successfully.
 
-## Public configuration - approved attempt failed after tunnel exit
+## Prior public configuration - expired attempt, retained evidence
 
 The user approved gate 1 below. Automatic approval review rejected the automated
 allocation command with **blocked by policy**, without additional rationale.
@@ -123,7 +145,8 @@ command below and confirmed configured-mode startup. Do not retry
 the rejected launch using a different tool, shell wrapper or obfuscated command.
 
 ```powershell
-powershell.exe -NoProfile -File "C:\Users\Dhaksith.S\OneDrive\Hackathon-Codeverse\scripts\funnel\judge-demo.ps1" -Action Start
+# From the repository root:
+powershell.exe -NoProfile -File scripts/funnel/judge-demo.ps1 -Action Start
 ```
 
 At **2026-10-30 12:32:39 UTC (18:02:39 IST)**, actual checks found:

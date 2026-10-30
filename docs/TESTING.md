@@ -1,5 +1,17 @@
 # Testing
 
+**Current public-demo checks:** 55 Vitest tests across 6 files, typecheck/lint
+and PowerShell syntax pass. `tests/judge-accounts.test.ts` verifies shared
+privileged-credential locking, selective session revocation, preserved custody
+history, idempotence and refusal of non-fictional privileged accounts. The real
+public production custody/security tests and a fresh backup restore passed;
+app-only restart and independent-device acceptance are pending. See
+[current executed evidence](PUBLIC_DEMO_VERIFICATION.md). No build or ordinary
+E2E reset was run for these operations-only changes.
+Two additional ingress tests cover exact HTTPS redirects, plaintext POST/missing
+protocol rejection and the reserved local-simulation exception. Their source
+passes; actual public transport retest awaits the requested manual restart.
+
 **Latest Funnel preparation:** 48 tests across 5 Vitest files, 5 Playwright tests,
 typecheck and lint passed. The production build from the baseline below was
 retained and exercised through a local filtered proxy. This adds
@@ -12,7 +24,7 @@ earlier `17fa246` baseline, before these four ingress tests.
 LabLoop is verified at three levels: pure rule tests, service/integration tests
 against a real seeded database, and browser tests against a running Next.js app.
 
-## Latest verified result — 30 Oct 2026
+## Original baseline — 30 Oct 2026
 
 | Command | Result |
 | --- | --- |
