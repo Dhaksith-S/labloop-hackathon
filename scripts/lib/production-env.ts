@@ -1,6 +1,9 @@
 import path from "node:path";
 
 export function validateProductionEnvironment(env: Record<string, string | undefined>): void {
+  if (env.LABLOOP_BIND_HOST && !["127.0.0.1", "0.0.0.0"].includes(env.LABLOOP_BIND_HOST)) {
+    throw new Error("LABLOOP_BIND_HOST must be 127.0.0.1 or 0.0.0.0.");
+  }
   if (!env.LABLOOP_SESSION_SECRET || env.LABLOOP_SESSION_SECRET.length < 24) {
     throw new Error("LABLOOP_SESSION_SECRET must contain at least 24 characters.");
   }

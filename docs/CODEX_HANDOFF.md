@@ -367,3 +367,33 @@ review links and submit individually. Codex must not submit the Google form.
 
 The local product is verified. Submission remains incomplete because public
 deployment, official-format PDF and participant details are outstanding.
+
+## 15. Subsequent Funnel preparation - current continuation point
+
+The user authorized zero-cost laptop Funnel preparation/testing, retaining the
+existing production build. Software installation, account sign-in and public
+exposure require separate approvals. Installation **only** was approved; the
+automated signed-MSI command was rejected by automatic approval review as
+`blocked by policy`. Do not retry installation through a policy workaround.
+The user was asked to manually run the verified MSI and confirm completion.
+Neither sign-in nor public exposure has been performed or approved.
+
+Read `docs/TAILSCALE_FUNNEL.md`. Private runtime:
+`%LOCALAPPDATA%/LabLoop/judge-demo` (ACL restricted; encrypted DPAPI secret;
+idempotent fictional DB; never commit runtime logs/browser session files).
+The helper `scripts/funnel/judge-demo.ps1` prepares/configures/starts/stops/backups
+without enabling Funnel. Backend 3210 and filtered ingress 3211 bind only
+127.0.0.1. The public target, if separately approved, is only ingress 3211.
+Administrative/developer paths are denied. Origin/Host are pinned exactly;
+Next allowedOrigins was not widened. Local browser proxy journey, current
+session persistence after restart and actual backup/restore integrity passed.
+48 Vitest tests, 5 E2E tests, typecheck and lint pass. Build ID remains
+`itApzfwuOZ96pav7ZpWPX`; no production rebuild was performed.
+
+Next: confirm manual installation, inspect current CLI/auth state, obtain sign-in
+approval, let the user complete free-account SSO, read the actual device DNS name,
+configure it exactly and review existing Serve/Funnel mappings. Ask for approval
+of the exact public URL/fictional surface/background persistence before enabling
+Funnel. Then test actual public workflow/restart/off-tailnet reachability and URL
+stability. Only then publish deployment evidence or update the provisional report
+with a real URL. No paid resources, power changes or automatic submission.

@@ -1,5 +1,14 @@
 # Testing
 
+**Latest Funnel preparation:** 48 tests across 5 Vitest files, 5 Playwright tests,
+typecheck and lint passed. The production build from the baseline below was
+retained and exercised through a local filtered proxy. This adds
+`tests/funnel-proxy.test.ts` (exact origin validation, Server Action body/headers,
+foreign-Origin denial and administrative/developer/path filtering), plus the
+local full journey/restart verifier `scripts/verify-funnel-demo.ts`. It does not
+prove a public URL. See `docs/TAILSCALE_FUNNEL.md`. The table below records the
+earlier `17fa246` baseline, before these four ingress tests.
+
 LabLoop is verified at three levels: pure rule tests, service/integration tests
 against a real seeded database, and browser tests against a running Next.js app.
 

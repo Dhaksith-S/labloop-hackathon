@@ -20,6 +20,11 @@ real, what is prepared, and which invariants must not be broken.
 - Independently reverified: 44 Vitest tests, 5 Playwright E2E tests, typecheck,
   lint and production build. Local production restart/session/booking and
   backup checks also passed; see `docs/VERIFICATION.md`.
+- Subsequent Funnel preparation: 48 Vitest tests and 5 E2E tests pass; existing
+  production artifact retained. Isolated judge data is outside OneDrive. Tailscale
+  installation is approved but automatic installation was blocked; manual install
+  confirmation, separate sign-in approval and separate public approval are pending.
+  No public URL. See `docs/TAILSCALE_FUNNEL.md` before attempting exposure.
 - **Not deployed.** No public URL. See `README.md` and
   `docs/CODEX_HANDOFF.md` before touching deployment claims.
 - **Source is public** at
@@ -36,7 +41,7 @@ npm run build
 npm start            # prestart runs setup-db
 npm run typecheck
 npm run lint
-npm test             # Vitest, 44 tests
+npm test             # Vitest, 48 tests (44 baseline + 4 ingress tests)
 npm run test:e2e     # prepare-e2e (data/e2e.db) then Playwright on :3100
 npm run db:setup     # idempotent; seeds only when profiles table is empty
 npm run db:reset     # deletes and reseeds data/labloop.db

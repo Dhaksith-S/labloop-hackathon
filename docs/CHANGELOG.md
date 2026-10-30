@@ -6,6 +6,19 @@ versioning for the application.
 
 ## [Unreleased] - 2026-10-30 Codex takeover
 
+### Subsequent zero-cost Funnel preparation (not publicly enabled)
+
+- Retained the verified production build; added selectable loopback binding,
+  exact-origin filtered ingress and private Windows judge-demo operations.
+- Created a fictional judge DB outside OneDrive, persistent DPAPI session secret,
+  restricted runtime ACL, restart helper and tested online backup/restore.
+- Four ingress tests added: 48 Vitest tests and 5 browser tests pass; typecheck
+  and lint pass. Actual local proxy custody journey and restart persistence pass.
+- Verified official Tailscale MSI signature/hash; user approved installation only.
+  Automatic installation rejected by approval review; manual confirmation pending.
+- No sign-in, Funnel exposure, public URL, paid resource, system power change or
+  startup task. Public verification and subsequent report update remain pending.
+
 ### Fixed and verified
 
 - Preserved the four interrupted documentation edits and private recovery copies.

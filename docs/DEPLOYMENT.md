@@ -1,5 +1,13 @@
 # Persistent SQLite deployment preparation
 
+**Subsequent zero-cost route:** Tailscale Funnel preparation is locally tested
+using the existing production build, loopback-only backend/ingress and a private
+judge database outside OneDrive. It is not publicly enabled. Installation was
+approved but blocked by automatic review; manual completion, separate sign-in
+and public-exposure approvals are pending. See [Funnel guide](TAILSCALE_FUNNEL.md)
+for exact evidence, restart/stop commands and the accountless fallback. The paid
+Render template below remains unapplied and unauthorized.
+
 **Status: prepared locally, not deployed.** The user authorized preparation and
 explicitly prohibited paid resources. No cloud service, disk, subscription or
 production URL was created. Render is available as an optional integration but

@@ -13,6 +13,7 @@ describe("production configuration", () => {
 
   it("accepts explicit volume configuration, HTTPS and a sufficiently long secret", () => {
     expect(() => validateProductionEnvironment(valid)).not.toThrow();
+    expect(() => validateProductionEnvironment({ ...valid, LABLOOP_BIND_HOST: "127.0.0.1" })).not.toThrow();
   });
 
   it("refuses unsafe configuration before database setup can run", () => {
@@ -20,6 +21,7 @@ describe("production configuration", () => {
       { LABLOOP_SESSION_SECRET: "" }, { LABLOOP_DB_PATH: "data/labloop.db" },
       { LABLOOP_INSECURE_COOKIES: "1" }, { NEXT_PUBLIC_APP_URL: "http://localhost:3000" },
       { LABLOOP_SEED_DEMO: "" },
+      { LABLOOP_BIND_HOST: "192.168.1.20" },
     ]) expect(() => validateProductionEnvironment({ ...valid, ...invalid })).toThrow();
   });
 });

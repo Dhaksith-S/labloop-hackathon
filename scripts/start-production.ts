@@ -14,7 +14,7 @@ if (setup.error) throw setup.error;
 if (setup.status !== 0) process.exit(setup.status ?? 1);
 
 const server = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "start",
-  "--hostname", "0.0.0.0", "--port", env.PORT ?? "3000"], {
+  "--hostname", env.LABLOOP_BIND_HOST ?? "0.0.0.0", "--port", env.PORT ?? "3000"], {
   stdio: "inherit", env,
 });
 for (const signal of ["SIGTERM", "SIGINT"] as const) {
